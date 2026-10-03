@@ -1,0 +1,40 @@
+:root{--ui-scale:1}
+body{margin:0;background:#131619;color:#e2e5e9;font-family:system-ui,"Microsoft YaHei",sans-serif}
+.demo-shell{height:100dvh;display:flex;flex-direction:column;min-height:480px}
+.demo-header{height:100px;flex-shrink:0;display:flex;align-items:center;gap:24px;padding:0 28px;border-bottom:1px solid #30363c;background:#1b1f23}
+.demo-eyebrow{font-size:10px;letter-spacing:2px;color:#94aaa3;margin-bottom:9px}
+.demo-header h1{margin:0;font-size:21px;font-weight:600;letter-spacing:.3px}
+.demo-tabs{display:flex;gap:4px;margin-left:auto;padding:4px;background:#14181b;border:1px solid #343b42;border-radius:7px}
+.demo-tabs button,.demo-reset{min-height:36px;padding:0 20px;border:0;border-radius:4px;background:transparent;color:#a9b0b9;font-size:13px;cursor:pointer}
+.demo-tabs button[aria-pressed=true]{color:#e6f0eb;background:#344840}
+.demo-tabs button:hover,.demo-reset:hover{background:#30373d;color:#fff}
+.demo-reset{border:1px solid #41484f}
+.demo-body{display:flex;flex:1;min-height:0;padding:20px;gap:20px}
+.demo-guide{width:222px;flex-shrink:0;padding:12px 8px;overflow:auto}
+.demo-mode-label{font-size:11px;color:#91b6a6}
+.demo-guide h2{font-size:18px;margin:12px 0 28px;font-weight:550}
+.demo-instruction{margin-bottom:24px}
+.demo-instruction kbd{display:inline-block;padding:3px 9px;margin-right:10px;border:1px solid #4a535a;border-bottom-width:2px;border-radius:5px;font-family:inherit;font-size:12px;color:#c9dad0;background:#22292d}
+.demo-instruction strong{font-size:13px;font-weight:550}
+.demo-instruction p,.demo-extra,.demo-scope{color:#8f99a2;font-size:12px;line-height:1.8;margin:10px 0 0}
+.demo-extra{padding-top:3px}
+.demo-status{margin-top:26px;padding:15px 14px;border:1px solid #374148;border-radius:6px;background:#1b2226;font-size:11px;color:#949fa8;font-variant-numeric:tabular-nums}
+.demo-status>strong{display:block;font-size:12px;color:#bfd2c6;line-height:1.7;margin:6px 0 14px}
+.demo-status>div{display:flex;justify-content:space-between;gap:12px;margin-top:10px}
+.demo-status output{color:#dde4e7}
+.demo-scope{margin-top:19px;font-size:11px}
+.demo-stage{position:relative;display:flex;flex:1;min-width:0;min-height:0;border:1px solid #363d43;border-radius:8px;overflow:hidden}
+.demo-stage>.asset-canvas{flex:1;min-width:0;border-radius:0}
+.demo-stage>.inner-canvas-shell{flex:1;min-width:0;padding:0;gap:0}
+.demo-stage .inner-canvas-toolbar{min-height:43px;padding:0 12px;border-bottom:1px solid #343b40}
+.demo-stage .asset-inner-canvas{border:0;border-radius:0}
+.demo-stage .is-panning,.demo-stage .is-panning *{cursor:grabbing!important}
+.demo-center{position:absolute;left:50%;top:50%;pointer-events:none;z-index:100006;transform:translate(-50%,-50%);opacity:.5;color:#aebcb8}
+.demo-center i{display:block;position:relative;width:16px;height:16px;margin:auto}
+.demo-center i:before,.demo-center i:after{content:"";position:absolute;background:#aebcb8}
+.demo-center i:before{left:7px;top:0;width:1px;height:16px}.demo-center i:after{top:7px;left:0;width:16px;height:1px}
+.demo-center span{display:block;font-size:10px;margin-top:5px;white-space:nowrap}
+.demo-footer{display:flex;justify-content:space-between;gap:16px;padding:0 28px 16px;color:#7f8b94;font-size:11px;line-height:1.6}
+button:focus-visible{outline:2px solid #98c3b0;outline-offset:3px}
+@media(max-width:950px){.demo-guide{width:180px}.demo-header{padding:0 20px}.demo-header h1{font-size:18px}.demo-body{gap:12px;padding:12px}.demo-tabs button{padding:0 12px}}
+@media(max-width:680px){.demo-header{height:auto;min-height:110px;flex-wrap:wrap;gap:10px;padding:16px}.demo-header>div:first-child{width:100%}.demo-tabs{margin-left:0}.demo-reset{margin-left:auto}.demo-body{flex-direction:column}.demo-guide{width:auto;display:flex;gap:16px;flex-wrap:wrap;padding:0}.demo-guide h2,.demo-mode-label,.demo-extra,.demo-scope{display:none}.demo-instruction{flex:1;margin:0}.demo-instruction p{font-size:11px;margin-top:5px}.demo-status{width:100%;margin:0;padding:8px 12px;display:flex;align-items:center;gap:12px}.demo-status>strong{margin:0}.demo-status>div{margin:0}.demo-footer{padding:0 14px 10px}.demo-footer span:first-child{display:none}.demo-shell{min-height:660px}}

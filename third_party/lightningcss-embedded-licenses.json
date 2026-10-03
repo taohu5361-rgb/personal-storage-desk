@@ -1,0 +1,3500 @@
+[
+  {
+    "ecosystem": "cargo",
+    "name": "ahash",
+    "version": "0.7.8",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/tkaitchuck/ahash",
+    "source_archive": "https://static.crates.io/crates/ahash/ahash-0.7.8.crate",
+    "notices_directory": "third_party/licenses/cargo/ahash-0.7.8",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "891477e0c6a8957309ee5c45a6368af3ae14bb510732d2684ffa19af310920f9",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "ahash",
+    "version": "0.8.12",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/tkaitchuck/ahash",
+    "source_archive": "https://static.crates.io/crates/ahash/ahash-0.8.12.crate",
+    "notices_directory": "third_party/licenses/cargo/ahash-0.8.12",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "5a15f179cd60c4584b8a8c596927aadc462e27f2ca70c04e0071964a73ba7a75",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "aho-corasick",
+    "version": "1.1.3",
+    "license": "Unlicense OR MIT",
+    "upstream": "https://github.com/BurntSushi/aho-corasick",
+    "source_archive": "https://static.crates.io/crates/aho-corasick/aho-corasick-1.1.3.crate",
+    "notices_directory": "third_party/licenses/cargo/aho-corasick-1.1.3",
+    "notice_files": [
+      "COPYING",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "8e60d3430d3a69478ad0993f19238d2df97c507009a52b3c10addcd7f6bcb916",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "android-tzdata",
+    "version": "0.1.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/RumovZ/android-tzdata",
+    "source_archive": "https://static.crates.io/crates/android-tzdata/android-tzdata-0.1.1.crate",
+    "notices_directory": "third_party/licenses/cargo/android-tzdata-0.1.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "e999941b234f3131b00bc13c22d06e8c5ff726d1b6318ac7eb276997bbb4fef0",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "android_system_properties",
+    "version": "0.1.5",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/nical/android_system_properties",
+    "source_archive": "https://static.crates.io/crates/android_system_properties/android_system_properties-0.1.5.crate",
+    "notices_directory": "third_party/licenses/cargo/android_system_properties-0.1.5",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "819e7219dbd41043ac279b19830f2efc897156490d7fd6ea916720117ee66311",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "anes",
+    "version": "0.1.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/zrzka/anes-rs",
+    "source_archive": "https://static.crates.io/crates/anes/anes-0.1.6.crate",
+    "notices_directory": "third_party/licenses/cargo/anes-0.1.6",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "4b46cbb362ab8752921c97e041f5e366ee6297bd428a31275b9fcf1e380f7299",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/zrzka/anes-rs/378ac7461ecac29fde9e10df7b08359d1315a9ad/LICENSE-MIT",
+      "https://raw.githubusercontent.com/zrzka/anes-rs/378ac7461ecac29fde9e10df7b08359d1315a9ad/LICENSE-APACHE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "anstyle",
+    "version": "1.0.10",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-cli/anstyle.git",
+    "source_archive": "https://static.crates.io/crates/anstyle/anstyle-1.0.10.crate",
+    "notices_directory": "third_party/licenses/cargo/anstyle-1.0.10",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "55cc3b69f167a1ef2e161439aa98aed94e6028e5f9a59be9a6ffb47aef1651f9",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "anyhow",
+    "version": "1.0.102",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/anyhow",
+    "source_archive": "https://static.crates.io/crates/anyhow/anyhow-1.0.102.crate",
+    "notices_directory": "third_party/licenses/cargo/anyhow-1.0.102",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "approx",
+    "version": "0.5.1",
+    "license": "Apache-2.0",
+    "upstream": "https://github.com/brendanzab/approx",
+    "source_archive": "https://static.crates.io/crates/approx/approx-0.5.1.crate",
+    "notices_directory": "third_party/licenses/cargo/approx-0.5.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "cab112f0a86d568ea0e627cc1d6be74a1e9cd55214684db5561995f6dad897c6",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "assert_cmd",
+    "version": "2.0.16",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/assert-rs/assert_cmd.git",
+    "source_archive": "https://static.crates.io/crates/assert_cmd/assert_cmd-2.0.16.crate",
+    "notices_directory": "third_party/licenses/cargo/assert_cmd-2.0.16",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "dc1835b7f27878de8525dc71410b5a31cdcc5f230aed5ba5df968e09c201b23d",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "assert_fs",
+    "version": "1.1.2",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/assert-rs/assert_fs.git",
+    "source_archive": "https://static.crates.io/crates/assert_fs/assert_fs-1.1.2.crate",
+    "notices_directory": "third_party/licenses/cargo/assert_fs-1.1.2",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "7efdb1fdb47602827a342857666feb372712cbc64b414172bd6b167a02927674",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "atty",
+    "version": "0.2.14",
+    "license": "MIT",
+    "upstream": "https://github.com/softprops/atty",
+    "source_archive": "https://static.crates.io/crates/atty/atty-0.2.14.crate",
+    "notices_directory": "third_party/licenses/cargo/atty-0.2.14",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "d9b39be18770d11421cdb1b9947a45dd3f37e93092cbf377614828a319d5fee8",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "autocfg",
+    "version": "1.4.0",
+    "license": "Apache-2.0 OR MIT",
+    "upstream": "https://github.com/cuviper/autocfg",
+    "source_archive": "https://static.crates.io/crates/autocfg/autocfg-1.4.0.crate",
+    "notices_directory": "third_party/licenses/cargo/autocfg-1.4.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "base64-simd",
+    "version": "0.7.0",
+    "license": "MIT",
+    "upstream": "https://github.com/Nugine/simd",
+    "source_archive": "https://static.crates.io/crates/base64-simd/base64-simd-0.7.0.crate",
+    "notices_directory": "third_party/licenses/cargo/base64-simd-0.7.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "781dd20c3aff0bd194fe7d2a977dd92f21c173891f3a03b677359e5fa457e5d5",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/Nugine/simd/220c2e5f615d897b999aba46acdce3d281ef4ca4/LICENSE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "bitflags",
+    "version": "1.3.2",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/bitflags/bitflags",
+    "source_archive": "https://static.crates.io/crates/bitflags/bitflags-1.3.2.crate",
+    "notices_directory": "third_party/licenses/cargo/bitflags-1.3.2",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "bitflags",
+    "version": "2.6.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/bitflags/bitflags",
+    "source_archive": "https://static.crates.io/crates/bitflags/bitflags-2.6.0.crate",
+    "notices_directory": "third_party/licenses/cargo/bitflags-2.6.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "b048fb63fd8b5923fc5aa7b340d8e156aec7ec02f0c78fa8a6ddc2613f6f71de",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "bitvec",
+    "version": "1.0.1",
+    "license": "MIT",
+    "upstream": "https://github.com/bitvecto-rs/bitvec",
+    "source_archive": "https://static.crates.io/crates/bitvec/bitvec-1.0.1.crate",
+    "notices_directory": "third_party/licenses/cargo/bitvec-1.0.1",
+    "notice_files": [
+      "LICENSE.txt"
+    ],
+    "lock_checksum": "1bc2832c24239b0141d5674bb9174f9d68a8b5b3f2753311927c172ca46f7e9c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "browserslist-data",
+    "version": "0.1.1",
+    "license": "MIT",
+    "upstream": "https://github.com/browserslist/browserslist-rs",
+    "source_archive": "https://static.crates.io/crates/browserslist-data/browserslist-data-0.1.1.crate",
+    "notices_directory": "third_party/licenses/cargo/browserslist-data-0.1.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "c49471c5ae53cefe3ac4acc4d3c75cb4b68995b70b3bbb864f8e08fae282098c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/browserslist/browserslist-rs/0a9a5c20b4a44c1216582881eed8019bc11d3c8c/LICENSE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "browserslist-rs",
+    "version": "0.19.0",
+    "license": "MIT",
+    "upstream": "https://github.com/browserslist/browserslist-rs",
+    "source_archive": "https://static.crates.io/crates/browserslist-rs/browserslist-rs-0.19.0.crate",
+    "notices_directory": "third_party/licenses/cargo/browserslist-rs-0.19.0",
+    "notice_files": [
+      "LICENSE",
+      "vendor/caniuse/LICENSE",
+      "vendor/electron-to-chromium/LICENSE",
+      "vendor/node-releases/LICENSE"
+    ],
+    "lock_checksum": "8dd48a6ca358df4f7000e3fb5f08738b1b91a0e5d5f862e2f77b2b14647547f5",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "bstr",
+    "version": "1.11.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/BurntSushi/bstr",
+    "source_archive": "https://static.crates.io/crates/bstr/bstr-1.11.1.crate",
+    "notices_directory": "third_party/licenses/cargo/bstr-1.11.1",
+    "notice_files": [
+      "COPYING",
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "786a307d683a5bf92e6fd5fd69a7eb613751668d1d8d67d802846dfe367c62c8",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "bumpalo",
+    "version": "3.16.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/fitzgen/bumpalo",
+    "source_archive": "https://static.crates.io/crates/bumpalo/bumpalo-3.16.0.crate",
+    "notices_directory": "third_party/licenses/cargo/bumpalo-3.16.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "79296716171880943b8470b5f8d03aa55eb2e645a4874bdbb28adb49162e012c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "bytecheck",
+    "version": "0.6.12",
+    "license": "MIT",
+    "upstream": "https://github.com/djkoloski/bytecheck",
+    "source_archive": "https://static.crates.io/crates/bytecheck/bytecheck-0.6.12.crate",
+    "notices_directory": "third_party/licenses/cargo/bytecheck-0.6.12",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "23cdc57ce23ac53c931e88a43d06d070a6fd142f2617be5855eb75efc9beb1c2",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "bytecheck_derive",
+    "version": "0.6.12",
+    "license": "MIT",
+    "upstream": "https://github.com/djkoloski/bytecheck",
+    "source_archive": "https://static.crates.io/crates/bytecheck_derive/bytecheck_derive-0.6.12.crate",
+    "notices_directory": "third_party/licenses/cargo/bytecheck_derive-0.6.12",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "3db406d29fbcd95542e92559bed4d8ad92636d1ca8b3b72ede10b4bcc010e659",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "bytes",
+    "version": "1.9.0",
+    "license": "MIT",
+    "upstream": "https://github.com/tokio-rs/bytes",
+    "source_archive": "https://static.crates.io/crates/bytes/bytes-1.9.0.crate",
+    "notices_directory": "third_party/licenses/cargo/bytes-1.9.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "325918d6fe32f23b19878fe4b34794ae41fc19ddbe53b10571a4874d44ffd39b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "cast",
+    "version": "0.3.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/japaric/cast.rs",
+    "source_archive": "https://static.crates.io/crates/cast/cast-0.3.0.crate",
+    "notices_directory": "third_party/licenses/cargo/cast-0.3.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "37b2a672a2cb129a2e41c10b1224bb368f9f37a2b16b612598138befd7b37eb5",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "cbindgen",
+    "version": "0.24.5",
+    "license": "MPL-2.0",
+    "upstream": "https://github.com/eqrion/cbindgen",
+    "source_archive": "https://static.crates.io/crates/cbindgen/cbindgen-0.24.5.crate",
+    "notices_directory": "third_party/licenses/cargo/cbindgen-0.24.5",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "4b922faaf31122819ec80c4047cc684c6979a087366c069611e33649bf98e18d",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "cc",
+    "version": "1.2.5",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang/cc-rs",
+    "source_archive": "https://static.crates.io/crates/cc/cc-1.2.5.crate",
+    "notices_directory": "third_party/licenses/cargo/cc-1.2.5",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "c31a0499c1dc64f458ad13872de75c0eb7e3fdb0e67964610c914b034fc5956e",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "cfg-if",
+    "version": "1.0.0",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/alexcrichton/cfg-if",
+    "source_archive": "https://static.crates.io/crates/cfg-if/cfg-if-1.0.0.crate",
+    "notices_directory": "third_party/licenses/cargo/cfg-if-1.0.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "cfg_aliases",
+    "version": "0.2.1",
+    "license": "MIT",
+    "upstream": "https://github.com/katharostech/cfg_aliases",
+    "source_archive": "https://static.crates.io/crates/cfg_aliases/cfg_aliases-0.2.1.crate",
+    "notices_directory": "third_party/licenses/cargo/cfg_aliases-0.2.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "chrono",
+    "version": "0.4.39",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/chronotope/chrono",
+    "source_archive": "https://static.crates.io/crates/chrono/chrono-0.4.39.crate",
+    "notices_directory": "third_party/licenses/cargo/chrono-0.4.39",
+    "notice_files": [
+      "LICENSE.txt"
+    ],
+    "lock_checksum": "7e36cc9d416881d2e24f9a963be5fb1cd90966419ac844274161d10488b3e825",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "ciborium",
+    "version": "0.2.2",
+    "license": "Apache-2.0",
+    "upstream": "https://github.com/enarx/ciborium",
+    "source_archive": "https://static.crates.io/crates/ciborium/ciborium-0.2.2.crate",
+    "notices_directory": "third_party/licenses/cargo/ciborium-0.2.2",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "42e69ffd6f0917f5c029256a24d0161db17cea3997d185db0d35926308770f0e",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "ciborium-io",
+    "version": "0.2.2",
+    "license": "Apache-2.0",
+    "upstream": "https://github.com/enarx/ciborium",
+    "source_archive": "https://static.crates.io/crates/ciborium-io/ciborium-io-0.2.2.crate",
+    "notices_directory": "third_party/licenses/cargo/ciborium-io-0.2.2",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "05afea1e0a06c9be33d539b876f1ce3692f4afea2cb41f740e7743225ed1c757",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "ciborium-ll",
+    "version": "0.2.2",
+    "license": "Apache-2.0",
+    "upstream": "https://github.com/enarx/ciborium",
+    "source_archive": "https://static.crates.io/crates/ciborium-ll/ciborium-ll-0.2.2.crate",
+    "notices_directory": "third_party/licenses/cargo/ciborium-ll-0.2.2",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "57663b653d948a338bfb3eeba9bb2fd5fcfaecb9e199e87e1eda4d9e8b240fd9",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "clap",
+    "version": "3.2.25",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/clap-rs/clap",
+    "source_archive": "https://static.crates.io/crates/clap/clap-3.2.25.crate",
+    "notices_directory": "third_party/licenses/cargo/clap-3.2.25",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "4ea181bf566f71cb9a5d17a59e1871af638180a18fb0035c92ae62b705207123",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "clap",
+    "version": "4.5.60",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/clap-rs/clap",
+    "source_archive": "https://static.crates.io/crates/clap/clap-4.5.60.crate",
+    "notices_directory": "third_party/licenses/cargo/clap-4.5.60",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "2797f34da339ce31042b27d23607e051786132987f595b02ba4f6a6dffb7030a",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "clap_builder",
+    "version": "4.5.60",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/clap-rs/clap",
+    "source_archive": "https://static.crates.io/crates/clap_builder/clap_builder-4.5.60.crate",
+    "notices_directory": "third_party/licenses/cargo/clap_builder-4.5.60",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "24a241312cea5059b13574bb9b3861cabf758b879c15190b37b6d6fd63ab6876",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "clap_derive",
+    "version": "3.2.25",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/clap-rs/clap/tree/master/clap_derive",
+    "source_archive": "https://static.crates.io/crates/clap_derive/clap_derive-3.2.25.crate",
+    "notices_directory": "third_party/licenses/cargo/clap_derive-3.2.25",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "ae6371b8bdc8b7d3959e9cf7b22d4435ef3e79e138688421ec654acf8c81b008",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "clap_lex",
+    "version": "0.2.4",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/clap-rs/clap/tree/master/clap_lex",
+    "source_archive": "https://static.crates.io/crates/clap_lex/clap_lex-0.2.4.crate",
+    "notices_directory": "third_party/licenses/cargo/clap_lex-0.2.4",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "2850f2f5a82cbf437dd5af4d49848fbdfc27c157c3d010345776f952765261c5",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "clap_lex",
+    "version": "1.1.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/clap-rs/clap",
+    "source_archive": "https://static.crates.io/crates/clap_lex/clap_lex-1.1.0.crate",
+    "notices_directory": "third_party/licenses/cargo/clap_lex-1.1.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "codspeed",
+    "version": "4.6.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/CodSpeedHQ/codspeed-rust",
+    "source_archive": "https://static.crates.io/crates/codspeed/codspeed-4.6.0.crate",
+    "notices_directory": "third_party/licenses/cargo/codspeed-4.6.0",
+    "notice_files": [
+      "instrument-hooks/LICENSE-APACHE",
+      "instrument-hooks/LICENSE-MIT"
+    ],
+    "lock_checksum": "d7ce4a32373a5c84f4fa785099b300b9b1796311abc122b9eb62c65fa615145d",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "codspeed-criterion-compat",
+    "version": "4.6.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/CodSpeedHQ/codspeed-rust",
+    "source_archive": "https://static.crates.io/crates/codspeed-criterion-compat/codspeed-criterion-compat-4.6.0.crate",
+    "notices_directory": "third_party/licenses/cargo/codspeed-criterion-compat-4.6.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "f5557c4e023f427ba208b849193c51c2ebd40534828490cd3f5f7f7fc0284ce5",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/CodSpeedHQ/codspeed-rust/0c6ccae11dc48654fd83c8dd77d231e386ebd9bd/LICENSE-MIT",
+      "https://raw.githubusercontent.com/CodSpeedHQ/codspeed-rust/0c6ccae11dc48654fd83c8dd77d231e386ebd9bd/LICENSE-APACHE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "codspeed-criterion-compat-walltime",
+    "version": "4.6.0",
+    "license": "Apache-2.0 OR MIT",
+    "upstream": "https://github.com/CodSpeedHQ/codspeed-rust",
+    "source_archive": "https://static.crates.io/crates/codspeed-criterion-compat-walltime/codspeed-criterion-compat-walltime-4.6.0.crate",
+    "notices_directory": "third_party/licenses/cargo/codspeed-criterion-compat-walltime-4.6.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "43ac19f0a5c3542301e9d011d658f93c3f550698ec8ba7d7c072692e7924c401",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "colored",
+    "version": "2.2.0",
+    "license": "MPL-2.0",
+    "upstream": "https://github.com/mackwic/colored",
+    "source_archive": "https://static.crates.io/crates/colored/colored-2.2.0.crate",
+    "notices_directory": "third_party/licenses/cargo/colored-2.2.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "117725a109d387c937a1533ce01b450cbde6b88abceea8473c4d7a85853cda3c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "const-str",
+    "version": "1.1.0",
+    "license": "MIT",
+    "upstream": "https://github.com/Nugine/const-str",
+    "source_archive": "https://static.crates.io/crates/const-str/const-str-1.1.0.crate",
+    "notices_directory": "third_party/licenses/cargo/const-str-1.1.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "18f12cc9948ed9604230cdddc7c86e270f9401ccbe3c2e98a4378c5e7632212f",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "convert_case",
+    "version": "0.6.0",
+    "license": "MIT",
+    "upstream": "https://github.com/rutrum/convert-case",
+    "source_archive": "https://static.crates.io/crates/convert_case/convert_case-0.6.0.crate",
+    "notices_directory": "third_party/licenses/cargo/convert_case-0.6.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "ec182b0ca2f35d8fc196cf3404988fd8b8c739a4d270ff118a398feb0cbec1ca",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "core-foundation-sys",
+    "version": "0.8.7",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/servo/core-foundation-rs",
+    "source_archive": "https://static.crates.io/crates/core-foundation-sys/core-foundation-sys-0.8.7.crate",
+    "notices_directory": "third_party/licenses/cargo/core-foundation-sys-0.8.7",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "criterion-plot",
+    "version": "0.5.0",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/bheisler/criterion.rs",
+    "source_archive": "https://static.crates.io/crates/criterion-plot/criterion-plot-0.5.0.crate",
+    "notices_directory": "third_party/licenses/cargo/criterion-plot-0.5.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "6b50826342786a51a89e2da3a28f1c32b06e387201bc2d19791f622c673706b1",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "crossbeam-channel",
+    "version": "0.5.14",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/crossbeam-rs/crossbeam",
+    "source_archive": "https://static.crates.io/crates/crossbeam-channel/crossbeam-channel-0.5.14.crate",
+    "notices_directory": "third_party/licenses/cargo/crossbeam-channel-0.5.14",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT",
+      "LICENSE-THIRD-PARTY"
+    ],
+    "lock_checksum": "06ba6d68e24814cb8de6bb986db8222d3a027d15872cabc0d18817bc3c0e4471",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "crossbeam-deque",
+    "version": "0.8.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/crossbeam-rs/crossbeam",
+    "source_archive": "https://static.crates.io/crates/crossbeam-deque/crossbeam-deque-0.8.6.crate",
+    "notices_directory": "third_party/licenses/cargo/crossbeam-deque-0.8.6",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "9dd111b7b7f7d55b72c0a6ae361660ee5853c9af73f70c3c2ef6858b950e2e51",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "crossbeam-epoch",
+    "version": "0.9.18",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/crossbeam-rs/crossbeam",
+    "source_archive": "https://static.crates.io/crates/crossbeam-epoch/crossbeam-epoch-0.9.18.crate",
+    "notices_directory": "third_party/licenses/cargo/crossbeam-epoch-0.9.18",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "5b82ac4a3c2ca9c3460964f020e1402edd5753411d7737aa39c3714ad1b5420e",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "crossbeam-utils",
+    "version": "0.8.21",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/crossbeam-rs/crossbeam",
+    "source_archive": "https://static.crates.io/crates/crossbeam-utils/crossbeam-utils-0.8.21.crate",
+    "notices_directory": "third_party/licenses/cargo/crossbeam-utils-0.8.21",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "d0a5c400df2834b80a4c3327b3aad3a4c4cd4de0629063962b03235697506a28",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "crunchy",
+    "version": "0.2.4",
+    "license": "MIT",
+    "upstream": "https://github.com/eira-fransham/crunchy",
+    "source_archive": "https://static.crates.io/crates/crunchy/crunchy-0.2.4.crate",
+    "notices_directory": "third_party/licenses/cargo/crunchy-0.2.4",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "460fbee9c2c2f33933d720630a6a0bac33ba7053db5344fac858d4b8952d77d5",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "cssparser",
+    "version": "0.37.0",
+    "license": "MPL-2.0",
+    "upstream": "https://github.com/servo/rust-cssparser",
+    "source_archive": "https://static.crates.io/crates/cssparser/cssparser-0.37.0.crate",
+    "notices_directory": "third_party/licenses/cargo/cssparser-0.37.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "8c9cdaae01d5ed7882b04d795e7f752f46ff52d2fa3b50a20d28c464510bba98",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "cssparser-color",
+    "version": "0.5.0",
+    "license": "MPL-2.0",
+    "upstream": "https://github.com/servo/rust-cssparser",
+    "source_archive": "https://static.crates.io/crates/cssparser-color/cssparser-color-0.5.0.crate",
+    "notices_directory": "third_party/licenses/cargo/cssparser-color-0.5.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "bbaa233e1dcd9c13a5d3e3a8a2c0f5a727bac380398345dbcb31db4597edc86b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "cssparser-macros",
+    "version": "0.7.0",
+    "license": "MPL-2.0",
+    "upstream": "https://github.com/servo/rust-cssparser",
+    "source_archive": "https://static.crates.io/crates/cssparser-macros/cssparser-macros-0.7.0.crate",
+    "notices_directory": "third_party/licenses/cargo/cssparser-macros-0.7.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "10a2a99df6e410a8ff4245aa2006499ea662245f967cc7c0a38c83ef8eb44dbf",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "ctor",
+    "version": "0.2.9",
+    "license": "Apache-2.0 OR MIT",
+    "upstream": "https://github.com/mmastrac/rust-ctor",
+    "source_archive": "https://static.crates.io/crates/ctor/ctor-0.2.9.crate",
+    "notices_directory": "third_party/licenses/cargo/ctor-0.2.9",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "32a2785755761f3ddc1492979ce1e48d2c00d09311c39e4466429188f3dd6501",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "dashmap",
+    "version": "5.5.3",
+    "license": "MIT",
+    "upstream": "https://github.com/xacrimon/dashmap",
+    "source_archive": "https://static.crates.io/crates/dashmap/dashmap-5.5.3.crate",
+    "notices_directory": "third_party/licenses/cargo/dashmap-5.5.3",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "978747c1d849a7d2ee5e8adc0159961c48fb7e5db2f06af6723b80123bb53856",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "data-encoding",
+    "version": "2.6.0",
+    "license": "MIT",
+    "upstream": "https://github.com/ia0/data-encoding",
+    "source_archive": "https://static.crates.io/crates/data-encoding/data-encoding-2.6.0.crate",
+    "notices_directory": "third_party/licenses/cargo/data-encoding-2.6.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "e8566979429cf69b49a5c740c60791108e86440e8be149bbea4fe54d2c32d6e2",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "data-url",
+    "version": "0.1.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/servo/rust-url",
+    "source_archive": "https://static.crates.io/crates/data-url/data-url-0.1.1.crate",
+    "notices_directory": "third_party/licenses/cargo/data-url-0.1.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "3a30bfce702bcfa94e906ef82421f2c0e61c076ad76030c16ee5d2e9a32fe193",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "diff",
+    "version": "0.1.13",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/utkarshkukreti/diff.rs",
+    "source_archive": "https://static.crates.io/crates/diff/diff-0.1.13.crate",
+    "notices_directory": "third_party/licenses/cargo/diff-0.1.13",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "56254986775e3233ffa9c4d7d3faaf6d36a2c09d30b20687e9f88bc8bafc16c8",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "difflib",
+    "version": "0.4.0",
+    "license": "MIT",
+    "upstream": "https://github.com/DimaKudosh/difflib",
+    "source_archive": "https://static.crates.io/crates/difflib/difflib-0.4.0.crate",
+    "notices_directory": "third_party/licenses/cargo/difflib-0.4.0",
+    "notice_files": [
+      "LICENSE",
+      "ORIGINAL-Cargo.toml",
+      "PROVENANCE.md"
+    ],
+    "lock_checksum": "6184e33543162437515c2e2b48714794e37845ec9851711914eec9d308f6ebe8",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "Original upstream LICENSE from immutable commit (crate omitted it); upstream commit is newer than locked package.\nhttps://raw.githubusercontent.com/DimaKudosh/difflib/f035fb8e656f27119e23eca9d5b996df14f3885e/LICENSE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "doc-comment",
+    "version": "0.3.3",
+    "license": "MIT",
+    "upstream": "https://github.com/GuillaumeGomez/doc-comment",
+    "source_archive": "https://static.crates.io/crates/doc-comment/doc-comment-0.3.3.crate",
+    "notices_directory": "third_party/licenses/cargo/doc-comment-0.3.3",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "dtoa",
+    "version": "1.0.9",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/dtoa",
+    "source_archive": "https://static.crates.io/crates/dtoa/dtoa-1.0.9.crate",
+    "notices_directory": "third_party/licenses/cargo/dtoa-1.0.9",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "dcbb2bf8e87535c23f7a8a321e364ce21462d0ff10cb6407820e8e96dfff6653",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "dtoa-short",
+    "version": "0.3.5",
+    "license": "MPL-2.0",
+    "upstream": "https://github.com/upsuper/dtoa-short",
+    "source_archive": "https://static.crates.io/crates/dtoa-short/dtoa-short-0.3.5.crate",
+    "notices_directory": "third_party/licenses/cargo/dtoa-short-0.3.5",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "cd1511a7b6a56299bd043a9c167a6d2bfb37bf84a6dfceaba651168adfb43c87",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "dyn-clone",
+    "version": "1.0.17",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/dyn-clone",
+    "source_archive": "https://static.crates.io/crates/dyn-clone/dyn-clone-1.0.17.crate",
+    "notices_directory": "third_party/licenses/cargo/dyn-clone-1.0.17",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "0d6ef0072f8a535281e4876be788938b528e9a1d43900b82c2569af7da799125",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "either",
+    "version": "1.13.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rayon-rs/either",
+    "source_archive": "https://static.crates.io/crates/either/either-1.13.0.crate",
+    "notices_directory": "third_party/licenses/cargo/either-1.13.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "equivalent",
+    "version": "1.0.1",
+    "license": "Apache-2.0 OR MIT",
+    "upstream": "https://github.com/cuviper/equivalent",
+    "source_archive": "https://static.crates.io/crates/equivalent/equivalent-1.0.1.crate",
+    "notices_directory": "third_party/licenses/cargo/equivalent-1.0.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "errno",
+    "version": "0.3.10",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/lambda-fairy/rust-errno",
+    "source_archive": "https://static.crates.io/crates/errno/errno-0.3.10.crate",
+    "notices_directory": "third_party/licenses/cargo/errno-0.3.10",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "33d852cb9b869c2a9b3df2f71a3074817f01e1844f839a144f5fcef059a4eb5d",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "fastrand",
+    "version": "2.3.0",
+    "license": "Apache-2.0 OR MIT",
+    "upstream": "https://github.com/smol-rs/fastrand",
+    "source_archive": "https://static.crates.io/crates/fastrand/fastrand-2.3.0.crate",
+    "notices_directory": "third_party/licenses/cargo/fastrand-2.3.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "37909eebbb50d72f9059c3b6d82c0463f2ff062c9e95845c43a6c9c0355411be",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "float-cmp",
+    "version": "0.9.0",
+    "license": "MIT",
+    "upstream": "https://github.com/mikedilger/float-cmp",
+    "source_archive": "https://static.crates.io/crates/float-cmp/float-cmp-0.9.0.crate",
+    "notices_directory": "third_party/licenses/cargo/float-cmp-0.9.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "98de4bbd547a563b716d8dfa9aad1cb19bfab00f4fa09a6a4ed21dbcf44ce9c4",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "fs_extra",
+    "version": "1.3.0",
+    "license": "MIT",
+    "upstream": "https://github.com/webdesus/fs_extra",
+    "source_archive": "https://static.crates.io/crates/fs_extra/fs_extra-1.3.0.crate",
+    "notices_directory": "third_party/licenses/cargo/fs_extra-1.3.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "42703706b716c37f96a77aea830392ad231f44c9e9a67872fa5548707e11b11c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "funty",
+    "version": "2.0.0",
+    "license": "MIT",
+    "upstream": "https://github.com/myrrlyn/funty",
+    "source_archive": "https://static.crates.io/crates/funty/funty-2.0.0.crate",
+    "notices_directory": "third_party/licenses/cargo/funty-2.0.0",
+    "notice_files": [
+      "LICENSE.txt"
+    ],
+    "lock_checksum": "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "getrandom",
+    "version": "0.2.15",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-random/getrandom",
+    "source_archive": "https://static.crates.io/crates/getrandom/getrandom-0.2.15.crate",
+    "notices_directory": "third_party/licenses/cargo/getrandom-0.2.15",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "c4567c8db10ae91089c99af84c68c38da3ec2f087c3f82960bcdbf3656b6f4d7",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "getrandom",
+    "version": "0.3.3",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-random/getrandom",
+    "source_archive": "https://static.crates.io/crates/getrandom/getrandom-0.3.3.crate",
+    "notices_directory": "third_party/licenses/cargo/getrandom-0.3.3",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "26145e563e54f2cadc477553f1ec5ee650b00862f0a58bcd12cbdc5f0ea2d2f4",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "glob",
+    "version": "0.3.3",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang/glob",
+    "source_archive": "https://static.crates.io/crates/glob/glob-0.3.3.crate",
+    "notices_directory": "third_party/licenses/cargo/glob-0.3.3",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "0cc23270f6e1808e30a928bdc84dea0b9b4136a8bc82338574f23baf47bbd280",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "globset",
+    "version": "0.4.15",
+    "license": "Unlicense OR MIT",
+    "upstream": "https://github.com/BurntSushi/ripgrep/tree/master/crates/globset",
+    "source_archive": "https://static.crates.io/crates/globset/globset-0.4.15.crate",
+    "notices_directory": "third_party/licenses/cargo/globset-0.4.15",
+    "notice_files": [
+      "COPYING",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "15f1ce686646e7f1e19bf7d5533fe443a45dbfb990e00629110797578b42fb19",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "globwalk",
+    "version": "0.9.1",
+    "license": "MIT",
+    "upstream": "https://github.com/gilnaa/globwalk",
+    "source_archive": "https://static.crates.io/crates/globwalk/globwalk-0.9.1.crate",
+    "notices_directory": "third_party/licenses/cargo/globwalk-0.9.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "0bf760ebf69878d9fd8f110c89703d90ce35095324d1f1edcb595c63945ee757",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "half",
+    "version": "2.7.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/VoidStarKat/half-rs",
+    "source_archive": "https://static.crates.io/crates/half/half-2.7.1.crate",
+    "notices_directory": "third_party/licenses/cargo/half-2.7.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "6ea2d84b969582b4b1864a92dc5d27cd2b77b622a8d79306834f1be5ba20d84b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "hashbrown",
+    "version": "0.12.3",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang/hashbrown",
+    "source_archive": "https://static.crates.io/crates/hashbrown/hashbrown-0.12.3.crate",
+    "notices_directory": "third_party/licenses/cargo/hashbrown-0.12.3",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "8a9ee70c43aaf417c914396645a0fa852624801b24ebb7ae78fe8272889ac888",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "hashbrown",
+    "version": "0.14.5",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang/hashbrown",
+    "source_archive": "https://static.crates.io/crates/hashbrown/hashbrown-0.14.5.crate",
+    "notices_directory": "third_party/licenses/cargo/hashbrown-0.14.5",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "e5274423e17b7c9fc20b6e7e208532f9b19825d82dfd615708b70edd83df41f1",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "hashbrown",
+    "version": "0.15.2",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang/hashbrown",
+    "source_archive": "https://static.crates.io/crates/hashbrown/hashbrown-0.15.2.crate",
+    "notices_directory": "third_party/licenses/cargo/hashbrown-0.15.2",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "bf151400ff0baff5465007dd2f3e717f3fe502074ca563069ce3a6629d07b289",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "heck",
+    "version": "0.4.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/withoutboats/heck",
+    "source_archive": "https://static.crates.io/crates/heck/heck-0.4.1.crate",
+    "notices_directory": "third_party/licenses/cargo/heck-0.4.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "95505c38b4572b2d910cecb0281560f54b440a19336cbbcb27bf6ce6adc6f5a8",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "hermit-abi",
+    "version": "0.1.19",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/hermitcore/libhermit-rs",
+    "source_archive": "https://static.crates.io/crates/hermit-abi/hermit-abi-0.1.19.crate",
+    "notices_directory": "third_party/licenses/cargo/hermit-abi-0.1.19",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "hermit-abi",
+    "version": "0.5.2",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/hermit-os/hermit-rs",
+    "source_archive": "https://static.crates.io/crates/hermit-abi/hermit-abi-0.5.2.crate",
+    "notices_directory": "third_party/licenses/cargo/hermit-abi-0.5.2",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "fc0fef456e4baa96da950455cd02c081ca953b141298e41db3fc7e36b1da849c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "iana-time-zone",
+    "version": "0.1.61",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/strawlab/iana-time-zone",
+    "source_archive": "https://static.crates.io/crates/iana-time-zone/iana-time-zone-0.1.61.crate",
+    "notices_directory": "third_party/licenses/cargo/iana-time-zone-0.1.61",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "235e081f3925a06703c2d0117ea8b91f042756fd6e7a6e5d901e8ca1a996b220",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "iana-time-zone-haiku",
+    "version": "0.1.2",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/strawlab/iana-time-zone",
+    "source_archive": "https://static.crates.io/crates/iana-time-zone-haiku/iana-time-zone-haiku-0.1.2.crate",
+    "notices_directory": "third_party/licenses/cargo/iana-time-zone-haiku-0.1.2",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "f31827a206f56af32e590ba56d5d2d085f558508192593743f16b2306495269f",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "ignore",
+    "version": "0.4.23",
+    "license": "Unlicense OR MIT",
+    "upstream": "https://github.com/BurntSushi/ripgrep/tree/master/crates/ignore",
+    "source_archive": "https://static.crates.io/crates/ignore/ignore-0.4.23.crate",
+    "notices_directory": "third_party/licenses/cargo/ignore-0.4.23",
+    "notice_files": [
+      "COPYING",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "6d89fd380afde86567dfba715db065673989d6253f42b88179abd3eae47bda4b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "indexmap",
+    "version": "1.9.3",
+    "license": "Apache-2.0 OR MIT",
+    "upstream": "https://github.com/bluss/indexmap",
+    "source_archive": "https://static.crates.io/crates/indexmap/indexmap-1.9.3.crate",
+    "notices_directory": "third_party/licenses/cargo/indexmap-1.9.3",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "bd070e393353796e801d209ad339e89596eb4c8d430d18ede6a1cced8fafbd99",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "indexmap",
+    "version": "2.7.0",
+    "license": "Apache-2.0 OR MIT",
+    "upstream": "https://github.com/indexmap-rs/indexmap",
+    "source_archive": "https://static.crates.io/crates/indexmap/indexmap-2.7.0.crate",
+    "notices_directory": "third_party/licenses/cargo/indexmap-2.7.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "62f822373a4fe84d4bb149bf54e584a7f4abec90e072ed49cda0edea5b95471f",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "indoc",
+    "version": "1.0.9",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/indoc",
+    "source_archive": "https://static.crates.io/crates/indoc/indoc-1.0.9.crate",
+    "notices_directory": "third_party/licenses/cargo/indoc-1.0.9",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "bfa799dd5ed20a7e349f3b4639aa80d74549c81716d9ec4f994c9b5815598306",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "is-terminal",
+    "version": "0.4.17",
+    "license": "MIT",
+    "upstream": "https://github.com/sunfishcode/is-terminal",
+    "source_archive": "https://static.crates.io/crates/is-terminal/is-terminal-0.4.17.crate",
+    "notices_directory": "third_party/licenses/cargo/is-terminal-0.4.17",
+    "notice_files": [
+      "LICENSE-MIT",
+      "LICENSE-MIT-atty"
+    ],
+    "lock_checksum": "3640c1c38b8e4e43584d8df18be5fc6b0aa314ce6ebf51b53313d4306cca8e46",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "itertools",
+    "version": "0.10.5",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/rust-itertools/itertools",
+    "source_archive": "https://static.crates.io/crates/itertools/itertools-0.10.5.crate",
+    "notices_directory": "third_party/licenses/cargo/itertools-0.10.5",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "b0fd2260e829bddf4cb6ea802289de2f86d6a7a690192fbe91b3f46e0f2c8473",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "itertools",
+    "version": "0.13.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-itertools/itertools",
+    "source_archive": "https://static.crates.io/crates/itertools/itertools-0.13.0.crate",
+    "notices_directory": "third_party/licenses/cargo/itertools-0.13.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "itoa",
+    "version": "1.0.14",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/itoa",
+    "source_archive": "https://static.crates.io/crates/itoa/itoa-1.0.14.crate",
+    "notices_directory": "third_party/licenses/cargo/itoa-1.0.14",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "d75a2a4b1b190afb6f5425f10f6a8f959d2ea0b9c2b1d79553551850539e4674",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "jemalloc-sys",
+    "version": "0.3.2",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/gnzlbg/jemallocator",
+    "source_archive": "https://static.crates.io/crates/jemalloc-sys/jemalloc-sys-0.3.2.crate",
+    "notices_directory": "third_party/licenses/cargo/jemalloc-sys-0.3.2",
+    "notice_files": [
+      "jemalloc/COPYING",
+      "rep/COPYING"
+    ],
+    "lock_checksum": "0d3b9f3f5c9b31aa0f5ed3260385ac205db665baa41d49bb8338008ae94ede45",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "jemallocator",
+    "version": "0.3.2",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/gnzlbg/jemallocator",
+    "source_archive": "https://static.crates.io/crates/jemallocator/jemallocator-0.3.2.crate",
+    "notices_directory": "third_party/licenses/cargo/jemallocator-0.3.2",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "43ae63fcfc45e99ab3d1b29a46782ad679e98436c3169d15a167a1108a724b69",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "js-sys",
+    "version": "0.3.76",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rustwasm/wasm-bindgen/tree/master/crates/js-sys",
+    "source_archive": "https://static.crates.io/crates/js-sys/js-sys-0.3.76.crate",
+    "notices_directory": "third_party/licenses/cargo/js-sys-0.3.76",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "6717b6b5b077764fb5966237269cb3c64edddde4b14ce42647430a78ced9e7b7",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "lazy_static",
+    "version": "1.5.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang-nursery/lazy-static.rs",
+    "source_archive": "https://static.crates.io/crates/lazy_static/lazy_static-1.5.0.crate",
+    "notices_directory": "third_party/licenses/cargo/lazy_static-1.5.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "libc",
+    "version": "0.2.186",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang/libc",
+    "source_archive": "https://static.crates.io/crates/libc/libc-0.2.186.crate",
+    "notices_directory": "third_party/licenses/cargo/libc-0.2.186",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "libloading",
+    "version": "0.8.6",
+    "license": "ISC",
+    "upstream": "https://github.com/nagisa/rust_libloading/",
+    "source_archive": "https://static.crates.io/crates/libloading/libloading-0.8.6.crate",
+    "notices_directory": "third_party/licenses/cargo/libloading-0.8.6",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "fc2f4eb4bc735547cfed7c0a4922cbd04a4655978c09b54f1f7b228750664c34",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "linux-raw-sys",
+    "version": "0.4.14",
+    "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+    "upstream": "https://github.com/sunfishcode/linux-raw-sys",
+    "source_archive": "https://static.crates.io/crates/linux-raw-sys/linux-raw-sys-0.4.14.crate",
+    "notices_directory": "third_party/licenses/cargo/linux-raw-sys-0.4.14",
+    "notice_files": [
+      "COPYRIGHT",
+      "LICENSE-APACHE",
+      "LICENSE-Apache-2.0_WITH_LLVM-exception",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "78b3ae25bc7c8c38cec158d1f2757ee79e9b3740fbc7ccf0e59e4b08d793fa89",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "lock_api",
+    "version": "0.4.12",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/Amanieu/parking_lot",
+    "source_archive": "https://static.crates.io/crates/lock_api/lock_api-0.4.12.crate",
+    "notices_directory": "third_party/licenses/cargo/lock_api-0.4.12",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "07af8b9cdd281b7915f413fa73f29ebd5d55d0d3f0155584dade1ff18cea1b17",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "log",
+    "version": "0.4.22",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang/log",
+    "source_archive": "https://static.crates.io/crates/log/log-0.4.22.crate",
+    "notices_directory": "third_party/licenses/cargo/log-0.4.22",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "matches",
+    "version": "0.1.10",
+    "license": "MIT",
+    "upstream": "https://github.com/SimonSapin/rust-std-candidates",
+    "source_archive": "https://static.crates.io/crates/matches/matches-0.1.10.crate",
+    "notices_directory": "third_party/licenses/cargo/matches-0.1.10",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "2532096657941c2fea9c289d370a250971c689d4f143798ff67113ec042024a5",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "memchr",
+    "version": "2.7.4",
+    "license": "Unlicense OR MIT",
+    "upstream": "https://github.com/BurntSushi/memchr",
+    "source_archive": "https://static.crates.io/crates/memchr/memchr-2.7.4.crate",
+    "notices_directory": "third_party/licenses/cargo/memchr-2.7.4",
+    "notice_files": [
+      "COPYING",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "78ca9ab1a0babb1e7d5695e3530886289c18cf2f87ec19a575a0abdce112e3a3",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "minimal-lexical",
+    "version": "0.2.1",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/Alexhuszagh/minimal-lexical",
+    "source_archive": "https://static.crates.io/crates/minimal-lexical/minimal-lexical-0.2.1.crate",
+    "notices_directory": "third_party/licenses/cargo/minimal-lexical-0.2.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT",
+      "LICENSE.md"
+    ],
+    "lock_checksum": "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "napi",
+    "version": "2.16.13",
+    "license": "MIT",
+    "upstream": "https://github.com/napi-rs/napi-rs",
+    "source_archive": "https://static.crates.io/crates/napi/napi-2.16.13.crate",
+    "notices_directory": "third_party/licenses/cargo/napi-2.16.13",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "214f07a80874bb96a8433b3cdfc84980d56c7b02e1a0d7ba4ba0db5cef785e2b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/napi-rs/napi-rs/39d38278d6b6b44e3cc99cdb97d6abfde46cd573/LICENSE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "napi-build",
+    "version": "1.2.1",
+    "license": "MIT",
+    "upstream": "https://github.com/napi-rs/napi-rs",
+    "source_archive": "https://static.crates.io/crates/napi-build/napi-build-1.2.1.crate",
+    "notices_directory": "third_party/licenses/cargo/napi-build-1.2.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "ebd4419172727423cf30351406c54f6cc1b354a2cfb4f1dba3e6cd07f6d5522b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/napi-rs/napi-rs/fa0fe874489f45b8d1ece8eb3e58f7d17b23ccd2/LICENSE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "napi-derive",
+    "version": "2.16.13",
+    "license": "MIT",
+    "upstream": "https://github.com/napi-rs/napi-rs",
+    "source_archive": "https://static.crates.io/crates/napi-derive/napi-derive-2.16.13.crate",
+    "notices_directory": "third_party/licenses/cargo/napi-derive-2.16.13",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "7cbe2585d8ac223f7d34f13701434b9d5f4eb9c332cccce8dee57ea18ab8ab0c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/napi-rs/napi-rs/a312b7eb4e12d3e0a3e9770429ee05c333947a39/LICENSE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "napi-derive-backend",
+    "version": "1.0.75",
+    "license": "MIT",
+    "upstream": "https://github.com/napi-rs/napi-rs",
+    "source_archive": "https://static.crates.io/crates/napi-derive-backend/napi-derive-backend-1.0.75.crate",
+    "notices_directory": "third_party/licenses/cargo/napi-derive-backend-1.0.75",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "1639aaa9eeb76e91c6ae66da8ce3e89e921cd3885e99ec85f4abacae72fc91bf",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/napi-rs/napi-rs/a312b7eb4e12d3e0a3e9770429ee05c333947a39/LICENSE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "napi-sys",
+    "version": "2.4.0",
+    "license": "MIT",
+    "upstream": "https://github.com/napi-rs/napi-rs",
+    "source_archive": "https://static.crates.io/crates/napi-sys/napi-sys-2.4.0.crate",
+    "notices_directory": "third_party/licenses/cargo/napi-sys-2.4.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "427802e8ec3a734331fec1035594a210ce1ff4dc5bc1950530920ab717964ea3",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/napi-rs/napi-rs/f1b8ab5e645e674df33c796ef75aa278cd1b4a31/LICENSE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "nix",
+    "version": "0.31.3",
+    "license": "MIT",
+    "upstream": "https://github.com/nix-rust/nix",
+    "source_archive": "https://static.crates.io/crates/nix/nix-0.31.3.crate",
+    "notices_directory": "third_party/licenses/cargo/nix-0.31.3",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "cf20d2fde8ff38632c426f1165ed7436270b44f199fc55284c38276f9db47c3d",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "nom",
+    "version": "7.1.3",
+    "license": "MIT",
+    "upstream": "https://github.com/Geal/nom",
+    "source_archive": "https://static.crates.io/crates/nom/nom-7.1.3.crate",
+    "notices_directory": "third_party/licenses/cargo/nom-7.1.3",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "d273983c5a657a70a3e8f2a01329822f3b8c8172b73826411a55751e404a0a4a",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "normalize-line-endings",
+    "version": "0.3.0",
+    "license": "Apache-2.0",
+    "upstream": "https://github.com/derekdreery/normalize-line-endings",
+    "source_archive": "https://static.crates.io/crates/normalize-line-endings/normalize-line-endings-0.3.0.crate",
+    "notices_directory": "third_party/licenses/cargo/normalize-line-endings-0.3.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "61807f77802ff30975e01f4f071c8ba10c022052f98b3294119f3e615d13e5be",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "num-traits",
+    "version": "0.2.19",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-num/num-traits",
+    "source_archive": "https://static.crates.io/crates/num-traits/num-traits-0.2.19.crate",
+    "notices_directory": "third_party/licenses/cargo/num-traits-0.2.19",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "once_cell",
+    "version": "1.20.2",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/matklad/once_cell",
+    "source_archive": "https://static.crates.io/crates/once_cell/once_cell-1.20.2.crate",
+    "notices_directory": "third_party/licenses/cargo/once_cell-1.20.2",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "1261fe7e33c73b354eab43b1273a57c8f967d0391e80353e51f764ac02cf6775",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "oorandom",
+    "version": "11.1.5",
+    "license": "MIT",
+    "upstream": "https://hg.sr.ht/~icefox/oorandom",
+    "source_archive": "https://static.crates.io/crates/oorandom/oorandom-11.1.5.crate",
+    "notices_directory": "third_party/licenses/cargo/oorandom-11.1.5",
+    "notice_files": [
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "d6790f58c7ff633d8771f42965289203411a5e5c68388703c06e14f24770b41e",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "os_str_bytes",
+    "version": "6.6.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dylni/os_str_bytes",
+    "source_archive": "https://static.crates.io/crates/os_str_bytes/os_str_bytes-6.6.1.crate",
+    "notices_directory": "third_party/licenses/cargo/os_str_bytes-6.6.1",
+    "notice_files": [
+      "COPYRIGHT",
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "e2355d85b9a3786f481747ced0e0ff2ba35213a1f9bd406ed906554d7af805a1",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "outref",
+    "version": "0.1.0",
+    "license": "MIT",
+    "upstream": "https://github.com/Nugine/outref",
+    "source_archive": "https://static.crates.io/crates/outref/outref-0.1.0.crate",
+    "notices_directory": "third_party/licenses/cargo/outref-0.1.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "7f222829ae9293e33a9f5e9f440c6760a3d450a64affe1846486b140db81c1f4",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "parcel_sourcemap",
+    "version": "2.1.1",
+    "license": "MIT",
+    "upstream": "https://github.com/parcel-bundler/source-map",
+    "source_archive": "https://static.crates.io/crates/parcel_sourcemap/parcel_sourcemap-2.1.1.crate",
+    "notices_directory": "third_party/licenses/cargo/parcel_sourcemap-2.1.1",
+    "notice_files": [
+      "LICENSE",
+      "ORIGINAL-Cargo.toml",
+      "PROVENANCE.md"
+    ],
+    "lock_checksum": "485b74d7218068b2b7c0e3ff12fbc61ae11d57cb5d8224f525bd304c6be05bbb",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "Original source package declares MIT but omits standalone LICENSE/copyright notice. Canonical MIT permission text supplied without inventing a copyright year or holder; original package author declarations preserved in ORIGINAL-Cargo.toml.\nhttps://static.crates.io/crates/parcel_sourcemap/parcel_sourcemap-2.1.1.crate"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "parking_lot_core",
+    "version": "0.9.10",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/Amanieu/parking_lot",
+    "source_archive": "https://static.crates.io/crates/parking_lot_core/parking_lot_core-0.9.10.crate",
+    "notices_directory": "third_party/licenses/cargo/parking_lot_core-0.9.10",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "1e401f977ab385c9e4e3ab30627d6f26d00e2c73eef317493c4ec6d468726cf8",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "pastey",
+    "version": "0.1.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/as1100k/pastey",
+    "source_archive": "https://static.crates.io/crates/pastey/pastey-0.1.0.crate",
+    "notices_directory": "third_party/licenses/cargo/pastey-0.1.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "b3a8cb46bdc156b1c90460339ae6bfd45ba0394e5effbaa640badb4987fdc261",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "pathdiff",
+    "version": "0.2.3",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/Manishearth/pathdiff",
+    "source_archive": "https://static.crates.io/crates/pathdiff/pathdiff-0.2.3.crate",
+    "notices_directory": "third_party/licenses/cargo/pathdiff-0.2.3",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "df94ce210e5bc13cb6651479fa48d14f601d9858cfe0467f43ae157023b938d3",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "phf",
+    "version": "0.11.2",
+    "license": "MIT",
+    "upstream": "https://github.com/rust-phf/rust-phf",
+    "source_archive": "https://static.crates.io/crates/phf/phf-0.11.2.crate",
+    "notices_directory": "third_party/licenses/cargo/phf-0.11.2",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "ade2d8b8f33c7333b51bcf0428d37e217e9f32192ae4772156f65063b8ce03dc",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "phf",
+    "version": "0.13.1",
+    "license": "MIT",
+    "upstream": "https://github.com/rust-phf/rust-phf",
+    "source_archive": "https://static.crates.io/crates/phf/phf-0.13.1.crate",
+    "notices_directory": "third_party/licenses/cargo/phf-0.13.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "c1562dc717473dbaa4c1f85a36410e03c047b2e7df7f45ee938fbef64ae7fadf",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "phf_codegen",
+    "version": "0.11.2",
+    "license": "MIT",
+    "upstream": "https://github.com/rust-phf/rust-phf",
+    "source_archive": "https://static.crates.io/crates/phf_codegen/phf_codegen-0.11.2.crate",
+    "notices_directory": "third_party/licenses/cargo/phf_codegen-0.11.2",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "e8d39688d359e6b34654d328e262234662d16cc0f60ec8dcbe5e718709342a5a",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "phf_generator",
+    "version": "0.11.2",
+    "license": "MIT",
+    "upstream": "https://github.com/rust-phf/rust-phf",
+    "source_archive": "https://static.crates.io/crates/phf_generator/phf_generator-0.11.2.crate",
+    "notices_directory": "third_party/licenses/cargo/phf_generator-0.11.2",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "48e4cc64c2ad9ebe670cb8fd69dd50ae301650392e81c05f9bfcb2d5bdbc24b0",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "phf_generator",
+    "version": "0.13.1",
+    "license": "MIT",
+    "upstream": "https://github.com/rust-phf/rust-phf",
+    "source_archive": "https://static.crates.io/crates/phf_generator/phf_generator-0.13.1.crate",
+    "notices_directory": "third_party/licenses/cargo/phf_generator-0.13.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "135ace3a761e564ec88c03a77317a7c6b80bb7f7135ef2544dbe054243b89737",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "phf_macros",
+    "version": "0.13.1",
+    "license": "MIT",
+    "upstream": "https://github.com/rust-phf/rust-phf",
+    "source_archive": "https://static.crates.io/crates/phf_macros/phf_macros-0.13.1.crate",
+    "notices_directory": "third_party/licenses/cargo/phf_macros-0.13.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "812f032b54b1e759ccd5f8b6677695d5268c588701effba24601f6932f8269ef",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "phf_shared",
+    "version": "0.11.2",
+    "license": "MIT",
+    "upstream": "https://github.com/rust-phf/rust-phf",
+    "source_archive": "https://static.crates.io/crates/phf_shared/phf_shared-0.11.2.crate",
+    "notices_directory": "third_party/licenses/cargo/phf_shared-0.11.2",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "90fcb95eef784c2ac79119d1dd819e162b5da872ce6f3c3abe1e8ca1c082f72b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "phf_shared",
+    "version": "0.13.1",
+    "license": "MIT",
+    "upstream": "https://github.com/rust-phf/rust-phf",
+    "source_archive": "https://static.crates.io/crates/phf_shared/phf_shared-0.13.1.crate",
+    "notices_directory": "third_party/licenses/cargo/phf_shared-0.13.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "e57fef6bc5981e38c2ce2d63bfa546861309f875b8a75f092d1d54ae2d64f266",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "plotters",
+    "version": "0.3.7",
+    "license": "MIT",
+    "upstream": "https://github.com/plotters-rs/plotters",
+    "source_archive": "https://static.crates.io/crates/plotters/plotters-0.3.7.crate",
+    "notices_directory": "third_party/licenses/cargo/plotters-0.3.7",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "5aeb6f403d7a4911efb1e33402027fc44f29b5bf6def3effcc22d7bb75f2b747",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "plotters-backend",
+    "version": "0.3.7",
+    "license": "MIT",
+    "upstream": "https://github.com/plotters-rs/plotters",
+    "source_archive": "https://static.crates.io/crates/plotters-backend/plotters-backend-0.3.7.crate",
+    "notices_directory": "third_party/licenses/cargo/plotters-backend-0.3.7",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "df42e13c12958a16b3f7f4386b9ab1f3e7933914ecea48da7139435263a4172a",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "plotters-svg",
+    "version": "0.3.7",
+    "license": "MIT",
+    "upstream": "https://github.com/plotters-rs/plotters.git",
+    "source_archive": "https://static.crates.io/crates/plotters-svg/plotters-svg-0.3.7.crate",
+    "notices_directory": "third_party/licenses/cargo/plotters-svg-0.3.7",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "51bae2ac328883f7acdfea3d66a7c35751187f870bc81f94563733a154d7a670",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "precomputed-hash",
+    "version": "0.1.1",
+    "license": "MIT",
+    "upstream": "https://github.com/emilio/precomputed-hash",
+    "source_archive": "https://static.crates.io/crates/precomputed-hash/precomputed-hash-0.1.1.crate",
+    "notices_directory": "third_party/licenses/cargo/precomputed-hash-0.1.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "925383efa346730478fb4838dbe9137d2a47675ad789c546d150a6e1dd4ab31c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "predicates",
+    "version": "2.1.5",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/assert-rs/predicates-rs",
+    "source_archive": "https://static.crates.io/crates/predicates/predicates-2.1.5.crate",
+    "notices_directory": "third_party/licenses/cargo/predicates-2.1.5",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "59230a63c37f3e18569bdb90e4a89cbf5bf8b06fea0b84e65ea10cc4df47addd",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "predicates",
+    "version": "3.1.3",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/assert-rs/predicates-rs",
+    "source_archive": "https://static.crates.io/crates/predicates/predicates-3.1.3.crate",
+    "notices_directory": "third_party/licenses/cargo/predicates-3.1.3",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "a5d19ee57562043d37e82899fade9a22ebab7be9cef5026b07fda9cdd4293573",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "predicates-core",
+    "version": "1.0.9",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/assert-rs/predicates-rs/tree/master/crates/core",
+    "source_archive": "https://static.crates.io/crates/predicates-core/predicates-core-1.0.9.crate",
+    "notices_directory": "third_party/licenses/cargo/predicates-core-1.0.9",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "727e462b119fe9c93fd0eb1429a5f7647394014cf3c04ab2c0350eeb09095ffa",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "predicates-tree",
+    "version": "1.0.12",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/assert-rs/predicates-rs/tree/master/crates/tree",
+    "source_archive": "https://static.crates.io/crates/predicates-tree/predicates-tree-1.0.12.crate",
+    "notices_directory": "third_party/licenses/cargo/predicates-tree-1.0.12",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "72dd2d6d381dfb73a193c7fca536518d7caee39fc8503f74e7dc0be0531b425c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "pretty_assertions",
+    "version": "1.4.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-pretty-assertions/rust-pretty-assertions",
+    "source_archive": "https://static.crates.io/crates/pretty_assertions/pretty_assertions-1.4.1.crate",
+    "notices_directory": "third_party/licenses/cargo/pretty_assertions-1.4.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "3ae130e2f271fbc2ac3a40fb1d07180839cdbbe443c7a27e1e3c13c5cac0116d",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "proc-macro-error",
+    "version": "1.0.4",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://gitlab.com/CreepySkeleton/proc-macro-error",
+    "source_archive": "https://static.crates.io/crates/proc-macro-error/proc-macro-error-1.0.4.crate",
+    "notices_directory": "third_party/licenses/cargo/proc-macro-error-1.0.4",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "da25490ff9892aab3fcf7c36f08cfb902dd3e71ca0f9f9517bea02a73a5ce38c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "proc-macro-error-attr",
+    "version": "1.0.4",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://gitlab.com/CreepySkeleton/proc-macro-error",
+    "source_archive": "https://static.crates.io/crates/proc-macro-error-attr/proc-macro-error-attr-1.0.4.crate",
+    "notices_directory": "third_party/licenses/cargo/proc-macro-error-attr-1.0.4",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "a1be40180e52ecc98ad80b184934baf3d0d29f979574e439af5a55274b35f869",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "proc-macro2",
+    "version": "1.0.106",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/proc-macro2",
+    "source_archive": "https://static.crates.io/crates/proc-macro2/proc-macro2-1.0.106.crate",
+    "notices_directory": "third_party/licenses/cargo/proc-macro2-1.0.106",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "8fd00f0bb2e90d81d1044c2b32617f68fcb9fa3bb7640c23e9c748e53fb30934",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "ptr_meta",
+    "version": "0.1.4",
+    "license": "MIT",
+    "upstream": "https://github.com/djkoloski/ptr_meta",
+    "source_archive": "https://static.crates.io/crates/ptr_meta/ptr_meta-0.1.4.crate",
+    "notices_directory": "third_party/licenses/cargo/ptr_meta-0.1.4",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "0738ccf7ea06b608c10564b31debd4f5bc5e197fc8bfe088f68ae5ce81e7a4f1",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "ptr_meta_derive",
+    "version": "0.1.4",
+    "license": "MIT",
+    "upstream": "https://github.com/djkoloski/ptr_meta",
+    "source_archive": "https://static.crates.io/crates/ptr_meta_derive/ptr_meta_derive-0.1.4.crate",
+    "notices_directory": "third_party/licenses/cargo/ptr_meta_derive-0.1.4",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "16b845dbfca988fa33db069c0e230574d15a3088f147a87b64c7589eb662c9ac",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "quote",
+    "version": "1.0.37",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/quote",
+    "source_archive": "https://static.crates.io/crates/quote/quote-1.0.37.crate",
+    "notices_directory": "third_party/licenses/cargo/quote-1.0.37",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "b5b9d34b8991d19d98081b46eacdd8eb58c6f2b201139f7c5f643cc155a633af",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "r-efi",
+    "version": "5.3.0",
+    "license": "MIT OR Apache-2.0 OR LGPL-2.1-or-later",
+    "upstream": "https://github.com/r-efi/r-efi",
+    "source_archive": "https://static.crates.io/crates/r-efi/r-efi-5.3.0.crate",
+    "notices_directory": "third_party/licenses/cargo/r-efi-5.3.0",
+    "notice_files": [
+      "AUTHORS"
+    ],
+    "lock_checksum": "69cdb34c158ceb288df11e18b4bd39de994f6657d83847bdffdbd7f346754b0f",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "radium",
+    "version": "0.7.0",
+    "license": "MIT",
+    "upstream": "https://github.com/bitvecto-rs/radium",
+    "source_archive": "https://static.crates.io/crates/radium/radium-0.7.0.crate",
+    "notices_directory": "third_party/licenses/cargo/radium-0.7.0",
+    "notice_files": [
+      "LICENSE.txt"
+    ],
+    "lock_checksum": "dc33ff2d4973d518d823d61aa239014831e521c75da58e3df4840d3f47749d09",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "rand",
+    "version": "0.8.5",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-random/rand",
+    "source_archive": "https://static.crates.io/crates/rand/rand-0.8.5.crate",
+    "notices_directory": "third_party/licenses/cargo/rand-0.8.5",
+    "notice_files": [
+      "COPYRIGHT",
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "34af8d1a0e25924bc5b7c43c079c942339d8f0a8b57c39049bef581b46327404",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "rand_core",
+    "version": "0.6.4",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-random/rand",
+    "source_archive": "https://static.crates.io/crates/rand_core/rand_core-0.6.4.crate",
+    "notices_directory": "third_party/licenses/cargo/rand_core-0.6.4",
+    "notice_files": [
+      "COPYRIGHT",
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "rayon",
+    "version": "1.10.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rayon-rs/rayon",
+    "source_archive": "https://static.crates.io/crates/rayon/rayon-1.10.0.crate",
+    "notices_directory": "third_party/licenses/cargo/rayon-1.10.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "b418a60154510ca1a002a752ca9714984e21e4241e804d32555251faf8b78ffa",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "rayon-core",
+    "version": "1.12.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rayon-rs/rayon",
+    "source_archive": "https://static.crates.io/crates/rayon-core/rayon-core-1.12.1.crate",
+    "notices_directory": "third_party/licenses/cargo/rayon-core-1.12.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "1465873a3dfdaa8ae7cb14b4383657caab0b3e8a0aa9ae8e04b044854c8dfce2",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "redox_syscall",
+    "version": "0.5.8",
+    "license": "MIT",
+    "upstream": "https://gitlab.redox-os.org/redox-os/syscall",
+    "source_archive": "https://static.crates.io/crates/redox_syscall/redox_syscall-0.5.8.crate",
+    "notices_directory": "third_party/licenses/cargo/redox_syscall-0.5.8",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "03a862b389f93e68874fbf580b9de08dd02facb9a788ebadaf4a3fd33cf58834",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "regex",
+    "version": "1.11.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang/regex",
+    "source_archive": "https://static.crates.io/crates/regex/regex-1.11.1.crate",
+    "notices_directory": "third_party/licenses/cargo/regex-1.11.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "b544ef1b4eac5dc2db33ea63606ae9ffcfac26c1416a2806ae0bf5f56b201191",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "regex-automata",
+    "version": "0.4.9",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang/regex/tree/master/regex-automata",
+    "source_archive": "https://static.crates.io/crates/regex-automata/regex-automata-0.4.9.crate",
+    "notices_directory": "third_party/licenses/cargo/regex-automata-0.4.9",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "809e8dc61f6de73b46c85f4c96486310fe304c434cfa43669d7b40f711150908",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "regex-syntax",
+    "version": "0.8.5",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rust-lang/regex/tree/master/regex-syntax",
+    "source_archive": "https://static.crates.io/crates/regex-syntax/regex-syntax-0.8.5.crate",
+    "notices_directory": "third_party/licenses/cargo/regex-syntax-0.8.5",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT",
+      "src/unicode_tables/LICENSE-UNICODE"
+    ],
+    "lock_checksum": "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "rend",
+    "version": "0.4.2",
+    "license": "MIT",
+    "upstream": "https://github.com/djkoloski/rend",
+    "source_archive": "https://static.crates.io/crates/rend/rend-0.4.2.crate",
+    "notices_directory": "third_party/licenses/cargo/rend-0.4.2",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "71fe3824f5629716b1589be05dacd749f6aa084c87e00e016714a8cdfccc997c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "rkyv",
+    "version": "0.7.45",
+    "license": "MIT",
+    "upstream": "https://github.com/rkyv/rkyv",
+    "source_archive": "https://static.crates.io/crates/rkyv/rkyv-0.7.45.crate",
+    "notices_directory": "third_party/licenses/cargo/rkyv-0.7.45",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "9008cd6385b9e161d8229e1f6549dd23c3d022f132a2ea37ac3a10ac4935779b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "rkyv_derive",
+    "version": "0.7.45",
+    "license": "MIT",
+    "upstream": "https://github.com/rkyv/rkyv",
+    "source_archive": "https://static.crates.io/crates/rkyv_derive/rkyv_derive-0.7.45.crate",
+    "notices_directory": "third_party/licenses/cargo/rkyv_derive-0.7.45",
+    "notice_files": [
+      "LICENSE",
+      "src/serde/LICENSE"
+    ],
+    "lock_checksum": "503d1d27590a2b0a3a4ca4c94755aa2875657196ecbf401a42eff41d7de532c0",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "rustc-hash",
+    "version": "2.1.0",
+    "license": "Apache-2.0 OR MIT",
+    "upstream": "https://github.com/rust-lang/rustc-hash",
+    "source_archive": "https://static.crates.io/crates/rustc-hash/rustc-hash-2.1.0.crate",
+    "notices_directory": "third_party/licenses/cargo/rustc-hash-2.1.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "c7fb8039b3032c191086b10f11f319a6e99e1e82889c5cc6046f515c9db1d497",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "rustix",
+    "version": "0.38.42",
+    "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+    "upstream": "https://github.com/bytecodealliance/rustix",
+    "source_archive": "https://static.crates.io/crates/rustix/rustix-0.38.42.crate",
+    "notices_directory": "third_party/licenses/cargo/rustix-0.38.42",
+    "notice_files": [
+      "COPYRIGHT",
+      "LICENSE-APACHE",
+      "LICENSE-Apache-2.0_WITH_LLVM-exception",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "f93dc38ecbab2eb790ff964bb77fa94faf256fd3e73285fd7ba0903b76bedb85",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "same-file",
+    "version": "1.0.6",
+    "license": "Unlicense/MIT",
+    "upstream": "https://github.com/BurntSushi/same-file",
+    "source_archive": "https://static.crates.io/crates/same-file/same-file-1.0.6.crate",
+    "notices_directory": "third_party/licenses/cargo/same-file-1.0.6",
+    "notice_files": [
+      "COPYING",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "schemars",
+    "version": "0.8.21",
+    "license": "MIT",
+    "upstream": "https://github.com/GREsau/schemars",
+    "source_archive": "https://static.crates.io/crates/schemars/schemars-0.8.21.crate",
+    "notices_directory": "third_party/licenses/cargo/schemars-0.8.21",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "09c024468a378b7e36765cd36702b7a90cc3cba11654f6685c8f233408e89e92",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "schemars_derive",
+    "version": "0.8.21",
+    "license": "MIT",
+    "upstream": "https://github.com/GREsau/schemars",
+    "source_archive": "https://static.crates.io/crates/schemars_derive/schemars_derive-0.8.21.crate",
+    "notices_directory": "third_party/licenses/cargo/schemars_derive-0.8.21",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "b1eee588578aff73f856ab961cd2f79e36bc45d7ded33a7562adba4667aecc0e",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "scopeguard",
+    "version": "1.2.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/bluss/scopeguard",
+    "source_archive": "https://static.crates.io/crates/scopeguard/scopeguard-1.2.0.crate",
+    "notices_directory": "third_party/licenses/cargo/scopeguard-1.2.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "seahash",
+    "version": "4.1.0",
+    "license": "MIT",
+    "upstream": "https://gitlab.redox-os.org/redox-os/seahash",
+    "source_archive": "https://static.crates.io/crates/seahash/seahash-4.1.0.crate",
+    "notices_directory": "third_party/licenses/cargo/seahash-4.1.0",
+    "notice_files": [
+      "LICENSE",
+      "ORIGINAL-Cargo.toml",
+      "PROVENANCE.md"
+    ],
+    "lock_checksum": "1c107b6f4780854c8b126e228ea8869f4d7b71260f962fefb57b996b8959ba6b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "Original source package declares MIT but omits standalone LICENSE/copyright notice. Canonical MIT permission text supplied without inventing a copyright year or holder; original package author declarations preserved in ORIGINAL-Cargo.toml.\nhttps://static.crates.io/crates/seahash/seahash-4.1.0.crate"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "semver",
+    "version": "1.0.24",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/semver",
+    "source_archive": "https://static.crates.io/crates/semver/semver-1.0.24.crate",
+    "notices_directory": "third_party/licenses/cargo/semver-1.0.24",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "3cb6eb87a131f756572d7fb904f6e7b68633f09cca868c5df1c4b8d1a694bbba",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "serde",
+    "version": "1.0.228",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/serde-rs/serde",
+    "source_archive": "https://static.crates.io/crates/serde/serde-1.0.228.crate",
+    "notices_directory": "third_party/licenses/cargo/serde-1.0.228",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "9a8e94ea7f378bd32cbbd37198a4a91436180c5bb472411e48b5ec2e2124ae9e",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "serde-content",
+    "version": "0.1.2",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/rushmorem/serde-content",
+    "source_archive": "https://static.crates.io/crates/serde-content/serde-content-0.1.2.crate",
+    "notices_directory": "third_party/licenses/cargo/serde-content-0.1.2",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "3753ca04f350fa92d00b6146a3555e63c55388c9ef2e11e09bce2ff1c0b509c6",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "serde-detach",
+    "version": "0.0.1",
+    "license": "MPL-2.0",
+    "upstream": "https://github.com/Tamschi/serde-detach",
+    "source_archive": "https://static.crates.io/crates/serde-detach/serde-detach-0.0.1.crate",
+    "notices_directory": "third_party/licenses/cargo/serde-detach-0.0.1",
+    "notice_files": [
+      "LICENSE",
+      "ORIGINAL-Cargo.toml",
+      "PROVENANCE.md"
+    ],
+    "lock_checksum": "c621150da442b6a854bb63c431347bcd4de19219a3e1f06fd744208ded057288",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "Original package contains license=MPL-2.0 metadata but no standalone LICENSE. Canonical MPL text preserved from cssparser; original author/metadata retained in ORIGINAL-Cargo.toml. Covered source archive is included in third_party/sources.\nhttps://static.crates.io/crates/serde-detach/serde-detach-0.0.1.crate"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "serde_bytes",
+    "version": "0.11.15",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/serde-rs/bytes",
+    "source_archive": "https://static.crates.io/crates/serde_bytes/serde_bytes-0.11.15.crate",
+    "notices_directory": "third_party/licenses/cargo/serde_bytes-0.11.15",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "387cc504cb06bb40a96c8e04e951fe01854cf6bc921053c954e4a606d9675c6a",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "serde_core",
+    "version": "1.0.228",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/serde-rs/serde",
+    "source_archive": "https://static.crates.io/crates/serde_core/serde_core-1.0.228.crate",
+    "notices_directory": "third_party/licenses/cargo/serde_core-1.0.228",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "41d385c7d4ca58e59fc732af25c3983b67ac852c1a25000afe1175de458b67ad",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "serde_derive",
+    "version": "1.0.228",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/serde-rs/serde",
+    "source_archive": "https://static.crates.io/crates/serde_derive/serde_derive-1.0.228.crate",
+    "notices_directory": "third_party/licenses/cargo/serde_derive-1.0.228",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "d540f220d3187173da220f885ab66608367b6574e925011a9353e4badda91d79",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "serde_derive_internals",
+    "version": "0.29.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/serde-rs/serde",
+    "source_archive": "https://static.crates.io/crates/serde_derive_internals/serde_derive_internals-0.29.1.crate",
+    "notices_directory": "third_party/licenses/cargo/serde_derive_internals-0.29.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "18d26a20a969b9e3fdf2fc2d9f21eda6c40e2de84c9408bb5d3b05d499aae711",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "serde_json",
+    "version": "1.0.149",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/serde-rs/json",
+    "source_archive": "https://static.crates.io/crates/serde_json/serde_json-1.0.149.crate",
+    "notices_directory": "third_party/licenses/cargo/serde_json-1.0.149",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "83fc039473c5595ace860d8c4fafa220ff474b3fc6bfdb4293327f1a37e94d86",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "shlex",
+    "version": "1.3.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/comex/rust-shlex",
+    "source_archive": "https://static.crates.io/crates/shlex/shlex-1.3.0.crate",
+    "notices_directory": "third_party/licenses/cargo/shlex-1.3.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "simd-abstraction",
+    "version": "0.7.1",
+    "license": "MIT",
+    "upstream": "https://github.com/Nugine/simd",
+    "source_archive": "https://static.crates.io/crates/simd-abstraction/simd-abstraction-0.7.1.crate",
+    "notices_directory": "third_party/licenses/cargo/simd-abstraction-0.7.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "9cadb29c57caadc51ff8346233b5cec1d240b68ce55cf1afc764818791876987",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/Nugine/simd/f3381a842a6b86f4eafd5ac587f8081cd7e9bb2f/LICENSE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "simdutf8",
+    "version": "0.1.5",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rusticstuff/simdutf8",
+    "source_archive": "https://static.crates.io/crates/simdutf8/simdutf8-0.1.5.crate",
+    "notices_directory": "third_party/licenses/cargo/simdutf8-0.1.5",
+    "notice_files": [
+      "LICENSE-Apache",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "e3a9fe34e3e7a50316060351f37187a3f546bce95496156754b601a5fa71b76e",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "siphasher",
+    "version": "0.3.11",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/jedisct1/rust-siphash",
+    "source_archive": "https://static.crates.io/crates/siphasher/siphasher-0.3.11.crate",
+    "notices_directory": "third_party/licenses/cargo/siphasher-0.3.11",
+    "notice_files": [
+      "COPYING"
+    ],
+    "lock_checksum": "38b58827f4464d87d377d175e90bf58eb00fd8716ff0a62f80356b5e61555d0d",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "siphasher",
+    "version": "1.0.2",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/jedisct1/rust-siphash",
+    "source_archive": "https://static.crates.io/crates/siphasher/siphasher-1.0.2.crate",
+    "notices_directory": "third_party/licenses/cargo/siphasher-1.0.2",
+    "notice_files": [
+      "COPYING"
+    ],
+    "lock_checksum": "b2aa850e253778c88a04c3d7323b043aeda9d3e30d5971937c1855769763678e",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "smallvec",
+    "version": "1.13.2",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/servo/rust-smallvec",
+    "source_archive": "https://static.crates.io/crates/smallvec/smallvec-1.13.2.crate",
+    "notices_directory": "third_party/licenses/cargo/smallvec-1.13.2",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "statrs",
+    "version": "0.18.0",
+    "license": "MIT",
+    "upstream": "https://github.com/statrs-dev/statrs",
+    "source_archive": "https://static.crates.io/crates/statrs/statrs-0.18.0.crate",
+    "notices_directory": "third_party/licenses/cargo/statrs-0.18.0",
+    "notice_files": [
+      "LICENSE.md"
+    ],
+    "lock_checksum": "2a3fe7c28c6512e766b0874335db33c94ad7b8f9054228ae1c2abd47ce7d335e",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "strsim",
+    "version": "0.10.0",
+    "license": "MIT",
+    "upstream": "https://github.com/dguo/strsim-rs",
+    "source_archive": "https://static.crates.io/crates/strsim/strsim-0.10.0.crate",
+    "notices_directory": "third_party/licenses/cargo/strsim-0.10.0",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "syn",
+    "version": "1.0.109",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/syn",
+    "source_archive": "https://static.crates.io/crates/syn/syn-1.0.109.crate",
+    "notices_directory": "third_party/licenses/cargo/syn-1.0.109",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "72b64191b275b66ffe2469e8af2c1cfe3bafa67b529ead792a6d0160888b4237",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "syn",
+    "version": "2.0.90",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/syn",
+    "source_archive": "https://static.crates.io/crates/syn/syn-2.0.90.crate",
+    "notices_directory": "third_party/licenses/cargo/syn-2.0.90",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "919d3b74a5dd0ccd15aeb8f93e7006bd9e14c295087c9896a110f490752bcf31",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "tap",
+    "version": "1.0.1",
+    "license": "MIT",
+    "upstream": "https://github.com/myrrlyn/tap",
+    "source_archive": "https://static.crates.io/crates/tap/tap-1.0.1.crate",
+    "notices_directory": "third_party/licenses/cargo/tap-1.0.1",
+    "notice_files": [
+      "LICENSE.txt"
+    ],
+    "lock_checksum": "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "tempfile",
+    "version": "3.14.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/Stebalien/tempfile",
+    "source_archive": "https://static.crates.io/crates/tempfile/tempfile-3.14.0.crate",
+    "notices_directory": "third_party/licenses/cargo/tempfile-3.14.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "28cce251fcbc87fac86a866eeb0d6c2d536fc16d06f184bb61aeae11aa4cee0c",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "termcolor",
+    "version": "1.4.1",
+    "license": "Unlicense OR MIT",
+    "upstream": "https://github.com/BurntSushi/termcolor",
+    "source_archive": "https://static.crates.io/crates/termcolor/termcolor-1.4.1.crate",
+    "notices_directory": "third_party/licenses/cargo/termcolor-1.4.1",
+    "notice_files": [
+      "COPYING",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "06794f8f6c5c898b3275aebefa6b8a1cb24cd2c6c79397ab15774837a0bc5755",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "termtree",
+    "version": "0.5.1",
+    "license": "MIT",
+    "upstream": "https://github.com/rust-cli/termtree",
+    "source_archive": "https://static.crates.io/crates/termtree/termtree-0.5.1.crate",
+    "notices_directory": "third_party/licenses/cargo/termtree-0.5.1",
+    "notice_files": [
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "8f50febec83f5ee1df3015341d8bd429f2d1cc62bcba7ea2076759d315084683",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "textwrap",
+    "version": "0.16.1",
+    "license": "MIT",
+    "upstream": "https://github.com/mgeisler/textwrap",
+    "source_archive": "https://static.crates.io/crates/textwrap/textwrap-0.16.1.crate",
+    "notices_directory": "third_party/licenses/cargo/textwrap-0.16.1",
+    "notice_files": [
+      "LICENSE"
+    ],
+    "lock_checksum": "23d434d3f8967a09480fb04132ebe0a3e088c173e6d0ee7897abbdf4eab0f8b9",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "thiserror",
+    "version": "1.0.69",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/thiserror",
+    "source_archive": "https://static.crates.io/crates/thiserror/thiserror-1.0.69.crate",
+    "notices_directory": "third_party/licenses/cargo/thiserror-1.0.69",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "thiserror-impl",
+    "version": "1.0.69",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/dtolnay/thiserror",
+    "source_archive": "https://static.crates.io/crates/thiserror-impl/thiserror-impl-1.0.69.crate",
+    "notices_directory": "third_party/licenses/cargo/thiserror-impl-1.0.69",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "tinytemplate",
+    "version": "1.2.1",
+    "license": "Apache-2.0 OR MIT",
+    "upstream": "https://github.com/bheisler/TinyTemplate",
+    "source_archive": "https://static.crates.io/crates/tinytemplate/tinytemplate-1.2.1.crate",
+    "notices_directory": "third_party/licenses/cargo/tinytemplate-1.2.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "be4d6b5f19ff7664e8c98d03e2139cb510db9b0a60b55f8e8709b689d939b6bc",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "tinyvec",
+    "version": "1.8.1",
+    "license": "Zlib OR Apache-2.0 OR MIT",
+    "upstream": "https://github.com/Lokathor/tinyvec",
+    "source_archive": "https://static.crates.io/crates/tinyvec/tinyvec-1.8.1.crate",
+    "notices_directory": "third_party/licenses/cargo/tinyvec-1.8.1",
+    "notice_files": [
+      "LICENSE-APACHE.md",
+      "LICENSE-MIT.md",
+      "LICENSE-ZLIB.md"
+    ],
+    "lock_checksum": "022db8904dfa342efe721985167e9fcd16c29b226db4397ed752a761cfce81e8",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "tinyvec_macros",
+    "version": "0.1.1",
+    "license": "MIT OR Apache-2.0 OR Zlib",
+    "upstream": "https://github.com/Soveu/tinyvec_macros",
+    "source_archive": "https://static.crates.io/crates/tinyvec_macros/tinyvec_macros-0.1.1.crate",
+    "notices_directory": "third_party/licenses/cargo/tinyvec_macros-0.1.1",
+    "notice_files": [
+      "LICENSE-APACHE.md",
+      "LICENSE-MIT.md",
+      "LICENSE-ZLIB.md"
+    ],
+    "lock_checksum": "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "toml",
+    "version": "0.5.11",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/toml-rs/toml",
+    "source_archive": "https://static.crates.io/crates/toml/toml-0.5.11.crate",
+    "notices_directory": "third_party/licenses/cargo/toml-0.5.11",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "f4f7f0dd8d50a853a531c426359045b1998f04219d88799810762cd4ad314234",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "unicode-ident",
+    "version": "1.0.14",
+    "license": "(MIT OR Apache-2.0) AND Unicode-3.0",
+    "upstream": "https://github.com/dtolnay/unicode-ident",
+    "source_archive": "https://static.crates.io/crates/unicode-ident/unicode-ident-1.0.14.crate",
+    "notices_directory": "third_party/licenses/cargo/unicode-ident-1.0.14",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT",
+      "LICENSE-UNICODE"
+    ],
+    "lock_checksum": "adb9e6ca4f869e1180728b7950e35922a7fc6397f7b641499e8f3ef06e50dc83",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "unicode-segmentation",
+    "version": "1.12.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/unicode-rs/unicode-segmentation",
+    "source_archive": "https://static.crates.io/crates/unicode-segmentation/unicode-segmentation-1.12.0.crate",
+    "notices_directory": "third_party/licenses/cargo/unicode-segmentation-1.12.0",
+    "notice_files": [
+      "COPYRIGHT",
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "f6ccf251212114b54433ec949fd6a7841275f9ada20dddd2f29e9ceea4501493",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "uuid",
+    "version": "1.11.0",
+    "license": "Apache-2.0 OR MIT",
+    "upstream": "https://github.com/uuid-rs/uuid",
+    "source_archive": "https://static.crates.io/crates/uuid/uuid-1.11.0.crate",
+    "notices_directory": "third_party/licenses/cargo/uuid-1.11.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "f8c5f0a0af699448548ad1a2fbf920fb4bee257eae39953ba95cb84891a0446a",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "version_check",
+    "version": "0.9.5",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/SergioBenitez/version_check",
+    "source_archive": "https://static.crates.io/crates/version_check/version_check-0.9.5.crate",
+    "notices_directory": "third_party/licenses/cargo/version_check-0.9.5",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "vlq",
+    "version": "0.5.1",
+    "license": "Apache-2.0/MIT",
+    "upstream": "https://github.com/tromey/vlq",
+    "source_archive": "https://static.crates.io/crates/vlq/vlq-0.5.1.crate",
+    "notices_directory": "third_party/licenses/cargo/vlq-0.5.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "65dd7eed29412da847b0f78bcec0ac98588165988a8cfe41d4ea1d429f8ccfff",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wait-timeout",
+    "version": "0.2.0",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/alexcrichton/wait-timeout",
+    "source_archive": "https://static.crates.io/crates/wait-timeout/wait-timeout-0.2.0.crate",
+    "notices_directory": "third_party/licenses/cargo/wait-timeout-0.2.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "9f200f5b12eb75f8c1ed65abd4b2db8a6e1b138a20de009dacee265a2498f3f6",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "walkdir",
+    "version": "2.5.0",
+    "license": "Unlicense/MIT",
+    "upstream": "https://github.com/BurntSushi/walkdir",
+    "source_archive": "https://static.crates.io/crates/walkdir/walkdir-2.5.0.crate",
+    "notices_directory": "third_party/licenses/cargo/walkdir-2.5.0",
+    "notice_files": [
+      "COPYING",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "29790946404f91d9c5d06f9874efddea1dc06c5efe94541a7d6863108e3a5e4b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wasi",
+    "version": "0.11.0+wasi-snapshot-preview1",
+    "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+    "upstream": "https://github.com/bytecodealliance/wasi",
+    "source_archive": "https://static.crates.io/crates/wasi/wasi-0.11.0+wasi-snapshot-preview1.crate",
+    "notices_directory": "third_party/licenses/cargo/wasi-0.11.0+wasi-snapshot-preview1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-Apache-2.0_WITH_LLVM-exception",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wasi",
+    "version": "0.14.2+wasi-0.2.4",
+    "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+    "upstream": "https://github.com/bytecodealliance/wasi-rs",
+    "source_archive": "https://static.crates.io/crates/wasi/wasi-0.14.2+wasi-0.2.4.crate",
+    "notices_directory": "third_party/licenses/cargo/wasi-0.14.2+wasi-0.2.4",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-Apache-2.0_WITH_LLVM-exception",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "9683f9a5a998d873c0d21fcbe3c083009670149a8fab228644b8bd36b2c48cb3",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wasm-bindgen",
+    "version": "0.2.99",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rustwasm/wasm-bindgen",
+    "source_archive": "https://static.crates.io/crates/wasm-bindgen/wasm-bindgen-0.2.99.crate",
+    "notices_directory": "third_party/licenses/cargo/wasm-bindgen-0.2.99",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "a474f6281d1d70c17ae7aa6a613c87fce69a127e2624002df63dcb39d6cf6396",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wasm-bindgen-backend",
+    "version": "0.2.99",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rustwasm/wasm-bindgen/tree/master/crates/backend",
+    "source_archive": "https://static.crates.io/crates/wasm-bindgen-backend/wasm-bindgen-backend-0.2.99.crate",
+    "notices_directory": "third_party/licenses/cargo/wasm-bindgen-backend-0.2.99",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "5f89bb38646b4f81674e8f5c3fb81b562be1fd936d84320f3264486418519c79",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wasm-bindgen-macro",
+    "version": "0.2.99",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rustwasm/wasm-bindgen/tree/master/crates/macro",
+    "source_archive": "https://static.crates.io/crates/wasm-bindgen-macro/wasm-bindgen-macro-0.2.99.crate",
+    "notices_directory": "third_party/licenses/cargo/wasm-bindgen-macro-0.2.99",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "2cc6181fd9a7492eef6fef1f33961e3695e4579b9872a6f7c83aee556666d4fe",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wasm-bindgen-macro-support",
+    "version": "0.2.99",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rustwasm/wasm-bindgen/tree/master/crates/macro-support",
+    "source_archive": "https://static.crates.io/crates/wasm-bindgen-macro-support/wasm-bindgen-macro-support-0.2.99.crate",
+    "notices_directory": "third_party/licenses/cargo/wasm-bindgen-macro-support-0.2.99",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "30d7a95b763d3c45903ed6c81f156801839e5ee968bb07e534c44df0fcd330c2",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wasm-bindgen-shared",
+    "version": "0.2.99",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rustwasm/wasm-bindgen/tree/master/crates/shared",
+    "source_archive": "https://static.crates.io/crates/wasm-bindgen-shared/wasm-bindgen-shared-0.2.99.crate",
+    "notices_directory": "third_party/licenses/cargo/wasm-bindgen-shared-0.2.99",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "943aab3fdaaa029a6e0271b35ea10b72b943135afe9bffca82384098ad0e06a6",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "web-sys",
+    "version": "0.3.76",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/rustwasm/wasm-bindgen/tree/master/crates/web-sys",
+    "source_archive": "https://static.crates.io/crates/web-sys/web-sys-0.3.76.crate",
+    "notices_directory": "third_party/licenses/cargo/web-sys-0.3.76",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "04dd7223427d52553d3702c004d3b2fe07c148165faa56313cb00211e31c12bc",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "winapi",
+    "version": "0.3.9",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/retep998/winapi-rs",
+    "source_archive": "https://static.crates.io/crates/winapi/winapi-0.3.9.crate",
+    "notices_directory": "third_party/licenses/cargo/winapi-0.3.9",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "winapi-i686-pc-windows-gnu",
+    "version": "0.4.0",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/retep998/winapi-rs",
+    "source_archive": "https://static.crates.io/crates/winapi-i686-pc-windows-gnu/winapi-i686-pc-windows-gnu-0.4.0.crate",
+    "notices_directory": "third_party/licenses/cargo/winapi-i686-pc-windows-gnu-0.4.0",
+    "notice_files": [
+      "SOURCE-LICENSE-HEADERS.txt"
+    ],
+    "lock_checksum": "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": []
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "winapi-util",
+    "version": "0.1.9",
+    "license": "Unlicense OR MIT",
+    "upstream": "https://github.com/BurntSushi/winapi-util",
+    "source_archive": "https://static.crates.io/crates/winapi-util/winapi-util-0.1.9.crate",
+    "notices_directory": "third_party/licenses/cargo/winapi-util-0.1.9",
+    "notice_files": [
+      "COPYING",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "winapi-x86_64-pc-windows-gnu",
+    "version": "0.4.0",
+    "license": "MIT/Apache-2.0",
+    "upstream": "https://github.com/retep998/winapi-rs",
+    "source_archive": "https://static.crates.io/crates/winapi-x86_64-pc-windows-gnu/winapi-x86_64-pc-windows-gnu-0.4.0.crate",
+    "notices_directory": "third_party/licenses/cargo/winapi-x86_64-pc-windows-gnu-0.4.0",
+    "notice_files": [
+      "SOURCE-LICENSE-HEADERS.txt"
+    ],
+    "lock_checksum": "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": []
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows-core",
+    "version": "0.52.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows-core/windows-core-0.52.0.crate",
+    "notices_directory": "third_party/licenses/cargo/windows-core-0.52.0",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "33ab640c8d7e35bf8ba19b884ba838ceb4fba93a4e8c65a9059d08afcfc683d9",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows-sys",
+    "version": "0.59.0",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows-sys/windows-sys-0.59.0.crate",
+    "notices_directory": "third_party/licenses/cargo/windows-sys-0.59.0",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "1e38bc4d79ed67fd075bcc251a1c39b32a1776bbe92e5bef1f0bf1f8c531853b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows-targets",
+    "version": "0.52.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows-targets/windows-targets-0.52.6.crate",
+    "notices_directory": "third_party/licenses/cargo/windows-targets-0.52.6",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "9b724f72796e036ab90c1021d4780d4d3d648aca59e491e6b98e725b84e99973",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows_aarch64_gnullvm",
+    "version": "0.52.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows_aarch64_gnullvm/windows_aarch64_gnullvm-0.52.6.crate",
+    "notices_directory": "third_party/licenses/cargo/windows_aarch64_gnullvm-0.52.6",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "32a4622180e7a0ec044bb555404c800bc9fd9ec262ec147edd5989ccd0c02cd3",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows_aarch64_msvc",
+    "version": "0.52.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows_aarch64_msvc/windows_aarch64_msvc-0.52.6.crate",
+    "notices_directory": "third_party/licenses/cargo/windows_aarch64_msvc-0.52.6",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "09ec2a7bb152e2252b53fa7803150007879548bc709c039df7627cabbd05d469",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows_i686_gnu",
+    "version": "0.52.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows_i686_gnu/windows_i686_gnu-0.52.6.crate",
+    "notices_directory": "third_party/licenses/cargo/windows_i686_gnu-0.52.6",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "8e9b5ad5ab802e97eb8e295ac6720e509ee4c243f69d781394014ebfe8bbfa0b",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows_i686_gnullvm",
+    "version": "0.52.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows_i686_gnullvm/windows_i686_gnullvm-0.52.6.crate",
+    "notices_directory": "third_party/licenses/cargo/windows_i686_gnullvm-0.52.6",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "0eee52d38c090b3caa76c563b86c3a4bd71ef1a819287c19d586d7334ae8ed66",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows_i686_msvc",
+    "version": "0.52.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows_i686_msvc/windows_i686_msvc-0.52.6.crate",
+    "notices_directory": "third_party/licenses/cargo/windows_i686_msvc-0.52.6",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "240948bc05c5e7c6dabba28bf89d89ffce3e303022809e73deaefe4f6ec56c66",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows_x86_64_gnu",
+    "version": "0.52.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows_x86_64_gnu/windows_x86_64_gnu-0.52.6.crate",
+    "notices_directory": "third_party/licenses/cargo/windows_x86_64_gnu-0.52.6",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "147a5c80aabfbf0c7d901cb5895d1de30ef2907eb21fbbab29ca94c5b08b1a78",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows_x86_64_gnullvm",
+    "version": "0.52.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows_x86_64_gnullvm/windows_x86_64_gnullvm-0.52.6.crate",
+    "notices_directory": "third_party/licenses/cargo/windows_x86_64_gnullvm-0.52.6",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "24d5b23dc417412679681396f2b49f3de8c1473deb516bd34410872eff51ed0d",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "windows_x86_64_msvc",
+    "version": "0.52.6",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/microsoft/windows-rs",
+    "source_archive": "https://static.crates.io/crates/windows_x86_64_msvc/windows_x86_64_msvc-0.52.6.crate",
+    "notices_directory": "third_party/licenses/cargo/windows_x86_64_msvc-0.52.6",
+    "notice_files": [
+      "license-apache-2.0",
+      "license-mit"
+    ],
+    "lock_checksum": "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wit-bindgen-rt",
+    "version": "0.39.0",
+    "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+    "upstream": "https://github.com/bytecodealliance/wit-bindgen",
+    "source_archive": "https://static.crates.io/crates/wit-bindgen-rt/wit-bindgen-rt-0.39.0.crate",
+    "notices_directory": "third_party/licenses/cargo/wit-bindgen-rt-0.39.0",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "6f42320e61fe2cfd34354ecb597f86f413484a798ba44a8ca1165c58d42da6c1",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/bytecodealliance/wit-bindgen/f2393e6e98fa5f9236cac580db8a3fc9de6a4b70/LICENSE-MIT",
+      "https://raw.githubusercontent.com/bytecodealliance/wit-bindgen/f2393e6e98fa5f9236cac580db8a3fc9de6a4b70/LICENSE-APACHE"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wyz",
+    "version": "0.2.0",
+    "license": "MIT",
+    "upstream": "https://github.com/myrrlyn/wyz",
+    "source_archive": "https://static.crates.io/crates/wyz/wyz-0.2.0.crate",
+    "notices_directory": "third_party/licenses/cargo/wyz-0.2.0",
+    "notice_files": [
+      "LICENSE.txt"
+    ],
+    "lock_checksum": "85e60b0d1b5f99db2556934e21937020776a5d31520bf169e851ac44e6420214",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock",
+    "notice_provenance": [
+      "https://raw.githubusercontent.com/myrrlyn/wyz/d404c761c0b7bfd38651c68c20faa09750c2d0a3/LICENSE.txt"
+    ]
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "wyz",
+    "version": "0.5.1",
+    "license": "MIT",
+    "upstream": "https://github.com/myrrlyn/wyz",
+    "source_archive": "https://static.crates.io/crates/wyz/wyz-0.5.1.crate",
+    "notices_directory": "third_party/licenses/cargo/wyz-0.5.1",
+    "notice_files": [
+      "LICENSE.txt"
+    ],
+    "lock_checksum": "05f360fc0b24296329c78fda852a1e9ae82de9cf7b27dae4b7f62f118f77b9ed",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "yansi",
+    "version": "1.0.1",
+    "license": "MIT OR Apache-2.0",
+    "upstream": "https://github.com/SergioBenitez/yansi",
+    "source_archive": "https://static.crates.io/crates/yansi/yansi-1.0.1.crate",
+    "notices_directory": "third_party/licenses/cargo/yansi-1.0.1",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "cfe53a6657fd280eaa890a3bc59152892ffa3e30101319d168b781ed6529b049",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "zerocopy",
+    "version": "0.8.26",
+    "license": "BSD-2-Clause OR Apache-2.0 OR MIT",
+    "upstream": "https://github.com/google/zerocopy",
+    "source_archive": "https://static.crates.io/crates/zerocopy/zerocopy-0.8.26.crate",
+    "notices_directory": "third_party/licenses/cargo/zerocopy-0.8.26",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-BSD",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "1039dd0d3c310cf05de012d8a39ff557cb0d23087fd44cad61df08fc31907a2f",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "zerocopy-derive",
+    "version": "0.8.26",
+    "license": "BSD-2-Clause OR Apache-2.0 OR MIT",
+    "upstream": "https://github.com/google/zerocopy",
+    "source_archive": "https://static.crates.io/crates/zerocopy-derive/zerocopy-derive-0.8.26.crate",
+    "notices_directory": "third_party/licenses/cargo/zerocopy-derive-0.8.26",
+    "notice_files": [
+      "LICENSE-APACHE",
+      "LICENSE-BSD",
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "9ecf5b4cc5364572d7f4c329661bcc82724222973f2cab6f050a4e5c22f75181",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  },
+  {
+    "ecosystem": "cargo",
+    "name": "zmij",
+    "version": "1.0.21",
+    "license": "MIT",
+    "upstream": "https://github.com/dtolnay/zmij",
+    "source_archive": "https://static.crates.io/crates/zmij/zmij-1.0.21.crate",
+    "notices_directory": "third_party/licenses/cargo/zmij-1.0.21",
+    "notice_files": [
+      "LICENSE-MIT"
+    ],
+    "lock_checksum": "b8848ee67ecc8aedbaf3e4122217aff892639231befc6a1b58d29fff4c2cabaa",
+    "embedded_in": "lightningcss npm 1.33.0 upstream Cargo.lock"
+  }
+]

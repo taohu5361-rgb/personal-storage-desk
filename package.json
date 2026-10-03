@@ -1,0 +1,34 @@
+{
+  "name": "script-collection",
+  "private": true,
+  "version": "0.1.0",
+  "description": "本地文件和创作材料的可视化组织工作空间（早期开发）",
+  "author": "Plume",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test:theme": "node scripts/audit-theme.mjs",
+    "preview": "vite preview",
+    "desktop": "tauri dev",
+    "build:exe": "node scripts/build-desktop.mjs && node scripts/copy-tauri-exe.mjs",
+    "test": "node --test \"src/**/*.test.js\""
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "6.1.1",
+    "lucide-react": "1.47.0",
+    "vite": "8.3.0",
+    "@tauri-apps/api": "2.11.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.11.5",
+    "postcss": "8.5.28",
+    "playwright": "1.62.1"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  }
+}

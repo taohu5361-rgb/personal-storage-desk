@@ -1,0 +1,1 @@
+https://raw.githubusercontent.com/napi-rs/napi-rs/fa0fe874489f45b8d1ece8eb3e58f7d17b23ccd2/LICENSE

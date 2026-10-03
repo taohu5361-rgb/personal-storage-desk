@@ -1,0 +1,114 @@
+--- src/lib.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![no_std]
+#![warn(
+    bad_style,
+    missing_debug_implementations,
+    missing_docs,
+    unconditional_recursion
+)]
+#![forbid(unsafe_code)]
+
+//! # UNIC — UCD — Core
+//!
+//! A component of [`unic`: Unicode and Internationalization Crates for Rust](/unic/).
+//!
+//! Core create indicating the version of Unicode Character Database.
+
+pub use unic_common::version::UnicodeVersion;
+
+mod pkg_info;
+pub use crate::pkg_info::{PKG_DESCRIPTION, PKG_NAME, PKG_VERSION};
+
+mod unicode_version;
+pub use crate::unicode_version::UNICODE_VERSION;
+
+--- src/pkg_info.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//! Package information
+
+/// UNIC component version.
+pub const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
+
+/// UNIC component name.
+pub const PKG_NAME: &str = env!("CARGO_PKG_NAME");
+
+/// UNIC component description.
+pub const PKG_DESCRIPTION: &str = env!("CARGO_PKG_DESCRIPTION");
+
+--- src/unicode_version.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use unic_common::version::UnicodeVersion;
+
+/// The [Version of The Unicode Standard](https://www.unicode.org/versions/) of the Unicode
+/// Character Database in use.
+pub const UNICODE_VERSION: UnicodeVersion = include!("../tables/unicode_version.rsv");
+
+#[cfg(test)]
+mod tests {
+    use super::UNICODE_VERSION;
+
+    #[test]
+    fn validate_version_values() {
+        assert!(UNICODE_VERSION.major > 0);
+
+        // Current release schedule of Unicode is to have one Major version update each year, with
+        // no Minor updates. We hard-code this internal policy while it stands.
+        assert!(UNICODE_VERSION.minor == 0);
+    }
+}
+
+--- tests/basic_tests.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use unic_ucd_version::UnicodeVersion;
+
+#[test]
+fn test_display() {
+    assert_eq!(
+        format!(
+            "Unicode {}",
+            UnicodeVersion {
+                major: 1,
+                minor: 2,
+                micro: 0,
+            }
+        ),
+        "Unicode 1.2.0"
+    );
+}

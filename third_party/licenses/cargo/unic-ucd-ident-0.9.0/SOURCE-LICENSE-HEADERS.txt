@@ -1,0 +1,303 @@
+--- src/id.rs ---
+// Copyright 2017-2019 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+char_property! {
+    /// A character that can start an identifier.
+    pub struct IdStart(bool) {
+        abbr => "IDS";
+        long => "ID_Start";
+        human => "ID Start";
+
+        data_table_path => "../tables/id_start.rsv";
+    }
+
+    /// Is this a identifier starting character?
+    pub fn is_id_start(char) -> bool;
+}
+
+char_property! {
+    /// A character that can continue an identifier.
+    pub struct IdContinue(bool) {
+        abbr => "IDC";
+        long => "ID_Continue";
+        human => "ID Continue";
+
+        data_table_path => "../tables/id_continue.rsv";
+    }
+
+    /// Is this a identifier continuing character?
+    pub fn is_id_continue(char) -> bool;
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_is_id_start() {
+        use super::is_id_start;
+
+        // ASCII
+        assert_eq!(is_id_start('\u{0000}'), false);
+        assert_eq!(is_id_start('\u{0020}'), false);
+        assert_eq!(is_id_start('\u{0021}'), false);
+
+        assert_eq!(is_id_start('\u{0027}'), false);
+
+--- src/lib.rs ---
+// Copyright 2017-2019 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![no_std]
+#![warn(
+    bad_style,
+    missing_debug_implementations,
+    missing_docs,
+    unconditional_recursion
+)]
+#![forbid(unsafe_code)]
+
+//! # UNIC — UCD — Identifier Properties
+//!
+//! A component of [`unic`: Unicode and Internationalization Crates for Rust](/unic/).
+//!
+//! Accessor to the UCD properties used widely by [UAX31 Unicode Identifier and Pattern Syntax].
+//!
+//! # Features
+//!
+//! - `xid` (default): the `XID_Start` and `XID_Continue` properties.
+//!
+//! - `id` (optional): the `ID_Start` and `ID_Continue` properties.
+//!   NOTE: in most cases, you should prefer using the `XID` properties
+//!   because they are consistent under NFKC normalization.
+//!
+//! - `pattern` (optional): the `Pattern_Syntax` and `Pattern_White_Space` properties.
+//!
+//! [UAX31 Unicode Identifier and Pattern Syntax]: <https://www.unicode.org/reports/tr31/>
+
+#[macro_use]
+extern crate unic_char_property;
+#[macro_use]
+extern crate unic_char_range;
+
+mod pkg_info;
+pub use crate::pkg_info::{PKG_DESCRIPTION, PKG_NAME, PKG_VERSION};
+
+#[cfg(feature = "xid")]
+mod xid;
+#[cfg(feature = "xid")]
+pub use crate::xid::{is_xid_continue, is_xid_start, XidContinue, XidStart};
+
+
+--- src/pattern.rs ---
+// Copyright 2017-2019 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+char_property! {
+    /// A character that should be treated as a syntax character in patterns.
+    pub struct PatternSyntax(bool) {
+        abbr => "Pat_Syn";
+        long => "Pattern_Syntax";
+        human => "Pattern Syntax";
+
+        data_table_path => "../tables/pattern_syntax.rsv";
+    }
+
+    /// Is this a character that should be treated as syntax in patterns?
+    pub fn is_pattern_syntax(char) -> bool;
+}
+
+char_property! {
+    /// A character that should be treated as a whitespace in patterns.
+    pub struct PatternWhitespace(bool) {
+        abbr => "Pat_WS";
+        long => "Pattern_White_Space";
+        human => "Pattern Whitespace";
+
+        data_table_path => "../tables/pattern_white_space.rsv";
+    }
+
+    /// Is this a character that should be treated as whitespace in patterns?
+    pub fn is_pattern_whitespace(char) -> bool;
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_is_pattern_syntax() {
+        use super::is_pattern_syntax;
+
+        // ASCII
+        assert_eq!(is_pattern_syntax('\u{0000}'), false);
+        assert_eq!(is_pattern_syntax('\u{0020}'), false);
+        assert_eq!(is_pattern_syntax('\u{0021}'), true);
+
+        assert_eq!(is_pattern_syntax('\u{0027}'), true);
+
+--- src/pkg_info.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//! Package information
+
+/// UNIC component version.
+pub const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
+
+/// UNIC component name.
+pub const PKG_NAME: &str = env!("CARGO_PKG_NAME");
+
+/// UNIC component description.
+pub const PKG_DESCRIPTION: &str = env!("CARGO_PKG_DESCRIPTION");
+
+--- src/xid.rs ---
+// Copyright 2017-2019 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+char_property! {
+    /// A character that can start an identifier, stable under NFKC.
+    pub struct XidStart(bool) {
+        abbr => "XIDS";
+        long => "XID_Start";
+        human => "XID Start";
+
+        data_table_path => "../tables/xid_start.rsv";
+    }
+
+    /// Is this a NFKC-safe identifier starting character?
+    pub fn is_xid_start(char) -> bool;
+}
+
+char_property! {
+    /// A character that can continue an identifier, stable under NFKC.
+    pub struct XidContinue(bool) {
+        abbr => "XIDC";
+        long => "XID_Continue";
+        human => "XID Continue";
+
+        data_table_path => "../tables/xid_continue.rsv";
+    }
+
+    /// Is this a NFKC-safe identifier continuing character?
+    pub fn is_xid_continue(char) -> bool;
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_is_xid_start() {
+        use super::is_xid_start;
+
+        // ASCII
+        assert_eq!(is_xid_start('\u{0000}'), false);
+        assert_eq!(is_xid_start('\u{0020}'), false);
+        assert_eq!(is_xid_start('\u{0021}'), false);
+
+        assert_eq!(is_xid_start('\u{0027}'), false);
+
+--- tests/lexical_class_tests.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![cfg(feature = "id")]
+#![cfg(feature = "pattern")]
+
+#[macro_use]
+extern crate unic_char_range;
+
+#[macro_use]
+extern crate matches;
+use regex;
+
+use std::char;
+use std::collections::BTreeSet;
+
+use unic_ucd_category::GeneralCategory;
+use unic_ucd_category::GeneralCategory::*;
+use unic_ucd_ident::{is_id_continue, is_id_start};
+use unic_ucd_ident::{is_pattern_syntax, is_pattern_whitespace};
+
+use regex::Regex;
+
+#[test]
+/// ref: <https://www.unicode.org/reports/tr31/#Table_Lexical_Classes_for_Identifiers>
+fn test_id_derivation() {
+    let other_start: BTreeSet<char> = {
+        Regex::new(
+            r"(?xm)^
+              ([[:xdigit:]]{4,6})        # low
+              (?:..([[:xdigit:]]{4,6}))? # high
+              \s+;\s+
+              Other_ID_Start             # property
+             ",
+        )
+        .unwrap()
+        .captures_iter(include_str!(
+            "../../../../external/unicode/ucd/data/PropList.txt"
+        ))
+        .flat_map(|cap: regex::Captures<'_>| {
+            let low = char::from_u32(u32::from_str_radix(&cap[1], 16).unwrap()).unwrap();
+            let high = cap
+                .get(2)
+
+--- tests/unicode_version_tests.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use unic_ucd_ident;
+use unic_ucd_version;
+
+#[test]
+fn test_version_against_ucd_version() {
+    assert_eq!(
+        unic_ucd_ident::UNICODE_VERSION,
+        unic_ucd_version::UNICODE_VERSION
+    );
+}

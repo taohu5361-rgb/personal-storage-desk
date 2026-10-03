@@ -1,0 +1,428 @@
+--- src/lib.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![no_std]
+#![warn(
+    bad_style,
+    missing_debug_implementations,
+    missing_docs,
+    unconditional_recursion
+)]
+#![forbid(unsafe_code)]
+
+//! # UNIC — Unicode Character Tools — Character Property
+//!
+//! A component of [`unic`: Unicode and Internationalization Crates for Rust](/unic/).
+//!
+//! Character Property taxonomy, contracts and build macros.
+//!
+//! ## References
+//!
+//! * [Unicode UTR #23: The Unicode Character Property Model](http://unicode.org/reports/tr23/).
+//!
+//! * [Unicode UAX #44: Unicode Character Database](http://unicode.org/reports/tr44/).
+//!
+//! * [PropertyAliases.txt](https://www.unicode.org/Public/UCD/latest/ucd/PropertyAliases.txt).
+
+#[macro_use]
+extern crate unic_char_range;
+
+mod pkg_info;
+pub use crate::pkg_info::{PKG_DESCRIPTION, PKG_NAME, PKG_VERSION};
+
+mod property;
+pub use self::property::{CharProperty, PartialCharProperty, TotalCharProperty};
+
+mod range_types;
+pub use crate::range_types::{
+    BinaryCharProperty,
+    CustomCharProperty,
+    EnumeratedCharProperty,
+    NumericCharProperty,
+    NumericCharPropertyValue,
+};
+
+--- src/macros.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+/// Macro for declaring a character property.
+///
+/// # Syntax (Enumerated Property)
+///
+/// ```
+/// #[macro_use]
+/// extern crate unic_char_property;
+///
+/// // First we define the type itself.
+/// char_property! {
+///     /// This is the enum type created for the character property.
+///     pub enum MyProp {
+///         abbr => "AbbrPropName";
+///         long => "Long_Property_Name";
+///         human => "Human-Readable Property Name";
+///
+///         /// Zero or more documentation or other attributes.
+///         RustName {
+///             abbr => AbbrName,
+///             long => Long_Name,
+///             human => "&'static str that is a nicer presentation of the name",
+///         }
+///     }
+///
+///     /// Module aliasing property value abbreviated names.
+///     pub mod abbr_names for abbr;
+///
+///     /// Module aliasing property value long names.
+///     pub mod long_names for long;
+/// }
+///
+/// // We also need to impl `PartialCharProperty` or `TotalCharProperty` manually.
+/// # impl unic_char_property::PartialCharProperty for MyProp {
+/// #     fn of(_: char) -> Option<Self> { None }
+/// # }
+/// #
+/// # fn main() {}
+/// ```
+///
+/// # Syntax (Binary Property)
+
+--- src/pkg_info.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//! Package information
+
+/// UNIC component version.
+pub const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
+
+/// UNIC component name.
+pub const PKG_NAME: &str = env!("CARGO_PKG_NAME");
+
+/// UNIC component description.
+pub const PKG_DESCRIPTION: &str = env!("CARGO_PKG_DESCRIPTION");
+
+--- src/property.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//! Taxonomy and contracts for Character Property types.
+
+use core::fmt::Debug;
+use core::hash::Hash;
+
+/// A Character Property, defined for some or all Unicode characters.
+pub trait CharProperty: PartialCharProperty + Debug + Eq + Hash {
+    /// The *abbreviated name* of the property.
+    fn prop_abbr_name() -> &'static str;
+
+    /// The *long name* of the property.
+    fn prop_long_name() -> &'static str;
+
+    /// The *human-readable* name of the property.
+    fn prop_human_name() -> &'static str;
+}
+
+/// A Character Property defined for some characters.
+///
+/// Examples: `Decomposition_Type`, `Numeric_Type`
+pub trait PartialCharProperty: Copy {
+    /// The property value for the character, or None.
+    fn of(ch: char) -> Option<Self>;
+}
+
+/// A Character Property defined on all characters.
+///
+/// Examples: `Age`, `Name`, `General_Category`, `Bidi_Class`
+pub trait TotalCharProperty: PartialCharProperty + Default {
+    /// The property value for the character.
+    fn of(ch: char) -> Self;
+}
+
+impl<T: TotalCharProperty> PartialCharProperty for T {
+    fn of(ch: char) -> Option<Self> {
+        Some(<Self as TotalCharProperty>::of(ch))
+    }
+}
+
+--- src/range_types.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//! Character Property Range types.
+//!
+//! NOTE: At the moment, it is not possible to define a marker for all character property range
+//! types and enforce their implementation from `CharProperty`.  We need to fix this whenever the
+//! compiler becomes able to do to so.
+
+use super::property::CharProperty;
+
+// == Enumerated/Catalog Types ==
+
+/// A Character Property with enumerated values.
+///
+/// This is similar to types *Enumeration* and *Catalog*, as defined in UAX#44.
+///
+/// Usage Note: If the property is of type *Catalog*, it's recommended to (in some way) mark the
+/// type as *non-exhaustive*, so that adding new variants to the `enum` type won't result in API
+/// breakage.
+pub trait EnumeratedCharProperty: Sized + CharProperty {
+    /// Exhaustive list of all property values.
+    fn all_values() -> &'static [Self];
+
+    /// The *abbreviated name* of the property value.
+    fn abbr_name(&self) -> &'static str;
+
+    /// The *long name* of the property value.
+    fn long_name(&self) -> &'static str;
+
+    /// The *human-readable name* of the property value.
+    fn human_name(&self) -> &'static str;
+}
+
+// == Binary Types ==
+
+/// A Character Property with binary values.
+///
+/// Examples: `Alphabetic`, `Bidi_Mirrored`, `White_Space`
+pub trait BinaryCharProperty: CharProperty {
+    /// The boolean value of the property value.
+    fn as_bool(&self) -> bool;
+
+
+--- src/tables.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//! Character data tables used in UNIC.
+
+use unic_char_range::CharRange;
+
+/// A mapping from characters to some associated data.
+///
+/// For the set case, use `()` as the associated value.
+#[derive(Copy, Clone, Debug)]
+pub enum CharDataTable<V: 'static> {
+    #[doc(hidden)]
+    Direct(&'static [(char, V)]),
+    #[doc(hidden)]
+    Range(&'static [(CharRange, V)]),
+}
+
+impl<V> Default for CharDataTable<V> {
+    fn default() -> Self {
+        CharDataTable::Direct(&[])
+    }
+}
+
+impl<V> CharDataTable<V> {
+    /// Does this table contain a mapping for a character?
+    pub fn contains(&self, needle: char) -> bool {
+        match *self {
+            CharDataTable::Direct(table) => {
+                table.binary_search_by_key(&needle, |&(k, _)| k).is_ok()
+            }
+            CharDataTable::Range(table) => table
+                .binary_search_by(|&(range, _)| range.cmp_char(needle))
+                .is_ok(),
+        }
+    }
+}
+
+impl<V: Copy> CharDataTable<V> {
+    /// Find the associated data for a character in this table.
+    pub fn find(&self, needle: char) -> Option<V> {
+        match *self {
+            CharDataTable::Direct(table) => table
+
+--- tests/bool_property_macro.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[macro_use]
+extern crate unic_char_property;
+
+#[macro_use]
+extern crate unic_char_range;
+
+char_property! {
+    /// This is a test property.
+    pub struct MyProp(bool) {
+        abbr => "mp";
+        long => "My_Prop";
+        human => "My Property";
+
+        data_table_path => "tables/property_table.rsv";
+    }
+
+    /// This is the shorthand function.
+    pub fn is_my_prop(char) -> bool;
+}
+
+#[test]
+fn test_basics() {
+    assert_eq!(MyProp::of('\u{0000}').as_bool(), false);
+    assert_eq!(MyProp::of('\u{0065}').as_bool(), true);
+
+    assert_eq!(is_my_prop('\u{0000}'), false);
+    assert_eq!(is_my_prop('\u{0065}'), true);
+}
+
+#[cfg_attr(feature = "cargo-clippy", allow(needless_bool))]
+#[test]
+fn test_into_bool() {
+    assert!(if MyProp::of('\u{0065}').into() {
+        true
+    } else {
+        false
+    });
+}
+
+#[test]
+
+--- tests/enum_property_macro.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[macro_use]
+extern crate unic_char_property;
+
+use unic_char_property::PartialCharProperty;
+
+char_property! {
+    pub enum MyProp {
+        abbr => "mp";
+        long => "My_Prop";
+        human => "My Property";
+
+        /// Variants can have multi-line documentations,
+        /// and/or other attributes.
+        Variant1 {
+            abbr => V1,
+            long => Variant_1,
+            human => "Variant 1",
+        }
+
+        /// One line works too, or...
+        Variant2 {
+            abbr => V2,
+            long => Variant_2,
+            human => "Variant 2",
+        }
+
+        Variant3 {
+            abbr => V3,
+            long => Variant_3,
+            human => "Variant 3",
+        }
+    }
+
+    pub mod abbr_names for abbr;
+    pub mod long_names for long;
+}
+
+impl PartialCharProperty for MyProp {
+    fn of(_: char) -> Option<Self> {
+        None
+
+--- tests/tables_tests.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[macro_use]
+extern crate unic_char_range;
+
+use unic_char_property::tables::CharDataTable;
+
+#[test]
+fn test_range_value_table() {
+    const TABLE: CharDataTable<u32> = CharDataTable::Range(&[
+        (chars!('a'..='g'), 1),
+        (chars!('j'..='q'), 2),
+        (chars!('w'..='z'), 3),
+    ]);
+    for ch in chars!('a'..='g') {
+        assert_eq!(TABLE.find(ch), Some(1));
+        assert_eq!(TABLE.find_or_default(ch), 1);
+    }
+    for ch in chars!('h'..='i') {
+        assert_eq!(TABLE.find(ch), None);
+        assert_eq!(TABLE.find_or_default(ch), 0);
+    }
+    for ch in chars!('j'..='q') {
+        assert_eq!(TABLE.find(ch), Some(2));
+        assert_eq!(TABLE.find_or_default(ch), 2);
+    }
+    for ch in chars!('r'..='v') {
+        assert_eq!(TABLE.find(ch), None);
+        assert_eq!(TABLE.find_or_default(ch), 0);
+    }
+    for ch in chars!('x'..='z') {
+        assert_eq!(TABLE.find(ch), Some(3));
+        assert_eq!(TABLE.find_or_default(ch), 3);
+    }
+}

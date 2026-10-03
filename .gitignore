@@ -1,0 +1,68 @@
+# Dependencies and builds
+node_modules/
+dist/
+release/
+target/
+src-tauri/target/
+.vite/
+.cache/
+*.tsbuildinfo
+
+# Local settings and secrets
+.env
+.env.*
+!.env.example
+*.local
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Runtime data and database backups
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.backup.tmp
+*.restore.tmp
+*.before-restore.*
+app-data/
+test-data/
+runtime-data/
+backups/
+managed-assets/
+user-fonts/
+
+# Test outputs and browser / WebView state
+verification/
+test-output/
+test-results/
+playwright-report/
+artifacts/
+.webview/
+WebView2/
+EBWebView/
+browser-profile/
+*.log
+*.dmp
+*.download
+*.tmp
+*.temp
+
+# Local delivery archives
+*.zip
+*.7z
+*.exe
+*.msi
+# SQL migrations and source icons remain tracked.
+
+# Hidden acceptance outputs
+.test-output/
+.*-output/
+.*-verified/
+# Required third-party covered source archives
+!third_party/sources/*.zip
+!third_party/sources/*.tar.gz
+

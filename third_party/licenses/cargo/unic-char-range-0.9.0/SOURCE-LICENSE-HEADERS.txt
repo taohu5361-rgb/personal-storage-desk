@@ -1,0 +1,471 @@
+--- benches/benchmarks.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(test)]
+
+extern crate test;
+
+use std::char;
+use unic_char_range::CharRange;
+
+#[bench]
+fn forward_iteration(b: &mut test::Bencher) {
+    b.iter(|| CharRange::all().iter().count())
+}
+
+#[bench]
+fn forward_iteration_baseline(b: &mut test::Bencher) {
+    b.iter(|| (0..0x11_0000).filter_map(char::from_u32).count())
+}
+
+#[bench]
+fn reverse_iteration(b: &mut test::Bencher) {
+    b.iter(|| CharRange::all().iter().rev().count())
+}
+
+#[bench]
+fn reverse_iteration_baseline(b: &mut test::Bencher) {
+    b.iter(|| (0..0x11_0000).rev().filter_map(char::from_u32).count())
+}
+
+#[bench]
+fn range_length(b: &mut test::Bencher) {
+    b.iter(|| CharRange::all().len())
+}
+
+--- examples/macro_use_std_tests.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[macro_use]
+extern crate unic_char_range;
+
+fn main() {
+    assert!(chars!('\u{0}'..='\u{2}')
+        .iter()
+        .eq(['\u{0}', '\u{1}', '\u{2}'].iter().cloned()));
+}
+
+--- src/iter.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::{char, ops};
+
+use crate::{step, CharRange};
+
+const SURROGATE_RANGE: ops::Range<u32> = 0xD800..0xE000;
+
+/// An iterator over a range of unicode code points.
+///
+/// Constructed via `CharRange::iter`. See `CharRange` for more information.
+#[derive(Clone, Debug)]
+pub struct CharIter {
+    /// The lowest uniterated character (inclusive).
+    ///
+    /// Iteration is finished if this is higher than `high`.
+    low: char,
+
+    /// The highest uniterated character (inclusive).
+    ///
+    /// Iteration is finished if this is lower than `low`.
+    high: char,
+}
+
+impl From<CharRange> for CharIter {
+    fn from(range: CharRange) -> CharIter {
+        CharIter {
+            low: range.low,
+            high: range.high,
+        }
+    }
+}
+
+impl From<CharIter> for CharRange {
+    fn from(iter: CharIter) -> CharRange {
+        CharRange {
+            low: iter.low,
+            high: iter.high,
+        }
+    }
+}
+
+
+--- src/iter_fused.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::iter;
+
+use super::iter::CharIter;
+
+impl iter::FusedIterator for CharIter {}
+
+--- src/iter_trusted_len.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::iter;
+
+use super::iter::CharIter;
+
+#[allow(unsafe_code)]
+unsafe impl iter::TrustedLen for CharIter {}
+
+--- src/lib.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(feature = "exact-size-is-empty", feature(exact_size_is_empty))]
+#![cfg_attr(feature = "trusted-len", feature(trusted_len))]
+#![warn(
+    bad_style,
+    missing_debug_implementations,
+    missing_docs,
+    unconditional_recursion
+)]
+#![deny(unsafe_code)]
+
+//! # UNIC — Unicode Character Tools — Character Range
+//!
+//! A simple way to control iteration over a range of characters.
+//!
+//! # Examples
+//!
+//! ```
+//! #[macro_use] extern crate unic_char_range;
+//!
+//! # fn main() {
+//! for character in chars!('a'..='z') {
+//!     // character is each character in the lowercase english alphabet in order
+//! }
+//!
+//! for character in chars!(..) {
+//!     // character is every valid char from lowest codepoint to highest
+//! }
+//! # }
+//! ```
+//!
+//! # Features
+//!
+//! None of these features are included by default; they rely on unstable Rust feature gates.
+//!
+//! - `unstable`: enables all features
+//! - `exact-size-is-empty`: provide a specific impl of [`ExactSizeIterator::is_empty`][is_empty]
+//! - `trusted-len`: impl the [`TrustedLen`] contract
+//!
+//! [is_empty]: https://doc.rust-lang.org/std/iter/trait.ExactSizeIterator.html#method.is_empty
+
+--- src/macros.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[macro_export]
+/// Convenience macro for the initialization of `CharRange`s.
+///
+/// # Syntax
+///
+/// ```
+/// # #[macro_use] extern crate unic_char_range;
+/// # fn main() {
+/// chars!('a'..'z'); // The half open range including 'a' and excluding 'z'
+/// chars!('a'..='z'); // The closed range including 'a' and including 'z'
+/// chars!(..); // All characters
+/// # }
+/// ```
+///
+/// `chars!('a'..='z')` and `chars!(..)` are constant-time expressions, and can be used
+/// where such are required, such as in the initialization of constant data structures.
+///
+/// NOTE: Because an `expr` capture cannot be followed by a `..`/`..=`, this macro captures token
+/// trees. This means that if you want to pass more than one token, you must parenthesize it (e.g.
+/// `chars!('\0' ..= (char::MAX))`).
+macro_rules! chars {
+    ( $low:tt .. $high:tt ) => {
+        $crate::CharRange::open_right($low, $high)
+    };
+    ( $low:tt ..= $high:tt ) => {
+        $crate::CharRange {
+            low: $low,
+            high: $high,
+        }
+    };
+    ( .. ) => {
+        $crate::CharRange::all()
+    };
+}
+
+--- src/par_iter.rs ---
+// Copyright 2018 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use rayon;
+
+use self::rayon::iter::plumbing::{Consumer, ProducerCallback, UnindexedConsumer};
+use self::rayon::prelude::*;
+use crate::step::{AFTER_SURROGATE, BEFORE_SURROGATE};
+use crate::CharRange;
+use core::char;
+use core::ops::Range;
+
+const SKIP_LENGTH: u32 =
+    crate::step::AFTER_SURROGATE as u32 - crate::step::BEFORE_SURROGATE as u32 - 1;
+
+#[derive(Clone, Debug)]
+pub struct Iter(rayon::iter::Map<rayon::range::Iter<u32>, fn(u32) -> char>);
+
+impl ParallelIterator for Iter {
+    type Item = char;
+
+    fn drive_unindexed<C>(self, consumer: C) -> C::Result
+    where
+        C: UnindexedConsumer<Self::Item>,
+    {
+        self.0.drive_unindexed(consumer)
+    }
+}
+
+impl IndexedParallelIterator for Iter {
+    fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    fn drive<C: Consumer<Self::Item>>(self, consumer: C) -> C::Result {
+        self.0.drive(consumer)
+    }
+
+    fn with_producer<CB: ProducerCallback<Self::Item>>(self, callback: CB) -> CB::Output {
+        self.0.with_producer(callback)
+    }
+}
+
+
+--- src/pkg_info.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//! Package information
+
+/// UNIC component version.
+pub const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
+
+/// UNIC component name.
+pub const PKG_NAME: &str = env!("CARGO_PKG_NAME");
+
+/// UNIC component description.
+pub const PKG_DESCRIPTION: &str = env!("CARGO_PKG_DESCRIPTION");
+
+--- src/range.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::{char, cmp};
+
+#[cfg(feature = "std")]
+use std::collections::Bound;
+
+use self::cmp::Ordering;
+use crate::CharIter;
+
+/// A range of unicode code points.
+///
+/// The most idiomatic way to construct this range is through the use of the `chars!` macro:
+///
+/// ```
+/// #[macro_use] extern crate unic_char_range;
+/// use unic_char_range::CharRange;
+///
+/// # fn main() {
+/// assert_eq!(chars!('a'..='z'), CharRange::closed('a', 'z'));
+/// assert_eq!(chars!('a'..'z'), CharRange::open_right('a', 'z'));
+/// assert_eq!(chars!(..), CharRange::all());
+/// # }
+/// ```
+///
+/// If constructed in reverse order, such that `self.high` is ordered before `self.low`,
+/// the range is empty. If you want to iterate in decreasing order, use `.iter().rev()`.
+/// All empty ranges are considered equal no matter the internal state.
+#[derive(Copy, Clone, Debug, Eq)]
+pub struct CharRange {
+    /// The lowest character in this range (inclusive).
+    pub low: char,
+
+    /// The highest character in this range (inclusive).
+    pub high: char,
+}
+
+/// Constructors
+impl CharRange {
+    /// Construct a closed range of characters.
+    ///
+    /// If `stop` is ordered before `start`, the resulting range will be empty.
+
+--- src/step.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::char;
+
+pub const BEFORE_SURROGATE: char = '\u{D7FF}';
+pub const AFTER_SURROGATE: char = '\u{E000}';
+
+#[inline]
+#[allow(unsafe_code)]
+/// Step a character one step towards `char::MAX`.
+///
+/// # Safety
+///
+/// If the given character is `char::MAX`, the return value is not a valid character.
+pub unsafe fn forward(ch: char) -> char {
+    if ch == BEFORE_SURROGATE {
+        AFTER_SURROGATE
+    } else {
+        char::from_u32_unchecked(ch as u32 + 1)
+    }
+}
+
+#[inline]
+#[allow(unsafe_code)]
+/// Step a character one step towards `'\0'`.
+///
+/// # Safety
+///
+/// If the given character is `'\0'`, this will cause an underflow.
+/// (Thus, it will panic in debug mode, undefined behavior in release mode.)
+pub unsafe fn backward(ch: char) -> char {
+    if ch == AFTER_SURROGATE {
+        BEFORE_SURROGATE
+    } else {
+        char::from_u32_unchecked(ch as u32 - 1)
+    }
+}
+
+--- tests/iter_tests.rs ---
+// Copyright 2017 The UNIC Project Developers.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+// <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::{char, u32, vec};
+
+use unic_char_range::CharRange;
+
+fn all_chars() -> vec::IntoIter<char> {
+    (u32::MIN..u32::MAX)
+        .take_while(|&u| u <= char::MAX as u32)
+        .filter_map(char::from_u32)
+        .collect::<Vec<_>>()
+        .into_iter()
+}
+
+#[test]
+fn test_iter_all_chars() {
+    assert!(CharRange::all().iter().eq(all_chars()))
+}
+
+#[test]
+fn test_iter_all_chars_rev() {
+    assert!(CharRange::all().iter().rev().eq(all_chars().rev()))
+}
+
+#[test]
+fn test_iter_all_chars_mixed_next_back() {
+    let mut custom = CharRange::all().iter();
+    let mut simple = all_chars();
+    while let Some(custom_char) = custom.next() {
+        assert_eq!(Some(custom_char), simple.next());
+        assert_eq!(custom.next_back(), simple.next_back());
+    }
+    assert_eq!(None, simple.next());
+}
+
+#[test]
+fn test_iter_all_chars_into_iter() {
+    for _ch in CharRange::all() {
+        // nothing
+    }
+}
