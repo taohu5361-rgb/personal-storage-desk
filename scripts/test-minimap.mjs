@@ -1,10 +1,10 @@
-import { reportDirectory, browserOptions, qaBaseURL } from './qa-support.mjs';
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 import path from 'node:path';
-import { chromium } from 'playwright';
-const output = path.resolve(reportDirectory(import.meta.url)); await mkdir(output, { recursive: true });
-const browser = await chromium.launch({...browserOptions,  headless: true });
+const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
+const output = path.resolve(process.argv[2]); await mkdir(output, { recursive: true });
+const browser = await chromium.launch({ channel: 'msedge', headless: true });
 const page = await browser.newPage({ viewport: { width: 1280, height: 820 } });
 const errors = [], checks = []; page.on('pageerror', error => errors.push(error.message));
 const near = (actual, expected, epsilon = .7) => assert.ok(Math.abs(actual - expected) < epsilon, `${actual} != ${expected}`);
@@ -13,7 +13,7 @@ const size = () => page.locator('.asset-canvas, .asset-inner-canvas').evaluate(n
 const map = () => page.locator('.canvas-minimap');
 const setView = async value => { await page.evaluate(value => window.minimapQA.setView(value), value); await page.waitForTimeout(320); };
 try {
-  await page.goto(`${qaBaseURL}/scripts/verify-minimap.html`); await map().waitFor();
+  await page.goto('http://127.0.0.1:5194/scripts/verify-minimap.html'); await map().waitFor();
   await page.waitForFunction(() => document.querySelectorAll('.minimap-note').length === 1 && document.querySelectorAll('.minimap-text').length === 1);
   assert.equal(await map().count(), 1); assert.equal(await map().locator('image,img,text').count(), 0);
   const layout = await map().evaluate(node => { const a = node.getBoundingClientRect(), b = document.querySelector('.canvas-controls').getBoundingClientRect(); return { width: a.width, height: a.height, gap: b.top - a.bottom, right: b.right - a.right }; });

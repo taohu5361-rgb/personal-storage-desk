@@ -2846,3 +2846,112 @@ h1 {
 .asset-note-scale-panel button { border: 1px solid var(--border-default); border-radius: 4px; padding: 4px 8px; background: var(--bg-hover); color: var(--text-primary); cursor: pointer; }
 .asset-note-scale-panel input[type="number"] { width: 85px; padding: 4px; background: var(--bg-input, var(--bg-surface)); color: var(--text-primary); border: 1px solid var(--border-default); border-radius: 4px; }
 .asset-note-scale-panel input[type="range"] { width: 100%; margin: 0 0 10px; accent-color: var(--accent); }
+
+/* Note ownership controls are separate from the existing drag grip. */
+.asset-note-attachment-title { display:flex; align-items:center; gap:4px; min-width:0; max-width:calc(100% - 45px); padding:0; border:0; background:transparent; color:inherit; font:inherit; cursor:pointer; }
+.asset-note-attachment-title > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.asset-note-attachment-title svg { flex:none; }
+.asset-note-attachment-title:hover { color:var(--text-primary); }
+.asset-note-attachment-title:focus-visible { outline:2px solid var(--border-focus); outline-offset:3px; border-radius:3px; }
+.asset-note-attachment-title:disabled { cursor:default; opacity:0.6; }
+.asset-note-attachment-panel { position:fixed; z-index:500001; width:min(300px,calc(100vw - 16px)); max-height:calc(100vh - 16px); box-sizing:border-box; padding:12px; border:1px solid var(--border-default); border-radius:8px; background:var(--bg-surface); color:var(--text-primary); font-size:13px; box-shadow:0 6px 20px var(--drawer-shadow-color); display:flex; flex-direction:column; gap:10px; }
+.asset-note-attachment-heading { display:flex; align-items:center; justify-content:space-between; }
+.asset-note-attachment-panel button { border:0; border-radius:4px; padding:7px 8px; background:transparent; color:var(--text-primary); cursor:pointer; }
+.asset-note-attachment-panel button:hover { background:var(--bg-hover); }
+.asset-note-attachment-panel button:focus-visible,.asset-note-attachment-panel input:focus-visible { outline:2px solid var(--border-focus); outline-offset:1px; }
+.asset-note-attachment-panel button:disabled { opacity:0.5; cursor:wait; }
+.asset-note-attachment-panel input { width:100%; min-width:0; box-sizing:border-box; padding:8px; border:1px solid var(--border-default); border-radius:4px; background:var(--bg-surface); color:var(--text-primary); font:inherit; }
+.asset-note-attachment-options { max-height:220px; overflow:auto; min-height:0; }
+.asset-note-attachment-options button { display:flex; justify-content:space-between; gap:8px; width:100%; min-height:34px; text-align:left; }
+.asset-note-attachment-options button > span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.asset-note-attachment-options button[aria-pressed="true"] { background:var(--bg-hover); font-weight:600; }
+.asset-note-attachment-options p,.asset-note-attachment-help { color:var(--text-muted); font-size:12px; margin:0; line-height:1.5; }
+
+/* Shared asset/script sidebar disclosure. The content stays mounted. */
+.sidebar-layout {
+  grid-template-columns: 230px minmax(0, 1fr);
+  transition: grid-template-columns 180ms cubic-bezier(.2, .8, .2, 1);
+}
+.sidebar-layout[data-sidebar-expanded="false"] {
+  grid-template-columns: 0px minmax(0, 1fr);
+}
+.sidebar-slot {
+  min-width: 0;
+  height: 100%;
+  overflow: clip;
+  transition: opacity 120ms ease, visibility 0s;
+}
+.sidebar-slot > aside { width: 230px; }
+.sidebar-layout[data-sidebar-expanded="false"] > .sidebar-slot {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 100ms ease, visibility 0s 180ms;
+}
+.sidebar-layout > .workspace-main { min-width: 0; }
+.sidebar-page-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+.canvas-header .sidebar-page-heading { align-items: center; }
+.sidebar-page-heading > .content-header,
+.sidebar-heading-copy { min-width: 0; }
+.sidebar-heading-copy h1,
+.sidebar-page-heading .content-header h1 { overflow-wrap: anywhere; }
+.sidebar-toggle {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.sidebar-toggle:hover { background: var(--bg-hover); color: var(--text-primary); }
+.sidebar-toggle:active { background: var(--bg-selected); }
+.sidebar-toggle:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+.app-shell.immersive .sidebar-slot { display: none; }
+@media (max-width: 650px) {
+  .app-shell:has(.sidebar-layout) { width: calc(100% / var(--ui-scale, 1)); }
+  .sidebar-layout > .sidebar-slot { height: auto; }
+  .sidebar-slot > aside { width: auto; }
+  .sidebar-layout[data-sidebar-expanded="false"] > .sidebar-slot { display: none; }
+  .sidebar-layout .canvas-header { flex-wrap: wrap; gap: 12px; }
+  .sidebar-layout .canvas-header-actions { flex-wrap: wrap; }
+  .sidebar-layout .script-section-header { flex-wrap: wrap; gap: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-layout, .sidebar-slot, .sidebar-toggle,
+  .sidebar-layout[data-sidebar-expanded="false"] > .sidebar-slot { transition: none; }
+}
+
+/* Put the collapse action beside the sidebar's own search/category heading. */
+.sidebar-topbar { display: flex; align-items: center; gap: 8px; }
+.asset-sidebar-topbar { margin-bottom: 20px; }
+.asset-sidebar-topbar .search-box { flex: 1; min-width: 0; margin-bottom: 0; }
+.asset-sidebar-topbar .search-box > svg { flex: 0 0 auto; }
+.script-sidebar-topbar { justify-content: space-between; margin-bottom: 14px; }
+.script-sidebar-topbar .sidebar-title { padding-bottom: 0; }
+.sidebar-toggle[hidden] { display: none; }
+.sidebar-toggle-with-label {
+  width: 64px;
+  flex-basis: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.sidebar-toggle-with-label svg { flex: 0 0 auto; }
+.asset-sidebar-topbar .sidebar-toggle { height: 38px; }

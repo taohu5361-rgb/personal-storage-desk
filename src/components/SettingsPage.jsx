@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { call } from "../data/database";
 import { resolveCanvasAppearance } from "../canvasAppearance";
 import { CanvasAppearanceControls } from "./CanvasAppearanceControls";
@@ -22,6 +22,8 @@ const group = (title, children) => <section className="settings-group"><h2>{titl
 export function SettingsPage({store}) {
   const {data, setData, run} = store;
   const [section,setSection] = useState("general");
+  const [navigationRevision,setNavigationRevision] = useState(0);
+  const mainRef = useRef(null);
   const [query,setQuery] = useState("");
   const [draftPath,setDraftPath] = useState(data.settings?.managedAssetDir || "");
   const [status,setStatus] = useState("");
@@ -31,6 +33,12 @@ export function SettingsPage({store}) {
   useEffect(()=>{currentSettings.current=data.settings},[data.settings]);
   useEffect(()=>{setDraftPath(data.settings?.managedAssetDir || "")},[data.settings?.managedAssetDir]);
   useEffect(()=>{call("database_info").then(setInfo).catch(()=>{})},[data.databasePath]);
+  useLayoutEffect(()=>{if(mainRef.current)mainRef.current.scrollTop=0},[navigationRevision]);
+  const selectSection = (key) => {
+    setSection(key);
+    setQuery("");
+    setNavigationRevision(value=>value+1);
+  };
   const save = (key,value) => {
     const previous = currentSettings.current;
     const next = {...previous,[key]:value};
@@ -57,8 +65,8 @@ export function SettingsPage({store}) {
   const s = data.settings;
   if (!s) return null;
   return <div className="settings-layout">
-    <aside className="settings-nav"><h2>设置</h2><nav className="settings-nav-items" aria-label="设置分类">{tabs.map(([key,name])=><button key={key} className={section===key?"active":""} aria-current={section===key?"page":undefined} onClick={()=>{setSection(key);setQuery("")}}>{name}</button>)}</nav></aside>
-    <div className="settings-main">{!visible.includes("shortcuts")&&<div className="settings-search"><input data-shortcut-search aria-label="搜索设置" placeholder="搜索设置，例如缩略图" value={query} onChange={e=>setQuery(e.target.value)}/>{query&&<button onClick={()=>setQuery("")}>清除</button>}</div>}
+    <aside className="settings-nav"><h2>设置</h2><nav className="settings-nav-items" aria-label="设置分类">{tabs.map(([key,name])=><button key={key} className={section===key?"active":""} aria-current={section===key?"page":undefined} onClick={()=>selectSection(key)}>{name}</button>)}</nav></aside>
+    <div className="settings-main" ref={mainRef}>{!visible.includes("shortcuts")&&<div className="settings-search"><input data-shortcut-search aria-label="搜索设置" placeholder="搜索设置，例如缩略图" value={query} onChange={e=>setQuery(e.target.value)}/>{query&&<button onClick={()=>setQuery("")}>清除</button>}</div>}
     {visible.length===0&&<p className="settings-help">没有找到相关设置</p>}
     {visible.includes("general")&&<><header><p className="eyebrow">设置</p><h1>常规</h1></header>
       {group("启动",<>{choices("启动页面",s.startupPage,[["home","首页"],["scripts","我的脚本"],["last","上次退出页面"]],v=>save("startupPage",v))}{toggle("启动时恢复上次工作区",s.restoreWorkspace,v=>save("restoreWorkspace",v))}</>)}

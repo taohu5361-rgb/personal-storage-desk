@@ -10,7 +10,8 @@ import {
 import { createPortal } from "react-dom";
 import { Lock, StickyNote, Unlock } from "lucide-react";
 import { AssetNoteDrawer } from "./AssetNoteDrawer";
-import { DrawerDragController, screenEventToWorld, worldDrawerRectToLocal, drawerAssetFrame } from "./DrawerDragController";
+import { DrawerAttachmentPanel } from "./DrawerAttachmentPanel.jsx";
+import { DrawerDragController, screenEventToWorld, worldDrawerRectToLocal, localDrawerRectToWorld, drawerAssetFrame } from "./DrawerDragController";
 import {
   createDefaultDrawerPlacement,
   drawerWorldRect,
@@ -28,8 +29,10 @@ import {
 import {
   createAssetNoteDrawer,
   deleteAssetNoteDrawer,
-  listAssetNoteDrawers,
+  listCategoryNoteDrawers,
+  createIndependentNoteDrawer,
   saveAssetNoteDrawer,
+  flushAssetNoteDrawerSaves,
 } from "../data/assetNoteDrawerRepository";
 import { reconcileDrawerSave, rollbackDrawerLayout } from "./DrawerSaveState.js";
 import { objectToWorld } from "./canvasTransforms.js";
@@ -80,6 +83,10 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
   const [notice, setNotice] = useState("");
   const [drawerMenu, setDrawerMenu] = useState(null);
   const [scaleMenu, setScaleMenu] = useState(null);
+  const [attachmentMenu, setAttachmentMenu] = useState(null);
+  const [attachmentBusy, setAttachmentBusy] = useState(new Set());
+  const attachmentBusyRef = useRef(new Set());
+  const visibleAssetsRef = useRef([]);
   const textareaRef = useRef(null);
   const drawersRef = useRef(drawers);
   const assetsRef = useRef(assets);
@@ -101,7 +108,7 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
   viewportRef.current = viewport;
 
   const assetIds = useMemo(() => assets.map((asset) => asset.id), [assets]);
-  const assetKey = assetIds.slice().sort().join("\u0000");
+  const assetKey = activeCategoryId + "\u0000" + assetIds.slice().sort().join("\u0000");
   const assetSizeKey = assets.map((asset) => `${asset.id}:${asset.width}:${asset.height}`).join("|");
   const drawerById = useMemo(() => new Map(drawers.map((drawer) => [drawer.id, drawer])), [drawers]);
   const drawersByAsset = useMemo(() => {
@@ -114,6 +121,14 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
   }, [drawers]);
   const collapsedGroupIds = useMemo(() => new Set(groups.filter((group) => group.collapsed).map((group) => group.id)), [groups]);
   const visibleAssets = displayAssets.filter((asset) => !collapsedGroupIds.has(asset.groupId));
+  visibleAssetsRef.current = visibleAssets;
+  const visibleAssetIds = new Set(visibleAssets.map((asset) => asset.id));
+  const visibleDrawers = drawers.filter((drawer) => !drawer.assetId || visibleAssetIds.has(drawer.assetId));
+  const assetForDrawer = (drawer) => assetsRef.current.find((asset) => asset.id === drawer.assetId) || { id: null, x: 0, y: 0, width: 0, height: 0, rotation: 0 };
+  const setBusy = (id, busy) => {
+    if (busy) attachmentBusyRef.current.add(id); else attachmentBusyRef.current.delete(id);
+    setAttachmentBusy(new Set(attachmentBusyRef.current));
+  };
 
   const updateDrawerList = (update) => {
     const next = typeof update === "function" ? update(drawersRef.current) : update;
@@ -128,13 +143,16 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
   const persistDrawer = async (drawer, previous) => {
     if (deletingRef.current.has(drawer.id)) return;
     const latest = drawersRef.current.find((item) => item.id === drawer.id);
-    const submitted = normalizeDrawer({ ...drawer, text: latest?.text ?? drawer.text });
+    const submitted = normalizeDrawer({ ...drawer, categoryId: drawer.categoryId || activeCategoryId, text: latest?.text ?? drawer.text });
     const pending = saveTimersRef.current.get(drawer.id);
     if (pending) clearTimeout(pending.timer);
     saveTimersRef.current.delete(drawer.id);
     const epoch = loadEpochRef.current;
+    const baseline = previous || confirmedRef.current.get(drawer.id);
+    const changingOwner = (baseline?.assetId ?? null) !== (submitted.assetId ?? null);
+    if (changingOwner) setBusy(drawer.id, true);
     try {
-      const saved = await saveAssetNoteDrawer(submitted);
+      const saved = await saveAssetNoteDrawer(submitted, baseline);
       if (epoch !== loadEpochRef.current) return saved;
       confirmedRef.current.set(saved.id, saved);
       updateDrawerList((current) => current.map((item) => item.id === saved.id ? reconcileDrawerSave(item, submitted, saved) : item));
@@ -145,6 +163,8 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
           ? rollbackDrawerLayout(item, submitted, previous || confirmedRef.current.get(drawer.id)) : item));
       }
       throw error;
+    } finally {
+      if (changingOwner) setBusy(drawer.id, false);
     }
   };
   const queueSave = (drawer, delay = 320) => {
@@ -169,13 +189,21 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     }
     return persistDrawer(drawersRef.current.find((item) => item.id === drawer.id) || drawer);
   };
-  const flushAllSaves = () => {
-    for (const pending of saveTimersRef.current.values()) {
-      clearTimeout(pending.timer);
-      persistDrawer(pending.drawer).catch(() => {});
-    }
-    saveTimersRef.current.clear();
+  const flushAllSaves = async () => {
+    const changed = drawersRef.current.filter((drawer) => {
+      const saved = confirmedRef.current.get(drawer.id);
+      return saveTimersRef.current.has(drawer.id) || !saved || JSON.stringify(saved) !== JSON.stringify(drawer);
+    });
+    try { await Promise.all(changed.map((drawer) => persistDrawer(drawer))); await flushAssetNoteDrawerSaves(); }
+    catch (error) { announce(error?.message || error); throw error; }
   };
+  const flushRef = useRef(flushAllSaves);
+  flushRef.current = flushAllSaves;
+  useEffect(() => {
+    const beforeLeave = (event) => event.detail.promises.push(flushRef.current());
+    window.addEventListener("asset-text-before-leave", beforeLeave);
+    return () => window.removeEventListener("asset-text-before-leave", beforeLeave);
+  }, []);
 
   useEffect(() => {
     const portal = portalRef.current;
@@ -196,17 +224,13 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     setPreview(null);
     setLoadedAssetKey("");
     setScaleMenu(null);
+    setAttachmentMenu(null);
     setLoadError("");
     setEditingId("");
     setSelectedDrawerId("");
     setDrawerMenu(null);
-    if (!assetIds.length) {
-      updateDrawerList([]);
-      setLoadedAssetKey(assetKey);
-      return () => { cancelled = true; };
-    }
     updateDrawerList([]);
-    listAssetNoteDrawers(assetIds)
+    listCategoryNoteDrawers(activeCategoryId)
       .then((items) => {
         if (cancelled) return;
         const normalized = items.map(normalizeDrawer);
@@ -257,6 +281,7 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     const closeDrawerMenu = (event) => {
       if (!event.target.closest?.(".asset-note-drawer-context-menu")) setDrawerMenu(null);
       if (!event.target.closest?.(".asset-note-scale-panel, .asset-note-drawer-grip")) setScaleMenu(null);
+      if (!event.target.closest?.(".asset-note-attachment-panel, .asset-note-attachment-title")) setAttachmentMenu(null);
     };
     document.addEventListener("pointerdown", closeDrawerMenu);
     return () => document.removeEventListener("pointerdown", closeDrawerMenu);
@@ -274,6 +299,7 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     debugMagnet: import.meta.env.DEV && new URLSearchParams(window.location.search).get("drawerSnapDebug") === "1",
     getAsset: (assetId) => assetsRef.current.find((asset) => asset.id === assetId),
     getDrawers: () => drawersRef.current,
+    getAssets: () => visibleAssetsRef.current,
     onDraft: (drawer) => updateDrawerList((current) => current.map((item) => item.id === drawer.id ? { ...drawer, text: item.text } : item)),
     onCommit: persistDrawer,
     onPreview: setPreview,
@@ -281,9 +307,21 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
   });
 
   useImperativeHandle(ref, () => ({
+    flush: () => flushRef.current(),
     getVisibleRects() {
-      return visibleAssets.flatMap((asset) => (drawersRef.current.filter((drawer) => drawer.assetId === asset.id))
-        .map((drawer) => drawerVisibleRect(asset, drawer)));
+      return drawersRef.current.filter((drawer) => !drawer.assetId || visibleAssetIds.has(drawer.assetId))
+        .map((drawer) => drawerVisibleRect(assetForDrawer(drawer), drawer));
+    },
+    async addIndependent(point) {
+      if (loadedAssetKey !== assetKey || loadError) { announce("备注正在读取或读取失败，无法安全新增"); return; }
+      const epoch = loadEpochRef.current;
+      try {
+        const created = await createIndependentNoteDrawer(activeCategoryId, point);
+        if (epoch !== loadEpochRef.current) return;
+        confirmedRef.current.set(created.id, created);
+        updateDrawerList((current) => [...current, created]);
+        setSelectedDrawerId(created.id); setEditingId(created.id);
+      } catch (error) { announce(error?.message || error); }
     },
     async addForAsset(assetId) {
       const asset = assetsRef.current.find((item) => item.id === assetId);
@@ -351,8 +389,8 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
     event.preventDefault();
     event.stopPropagation();
-    const asset = assetsRef.current.find((item) => item.id === drawer.assetId);
-    if (!asset || drawer.locked || isDrawerCollapsed(drawer)) return;
+    const asset = assetForDrawer(drawer);
+    if (drawer.locked || isDrawerCollapsed(drawer) || attachmentBusyRef.current.has(drawer.id)) return;
     const deltaX = event.key === "ArrowRight" ? 10 : event.key === "ArrowLeft" ? -10 : 0;
     const deltaY = event.key === "ArrowDown" ? 10 : event.key === "ArrowUp" ? -10 : 0;
     const candidate = resizeDrawerByDelta(asset, drawer, corner, deltaX, deltaY);
@@ -426,6 +464,41 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
       x: clamp((rect?.right ?? event.clientX) - 260, 8, Math.max(8, window.innerWidth - 268)),
       y: clamp((rect?.bottom ?? event.clientY) + 6, 8, Math.max(8, window.innerHeight - 170)) });
   };
+  const closeAttachmentSettings = () => {
+    const id = attachmentMenu?.drawerId;
+    setAttachmentMenu(null);
+    if (id) requestAnimationFrame(() => document.querySelector(`article[data-drawer-id="${CSS.escape(id)}"] .asset-note-attachment-title`)?.focus());
+  };
+  const openAttachmentSettings = (event, drawer) => {
+    if (drawer.locked || attachmentBusyRef.current.has(drawer.id)) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    setScaleMenu(null); setDrawerMenu(null); setSelectedDrawerId(drawer.id);
+    setAttachmentMenu({ drawerId: drawer.id,
+      x: clamp(rect.left, 8, Math.max(8, window.innerWidth - 308)),
+      y: clamp(rect.bottom + 6, 8, Math.max(8, window.innerHeight - 340)) });
+  };
+  const chooseAttachment = async (assetId) => {
+    let latest = drawersRef.current.find((item) => item.id === attachmentMenu?.drawerId);
+    if (!latest || latest.locked || attachmentBusyRef.current.has(latest.id)) return;
+    if ((latest.assetId ?? null) === assetId && (assetId === null || isDrawerDocked(latest))) { closeAttachmentSettings(); return; }
+    if (editingId === latest.id && textareaRef.current) latest = { ...latest, text: textareaRef.current.value };
+    let updated;
+    if (!assetId) {
+      const asset = assetForDrawer(latest);
+      const rect = isDrawerDocked(latest) ? localDrawerRectToWorld(drawerWorldRect(asset, latest), asset) : drawerWorldRect(asset, latest);
+      updated = { ...latest, assetId: null, categoryId: activeCategoryId, mode: "floating", floatingX: rect.left, floatingY: rect.top };
+    } else {
+      const asset = assetsRef.current.find((item) => item.id === assetId);
+      if (!asset) { announce("附属资产不存在"); return; }
+      if (drawersRef.current.filter((item) => item.assetId === assetId && item.id !== latest.id).length >= 3) { announce("该资产已有 3 个备注抽屉"); return; }
+      updated = resolveDrawerPlacement(asset, { ...latest, assetId, categoryId: activeCategoryId, mode: "docked-expanded" }, drawersRef.current);
+      if (!updated) { announce("目标资产各边空间不足，请先移动或缩小其他抽屉"); return; }
+    }
+    updateDrawerList((current) => current.map((item) => item.id === latest.id ? updated : item));
+    setEditingId("");
+    try { await persistDrawer(updated, latest); closeAttachmentSettings(); }
+    catch (error) { announce(error?.message || error); }
+  };
   const changeScale = (id, percent) => {
     if (!Number.isFinite(percent)) return;
     const latest = drawersRef.current.find((item) => item.id === id);
@@ -444,7 +517,7 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
   const toggleCollapsed = (drawer) => {
     let latest = drawersRef.current.find((item) => item.id === drawer.id) || drawer;
     if (editingId === latest.id && textareaRef.current) latest = { ...latest, text: textareaRef.current.value };
-    if (!isDrawerDocked(latest) || controllerRef.current?.active) return;
+    if (!isDrawerDocked(latest) || controllerRef.current?.active || attachmentBusyRef.current.has(latest.id)) return;
     const updated = { ...latest, mode: isDrawerCollapsed(latest) ? "docked-expanded" : "docked-collapsed" };
     if (editingId === latest.id) setEditingId("");
     setSelectedDrawerId(latest.id);
@@ -462,18 +535,20 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
   })), [assets, drawersByAsset, preview]);
   useEffect(() => { onDecorationChange?.(decorations); }, [decorations, onDecorationChange]);
 
-  const minimapItems = visibleAssets.flatMap(asset => (drawersByAsset.get(asset.id) || []).map(storedDrawer => {
+  const minimapItems = visibleDrawers.map(storedDrawer => {
+    const asset = assetForDrawer(storedDrawer);
     const active = preview?.drawerId === storedDrawer.id ? preview : null;
     const drawer = active?.placement || storedDrawer;
     const rect = active?.rect || drawerVisibleRect(asset, drawer);
     const docked = active?.kind === "move" ? active.docked : isDrawerDocked(drawer);
     const points = docked && asset.rotation ? [{ x: rect.left, y: rect.top }, { x: rect.right, y: rect.top }, { x: rect.right, y: rect.bottom }, { x: rect.left, y: rect.bottom }].map(point => objectToWorld(point, { ...asset, height: asset.height + (asset.tags?.length ? 44 : 32) })) : null;
     return minimapPolygonItem({ id: `drawer:${drawer.id}`, kind: "note", x: rect.left, y: rect.top, width: rect.right - rect.left, height: rect.bottom - rect.top, zIndex: 200000 + (drawer.orderIndex || 0), selected: selectedDrawerId === drawer.id }, points);
-  }));
+  });
   const minimapKey = JSON.stringify(minimapItems);
   useEffect(() => { onMinimapItems?.(minimapItems); }, [minimapKey, onMinimapItems]);
 
-  const renderedDrawers = visibleAssets.flatMap((asset) => (drawersByAsset.get(asset.id) || []).map((storedDrawer) => {
+  const renderedDrawers = visibleDrawers.map((storedDrawer) => {
+    const asset = assetForDrawer(storedDrawer);
     const activePreview = preview?.drawerId === storedDrawer.id ? preview : null;
     const drawer = activePreview?.placement || storedDrawer;
     const docked = activePreview?.kind === "move" ? activePreview.docked : isDrawerDocked(drawer);
@@ -485,6 +560,9 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     <AssetNoteDrawer
       key={drawer.id}
       drawer={drawer}
+      assetName={drawer.assetId ? assetsRef.current.find((item) => item.id === drawer.assetId)?.name : ""}
+      onAttachmentSettings={openAttachmentSettings}
+      attachmentBusy={attachmentBusy.has(drawer.id)}
       rect={localize(worldRect)}
       handleRect={localize(drawerHandleRect(asset, drawer))}
       fromRect={localize(activePreview?.fromRect && !activePreview.fromRectLocal && docked ? worldDrawerRectToLocal(activePreview.fromRect,asset) : activePreview?.fromRect)}
@@ -499,8 +577,8 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
       snapping={preview?.drawerId === drawer.id && preview.snapping}
       inverseZoom={1 / (viewport.zoom * uiScale)}
       textareaRef={editingId === drawer.id ? textareaRef : null}
-      onMoveStart={(event, item) => { setScaleMenu(null); controllerRef.current.beginMove(event, item); }}
-      onResizeStart={(event, item, corner) => controllerRef.current.beginResize(event, item, corner)}
+      onMoveStart={(event, item) => { if (attachmentBusyRef.current.has(item.id)) return; setScaleMenu(null); setAttachmentMenu(null); controllerRef.current.beginMove(event, item); }}
+      onResizeStart={(event, item, corner) => { if (!attachmentBusyRef.current.has(item.id)) controllerRef.current.beginResize(event, item, corner); }}
       onResizeKeyDown={handleResizeKeyDown}
       onEdit={editDrawer}
       onTextChange={changeText}
@@ -512,34 +590,35 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     />
     );
     return docked ? createPortal(content, host, drawer.id) : content;
-  }));
+  });
   const portalContent = (
     <>
       {renderedDrawers}
       {preview?.dragging && !preview.docked && preview.targetRect && (
-        <div className={`asset-note-drop-placeholder side-${preview.side}`} aria-hidden="true" style={{ left: preview.targetRect.left, top: preview.targetRect.top, width: preview.targetRect.width, height: preview.targetRect.height, transform:`rotate(${assetsRef.current.find(a=>a.id===preview.assetId)?.rotation || 0}deg)`,transformOrigin:`${(assetsRef.current.find(a=>a.id===preview.assetId)?.x || 0)+(assetsRef.current.find(a=>a.id===preview.assetId)?.width || 0)/2-preview.targetRect.left}px ${(assetsRef.current.find(a=>a.id===preview.assetId)?.y || 0)+(drawerAssetFrame(assetsRef.current.find(a=>a.id===preview.assetId)||{height:0}).height)/2-preview.targetRect.top}px`, zIndex: 199999 }} />
+        <div className={`asset-note-drop-placeholder side-${preview.side}`} aria-hidden="true" data-target-asset-id={preview.assetId} style={{ left: preview.targetRect.left, top: preview.targetRect.top, width: preview.targetRect.width, height: preview.targetRect.height, transform:`rotate(${assetsRef.current.find(a=>a.id===preview.assetId)?.rotation || 0}deg)`,transformOrigin:`${(assetsRef.current.find(a=>a.id===preview.assetId)?.x || 0)+(assetsRef.current.find(a=>a.id===preview.assetId)?.width || 0)/2-preview.targetRect.left}px ${(assetsRef.current.find(a=>a.id===preview.assetId)?.y || 0)+(drawerAssetFrame(assetsRef.current.find(a=>a.id===preview.assetId)||{height:0}).height)/2-preview.targetRect.top}px`, zIndex: 199999 }} />
       )}
     </>
   );
+  const attachmentDrawer = attachmentMenu ? drawerById.get(attachmentMenu.drawerId) : null;
   const scaleDrawer = scaleMenu ? drawerById.get(scaleMenu.drawerId) : null;
   const menuDrawer = drawerMenu ? drawerById.get(drawerMenu.drawerId) : null;
 
   useEffect(() => {
     const deselect = (event) => {
-      if (!event.target.closest?.(".asset-note-drawer, .asset-note-drawer-handle, .asset-note-drawer-context-menu, .asset-note-scale-panel")) setSelectedDrawerId("");
+      if (!event.target.closest?.(".asset-note-drawer, .asset-note-drawer-handle,  .asset-note-drawer-context-menu, .asset-note-scale-panel, .asset-note-attachment-panel")) setSelectedDrawerId("");
     };
     const escape = (event) => {
-      if (event.key === "Escape") setScaleMenu(null);
+      if (event.key === "Escape") { setScaleMenu(null); setAttachmentMenu(null); }
       if (event.key === "Escape" && !event.defaultPrevented && !editingId && !controllerRef.current?.active) setSelectedDrawerId("");
     };
     document.addEventListener("pointerdown", deselect, true);
     document.addEventListener("keydown", escape);
     return () => { document.removeEventListener("pointerdown", deselect, true); document.removeEventListener("keydown", escape); };
   }, [editingId]);
-  useEffect(() => () => flushAllSaves(), [activeCategoryId, assetKey]);
+  useEffect(() => () => { flushAllSaves().catch(() => {}); }, [activeCategoryId, assetKey]);
   useEffect(() => () => {
     controllerRef.current?.dispose();
-    flushAllSaves();
+    flushRef.current().catch(() => {});
     clearTimeout(noticeTimerRef.current);
   }, []);
 
@@ -562,12 +641,15 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
           </button>
           <button disabled title="样式选项预留">修改样式（预留）</button>
           <hr />
-          <button disabled={menuDrawer.locked} onClick={() => moveDrawerToSide(menuDrawer, "left")}>移到左侧</button>
-          <button disabled={menuDrawer.locked} onClick={() => moveDrawerToSide(menuDrawer, "right")}>移到右侧</button>
-          <button disabled={menuDrawer.locked} onClick={() => moveDrawerToSide(menuDrawer, "top")}>移到顶部</button>
-          <button disabled={menuDrawer.locked} onClick={() => moveDrawerToSide(menuDrawer, "bottom")}>移到底部</button>
+          <button disabled={menuDrawer.locked || !menuDrawer.assetId || attachmentBusy.has(menuDrawer.id)} onClick={() => moveDrawerToSide(menuDrawer, "left")}>移到左侧</button>
+          <button disabled={menuDrawer.locked || !menuDrawer.assetId || attachmentBusy.has(menuDrawer.id)} onClick={() => moveDrawerToSide(menuDrawer, "right")}>移到右侧</button>
+          <button disabled={menuDrawer.locked || !menuDrawer.assetId || attachmentBusy.has(menuDrawer.id)} onClick={() => moveDrawerToSide(menuDrawer, "top")}>移到顶部</button>
+          <button disabled={menuDrawer.locked || !menuDrawer.assetId || attachmentBusy.has(menuDrawer.id)} onClick={() => moveDrawerToSide(menuDrawer, "bottom")}>移到底部</button>
         </div>
       )}
+      {attachmentDrawer && attachmentMenu && createPortal(
+        <DrawerAttachmentPanel key={attachmentDrawer.id} drawer={attachmentDrawer} assets={assets}
+          position={attachmentMenu} busy={attachmentBusy.has(attachmentDrawer.id)} onChoose={chooseAttachment} onClose={closeAttachmentSettings} />, document.body)}
       {scaleDrawer && scaleMenu && createPortal(
         <DrawerScalePanel key={scaleDrawer.id} drawer={scaleDrawer} position={scaleMenu} onChange={changeScale} onClose={() => setScaleMenu(null)} />, document.body)}
       {notice && <output className="asset-note-drawer-notice" role="status">{notice}</output>}

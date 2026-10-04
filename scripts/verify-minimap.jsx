@@ -10,7 +10,7 @@ document.documentElement.dataset.theme = 'dark';
 document.documentElement.dataset.effectiveTheme = 'dark';
 let drawers = [{ id: 'qa-drawer', assetId: 'qa-asset', text: '备注', mode: 'docked-expanded', side: 'right', offset: 0, width: 240, height: 150, orderIndex: 0, locked: false, createdAt: 1, updatedAt: 1 }];
 mockIPC(async (command, args) => {
-  if (command === 'list_asset_note_drawers') return drawers;
+  if ((command === 'list_asset_note_drawers' || command === 'list_category_note_drawers')) return drawers;
   if (command === 'save_asset_note_drawer') { drawers = drawers.map(item => item.id === args.drawer.id ? args.drawer : item); return args.drawer; }
   if (command === 'set_asset_text_close_guard') return;
   throw Error('Unexpected IPC ' + command);

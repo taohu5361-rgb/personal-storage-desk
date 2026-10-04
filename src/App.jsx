@@ -28,6 +28,8 @@ import { AssetStandardTextLayer } from "./components/AssetStandardTextLayer";
 import { useAssetTextController } from "./hooks/useAssetTextController";
 import { projectTextItems } from "./data/assetTextModel";
 import { AssetSidebar } from "./components/AssetSidebar";
+import { SidebarToggle } from "./components/SidebarToggle";
+import { useSidebarPreference } from "./hooks/useSidebarPreference";
 import { bootDatabase, call, fileUrl, id } from "./data/database";
 
 import { applyTheme } from "./theme";
@@ -132,13 +134,12 @@ function Home({ go }) {
   return (
     <section className="home-page">
       <div className="home-heading">
-        <p className="eyebrow">工作区</p>
-        <h1>今天要打开什么？</h1>
+        <h1>选择你的组织方式</h1>
       </div>
       <div className="home-actions">
         {[
-          [FolderCode, "我的脚本", "整理、查找并启动本地脚本", "scripts"],
-          [Image, "生图资产模型", "建立自己的模型与资产库", "models"],
+          [FolderCode, "排列模式", "有序排列，分类整理你的内容", "scripts"],
+          [Image, "画布模式", "自由布局，直观组织你的内容", "models"],
         ].map(([Icon, title, caption, to]) => (
           <button className="entry-card" key={to} onClick={() => go(to)}>
             <span className="entry-icon">
@@ -158,6 +159,7 @@ function Home({ go }) {
 
 function Scripts({ store }) {
   const { data, run } = store;
+  const sidebar = useSidebarPreference("scripts");
   const [active, setActive] = useState("");
   const [categoryDialog, setCategoryDialog] = useState(false);
   const [scriptDialog, setScriptDialog] = useState(null);
@@ -187,9 +189,13 @@ function Scripts({ store }) {
     }
   };
   return (
-    <div className="workspace-layout">
+    <div className="workspace-layout sidebar-layout" data-sidebar-expanded={sidebar.expanded}>
+      <div id="script-sidebar" className="sidebar-slot" inert={!sidebar.expanded} aria-hidden={!sidebar.expanded}>
       <aside className="script-sidebar">
-        <div className="sidebar-title">分类</div>
+        <div className="sidebar-topbar script-sidebar-topbar">
+          <div className="sidebar-title">分类</div>
+          <SidebarToggle expanded={sidebar.expanded} onToggle={sidebar.toggle} controls="script-sidebar" showLabel />
+        </div>
         <nav>
           {data.scriptCategories.map((x) => (
             <button
@@ -210,25 +216,25 @@ function Scripts({ store }) {
           新增分类
         </button>
       </aside>
+      </div>
       <section className="workspace-main">
+        <div className="script-section-header">
+          <div className="sidebar-page-heading">
+            <SidebarToggle expanded={sidebar.expanded} onToggle={sidebar.toggle} controls="script-sidebar" showLabel hidden={sidebar.expanded} />
+            <header className="content-header">
+              <p className="eyebrow">脚本分类</p>
+              <h1>{current?.name || "脚本"}</h1>
+              {current && <p>{current.description || "暂无分类简介。"}</p>}
+            </header>
+          </div>
+          {scripts.length > 0 && (
+            <button className="primary" onClick={() => setScriptDialog({ mode: "create" })}>
+              <Plus size={16} />新增脚本
+            </button>
+          )}
+        </div>
         {current ? (
           <>
-            <div className="script-section-header">
-              <header className="content-header">
-                <p className="eyebrow">脚本分类</p>
-                <h1>{current.name}</h1>
-                <p>{current.description || "暂无分类简介。"}</p>
-              </header>
-              {scripts.length > 0 && (
-                <button
-                  className="primary"
-                  onClick={() => setScriptDialog({ mode: "create" })}
-                >
-                  <Plus size={16} />
-                  新增脚本
-                </button>
-              )}
-            </div>
             {scripts.length ? (
               <div className="script-list">
                 {scripts.map((script) => (
@@ -348,7 +354,7 @@ function Scripts({ store }) {
       {pendingDelete && (
         <Confirm
           title="删除脚本"
-          text={`确定要删除脚本“${pendingDelete.name}”吗？只会删除个人收纳台中的记录，不会删除硬盘上的脚本文件。`}
+          text={`确定要删除脚本“${pendingDelete.name}”吗？只会删除脚本集合器中的记录，不会删除硬盘上的脚本文件。`}
           onCancel={() => setPendingDelete(null)}
           onConfirm={async () => {
             await saveScripts(
@@ -514,6 +520,9 @@ function Models({ store, go }) {
 
 function Assets({ store, workspaceId, initialCategoryId, go, registerShortcutActions, assetClipboardRef }) {
   const { data, setData, run, reload } = store;
+  const sidebar = useSidebarPreference("assets");
+  const sidebarSearchRef = useRef(null);
+  const [searchFocusRequest, setSearchFocusRequest] = useState(0);
   const workspace = data.workspaces.find((x) => x.id === workspaceId);
   const categories = data.categories.filter(
     (x) => x.workspaceId === workspaceId,
@@ -524,6 +533,16 @@ function Assets({ store, workspaceId, initialCategoryId, go, registerShortcutAct
   const [editingCategory, setEditingCategory] = useState(null);
   const [editingAsset, setEditingAsset] = useState(null);
   const [menuCategoryId, setMenuCategoryId] = useState("");
+  const toggleSidebar = () => {
+    setMenuCategoryId("");
+    sidebar.toggle();
+  };
+  useEffect(() => {
+    if (!searchFocusRequest || !sidebar.expanded) return;
+    sidebarSearchRef.current?.focus();
+    sidebarSearchRef.current?.select();
+    setSearchFocusRequest(0);
+  }, [searchFocusRequest, sidebar.expanded]);
   const [pending, setPending] = useState(null);
   const canvas = useRef();
   const saveTimer = useRef(null);
@@ -680,6 +699,7 @@ function Assets({ store, workspaceId, initialCategoryId, go, registerShortcutAct
     }
   };
   const removeAssets = async (ids) => {
+    await canvas.current?.flushNotes();
     for (const assetId of ids) {
       const asset = data.assets.find(x=>x.id===assetId);
       await run("delete_asset", {id:assetId,deleteManaged:asset?.storageMode==="managed"});
@@ -703,6 +723,7 @@ function Assets({ store, workspaceId, initialCategoryId, go, registerShortcutAct
       return true;
     };
     const actions = {
+      search: () => { sidebar.expand(); setSearchFocusRequest(request => request + 1); return true; },
       save: () => commit(),
       undo: () => canvas.current?.undo(),
       redo: () => canvas.current?.redo(),
@@ -781,7 +802,7 @@ function Assets({ store, workspaceId, initialCategoryId, go, registerShortcutAct
     const textActions=new Set(['save','copy','cut','paste','delete','select-all','canvas-toggle-lock','canvas-bring-top','canvas-send-bottom','canvas-group-selected']);
     registerShortcutActions(Object.fromEntries(Object.entries(actions).map(([action,handler])=>[action,()=>textActions.has(action)&&canvas.current?.textAction(action)?true:handler()])));
     return () => registerShortcutActions({});
-  }, [registerShortcutActions, assetClipboardRef, active, category, data.assets, data.settings?.confirmDelete, workspaceId, go]);
+  }, [registerShortcutActions, assetClipboardRef, active, category, data.assets, data.settings?.confirmDelete, workspaceId, go, sidebar.expand]);
   if (!workspace)
     return (
       <Empty
@@ -793,8 +814,12 @@ function Assets({ store, workspaceId, initialCategoryId, go, registerShortcutAct
       />
     );
   return (
-    <div className="asset-layout">
+    <div className="asset-layout sidebar-layout" data-sidebar-expanded={sidebar.expanded}>
+      <div id="asset-sidebar" className="sidebar-slot" inert={!sidebar.expanded} aria-hidden={!sidebar.expanded}>
       <AssetSidebar
+        searchRef={sidebarSearchRef}
+        expanded={sidebar.expanded}
+        onToggleSidebar={toggleSidebar}
         active={active}
         search={search}
         onSearch={setSearch}
@@ -813,23 +838,24 @@ function Assets({ store, workspaceId, initialCategoryId, go, registerShortcutAct
           else setPending({ kind: "category", ...x });
         }}
       />
+      </div>
       <section className="asset-main canvas-page">
+        <header className="asset-header canvas-header">
+          <div className="sidebar-page-heading">
+            <SidebarToggle expanded={sidebar.expanded} onToggle={toggleSidebar} controls="asset-sidebar" showLabel hidden={sidebar.expanded} />
+            <div className="sidebar-heading-copy">
+              <p className="eyebrow">{workspace.name}</p>
+              <h1>{category?.name || "资产"}</h1>
+              {category?.description && <p className="asset-description">{category.description}</p>}
+            </div>
+          </div>
+          {category && <div className="canvas-header-actions">
+            <button className="secondary" onClick={() => canvas.current?.addText()}><Plus size={16}/>添加文字</button>
+            <button className="primary" onClick={() => setDialog("asset")}><Plus size={16} />添加资产</button>
+          </div>}
+        </header>
         {category ? (
           <>
-            <header className="asset-header canvas-header">
-              <div>
-                <p className="eyebrow">{workspace.name}</p>
-                <h1>{category.name}</h1>
-                <p>{category.description}</p>
-              </div>
-              <div className="canvas-header-actions">
-              <button className="secondary" onClick={() => canvas.current?.addText()}><Plus size={16}/>添加文字</button>
-              <button className="primary" onClick={() => setDialog("asset")}>
-                <Plus size={16} />
-                添加资产
-              </button>
-              </div>
-            </header>
             <AssetCanvas
               ref={canvas}
               textBlocks={(data.categoryTextBlocks || []).filter(b=>b.categoryId===active)}
@@ -973,7 +999,7 @@ function Assets({ store, workspaceId, initialCategoryId, go, registerShortcutAct
           text={
             data.assets.some((x) => x.categoryId === pending.id)
               ? `该分类中仍有 ${data.assets.filter((x) => x.categoryId === pending.id).length} 个资产，必须先移走或删除。`
-              : "确定要删除这个分类吗？"
+              : "确定要删除这个分类及其中的独立备注和画布内容吗？"
           }
           disabled={data.assets.some((x) => x.categoryId === pending.id)}
           onCancel={() => setPending(null)}
@@ -986,7 +1012,7 @@ function Assets({ store, workspaceId, initialCategoryId, go, registerShortcutAct
       {pending?.kind === "assets" && (
         <Confirm
           title="删除资产"
-          text="只会删除记录；托管模式会同时删除个人收纳台自己的托管副本，绝不会删除引用模式的用户源文件。"
+          text="资产的备注抽屉会保留为原分类中的独立备注。托管模式会同时删除脚本集合器自己的托管副本，引用模式的用户源文件会保留。"
           onCancel={() => setPending(null)}
           onConfirm={async () => {
             await removeAssets(pending.ids);
@@ -1910,7 +1936,7 @@ function WorkspaceDeleteConfirm({
       >
         <header>
           <h2>删除模型</h2>
-          <p>此操作会清理个人收纳台中的模型管理数据。</p>
+          <p>此操作会清理脚本集合器中的模型管理数据。</p>
         </header>
         <div className="dialog-fields confirm-copy">
           <p>
@@ -1940,7 +1966,7 @@ function WorkspaceDeleteConfirm({
                   checked={deleteManaged}
                   onChange={() => setDeleteManaged(true)}
                 />
-                同时删除个人收纳台管理的托管文件
+                同时删除脚本集合器管理的托管文件
               </label>
             </div>
           )}
@@ -2323,6 +2349,10 @@ export default function App() {
       return true;
     }
     if (actionId === "search") {
+      if (page === "assets" && shortcutActionsRef.current.search) {
+        setImmersive(false);
+        return shortcutActionsRef.current.search();
+      }
       const field = document.querySelector("[data-shortcut-search]");
       field?.focus();
       field?.select?.();

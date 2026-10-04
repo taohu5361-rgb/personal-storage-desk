@@ -1,4 +1,5 @@
 export const DRAWER_LAYOUT_FIELDS = Object.freeze([
+  "assetId", "categoryId", "orderIndex",
   "mode", "side", "offset", "width", "height", "floatingX", "floatingY", "locked", "textScale",
 ]);
 
@@ -16,6 +17,9 @@ export function reconcileDrawerSave(current, submitted, saved) {
 export function rollbackDrawerLayout(current, submitted, previous) {
   if (!previous || !sameDrawerLayout(current, submitted)) return current;
   const restored = { ...current };
-  for (const field of DRAWER_LAYOUT_FIELDS) restored[field] = previous[field];
+  for (const field of DRAWER_LAYOUT_FIELDS) {
+    if (Object.hasOwn(previous, field)) restored[field] = previous[field];
+    else delete restored[field];
+  }
   return restored;
 }

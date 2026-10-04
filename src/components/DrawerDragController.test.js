@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { DrawerDragController, DRAWER_MAGNET, drawerRectCenter, hitDrawerSnapZone, screenEventToWorld, drawerVisualRect, overlapsAsset } from "./DrawerDragController.js";
+import { DrawerDragController, DRAWER_MAGNET, drawerRectCenter, hitDrawerSnapZone, screenEventToWorld, drawerVisualRect, overlapsAsset, findDrawerSnapTarget } from "./DrawerDragController.js";
 import { drawerWorldRect } from "./DrawerLayoutEngine.js";
 import {objectToWorld} from './canvasTransforms.js';
 import {drawerAssetFrame} from './DrawerDragController.js';
@@ -19,6 +19,38 @@ const asset = { id: "a", x: 0, y: 0, width: 600, height: 400 };
 const drawer = { id: "d", assetId: "a", side: "right", offset: 50, width: 240, height: 150 };
 const close = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-8, actual + " != " + expected);
 const sides = ["left", "right", "top", "bottom"];
+test("cross-asset snap chooses nearest valid edge, then highest layer; full targets are rejected", () => {
+  const a = { ...asset, categoryId: "c", name: "A" };
+  const b = { ...a, id: "b", x: 1000, zIndex: 4 };
+  const floating = { ...drawer, categoryId: "c", mode: "floating" };
+  const rect = { left: 1650, top: 100, width: 240, height: 150 };
+  let result = findDrawerSnapTarget(rect, { x: 20, y: 16 }, floating, [a, b], []);
+  assert.equal(result.candidate.placement.assetId, "b");
+  assert.equal(result.candidate.placement.side, "right");
+  const c = { ...b, id: "c", zIndex: 8 };
+  assert.equal(findDrawerSnapTarget(rect, { x: 20, y: 16 }, floating, [b, c], []).candidate.asset.id, "c");
+  result = findDrawerSnapTarget(rect, { x: 20, y: 16 }, floating, [b], [0,1,2].map(i => ({ ...drawer, id: "full"+i, assetId: "b" })));
+  assert.equal(result.candidate, null); assert.match(result.blocked.reason, /3 个/);
+  const rotated = { ...b, rotation: 90 };
+  const center = objectToWorld({ x: b.x + b.width + 160, y: 200 }, drawerAssetFrame(rotated));
+  result = findDrawerSnapTarget({ ...rect, left: center.x - 120, top: center.y - 75 }, { x:20,y:16 }, floating, [rotated], []);
+  assert.equal(result.candidate.placement.assetId, "b"); assert.equal(result.candidate.placement.side,"right");
+});
+
+test("independent notes move and resize without any source asset and can acquire an owner", () => {
+  globalThis.window = { addEventListener() {}, removeEventListener() {} };
+  const free = { ...drawer, assetId: null, categoryId: "c", mode: "floating", floatingX: 800, floatingY: 100 };
+  let draft, preview, committed;
+  const ctrl = new DrawerDragController({ getAsset: () => undefined, getAssets: () => [{ ...asset, categoryId: "c" }], getDrawers: () => [free],
+    getWorldPoint: e => ({x:e.clientX,y:e.clientY}), onDraft: d => draft=d, onCommit: d => committed=d, onPreview: p => preview=p });
+  const event=(x,y)=>({button:0,pointerId:9,clientX:x,clientY:y,stopPropagation(){},preventDefault(){}});
+  ctrl.beginMove(event(830,116),free);ctrl.handlePointerMove(event(670,116));
+  assert.equal(preview.assetId,"a");ctrl.finish(false);assert.equal(committed.assetId,"a");
+  ctrl.beginMove(event(830,116),free);ctrl.handlePointerMove(event(1330,116));ctrl.finish(false);
+  assert.equal(committed.assetId,null);assert.equal(committed.floatingX,1300);
+  ctrl.beginResize(event(1040,250),free,"se");ctrl.handlePointerMove(event(1080,290));ctrl.finish(false);
+  assert.equal(draft.width,280);assert.equal(draft.assetId,null);ctrl.dispose();
+});
 function harness({ initial = drawer, zoom = 1, uiScale = 1, other = [], grab = { x: 30, y: 16 }, viewport = { x: -53, y: 86 }, surface = { left: 23, top: 44 }, magnet } = {}) {
   globalThis.window = { addEventListener() {}, removeEventListener() {} };
   let preview = null;

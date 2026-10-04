@@ -10,7 +10,7 @@ export function AssetNoteDrawer({
   drawer, rect, handleRect, editing, dragging, selected, resizing, resizeCorner,
   docked = true, onSelect, snapping, fromRect, grab, inverseZoom, textareaRef,
   onMoveStart, onResizeStart, onResizeKeyDown, onEdit, onTextChange, onTextBlur,
-  onTextKeyDown, onContextMenu, onToggleCollapsed, onScaleSettings,
+  onTextKeyDown, onContextMenu, onToggleCollapsed, onScaleSettings, assetName, onAttachmentSettings, attachmentBusy,
 }) {
   const gripCleanup = useRef(null);
   useEffect(() => () => gripCleanup.current?.(), []);
@@ -115,7 +115,13 @@ export function AssetNoteDrawer({
       >
         <div className="asset-note-drawer-content" id={contentId}>
           <header className="asset-note-drawer-header" onPointerDown={(event) => { onSelect(drawer.id); onMoveStart(event, drawer); }} onDoubleClick={(event) => event.stopPropagation()} title={drawer.locked ? "位置与尺寸已锁定" : "拖动标题栏移动，双击正文编辑"}>
-            <span>备注</span>
+            <button type="button" className="asset-note-attachment-title"
+              aria-label={`更换附属资产：${assetName || "独立备注"}`} aria-haspopup="dialog"
+              title={assetName ? `附属：${assetName}` : "独立备注"} disabled={drawer.locked || attachmentBusy}
+              onPointerDown={stopControlPointer} onKeyDown={stopControlKey}
+              onDoubleClick={(event) => event.stopPropagation()}
+              onClick={(event) => { event.stopPropagation(); onAttachmentSettings(event, drawer); }}
+            ><span>{assetName ? `附属：${assetName}` : "独立备注"}</span><ChevronDown size={12} /></button>
             <span className="asset-note-drawer-header-actions">
               {drawer.locked && <Lock size={12} aria-label="已锁定" />}
               <button type="button" className="asset-note-drawer-grip" aria-label="文字缩放" title="点击调整文字缩放，拖动移动备注" onPointerDown={beginGrip} onDoubleClick={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); if (e.detail === 0) onScaleSettings(e, drawer); }} onKeyDown={stopControlKey}>⠿</button>

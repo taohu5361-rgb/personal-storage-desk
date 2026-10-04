@@ -28,3 +28,12 @@ test("scale saves preserve newer text and reject stale scale responses", () => {
   assert.equal(rollbackDrawerLayout(newer, submitted, original), newer);
   assert.deepEqual(rollbackDrawerLayout({ ...submitted, text: newer.text }, submitted, original), { ...original, text: newer.text });
 });
+
+test("old owner responses cannot undo transfer and failed transfer retains newer text", () => {
+  const before = { ...original, assetId: "a", categoryId: "category", orderIndex: 0 };
+  const submitted = { ...before, assetId: "b", side: "left" };
+  const latest = { ...submitted, text: "转移过程中继续输入的中文" };
+  assert.equal(reconcileDrawerSave(latest, before, before), latest);
+  assert.deepEqual(rollbackDrawerLayout(latest, submitted, before), { ...before, text: latest.text });
+  assert.equal(rollbackDrawerLayout({ ...latest, assetId: null }, submitted, before).assetId, null);
+});

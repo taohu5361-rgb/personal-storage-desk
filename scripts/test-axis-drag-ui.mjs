@@ -1,10 +1,10 @@
-import { reportDirectory, browserOptions, qaBaseURL } from './qa-support.mjs';
 import assert from 'node:assert/strict';
+import {pathToFileURL} from 'node:url';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {imageCenter,axisSnapPreview} from '../src/components/canvasAxisGeometry.js';
-import { chromium } from 'playwright';
-const output=reportDirectory(import.meta.url);await mkdir(output,{recursive:true});
-const browser=await chromium.launch({...browserOptions,headless:true}),page=await browser.newPage({viewport:{width:1500,height:1000}}),errors=[],checks=[];
+const {chromium}=await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
+const output=process.argv[2];await mkdir(output,{recursive:true});
+const browser=await chromium.launch({channel:'msedge',headless:true}),page=await browser.newPage({viewport:{width:1500,height:1000}}),errors=[],checks=[];
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 await page.addInitScript(()=>{if(!sessionStorage.getItem('grid-migration-seeded')){localStorage.setItem('canvas-transform-grid','true');localStorage.removeItem('canvas-transform-grid-continuous-v1');sessionStorage.setItem('grid-migration-seeded','1');}});
 const state=()=>page.evaluate(()=>window.axisQA.state());
@@ -19,7 +19,7 @@ async function pick(id){const start=await begin(id);await pointer('pointerup',st
 async function activate(){await pick('r');await page.getByRole('button',{name:'排列 · 1',exact:true}).click();await settle();assert.equal(await page.locator('.canvas-axis-guides').count(),1);assert.equal(await page.locator('.canvas-arrange-panel').count(),0);}
 async function reset(mode){await page.evaluate(mode=>{window.axisQA.ui('1');window.axisQA.mode(mode);window.axisQA.reset();},mode);await settle();}
 try{
- await page.goto(`${qaBaseURL}/scripts/verify-axis-drag.html`);await page.waitForFunction(()=>window.axisQA);await settle();
+ await page.goto('http://127.0.0.1:1420/scripts/verify-axis-drag.html');await page.waitForFunction(()=>window.axisQA);await settle();
  assert.equal(await page.getByLabel('网格吸附',{exact:true}).isChecked(),false);await page.getByLabel('网格吸附',{exact:true}).check();await page.reload();await page.waitForFunction(()=>window.axisQA);assert.equal(await page.getByLabel('网格吸附',{exact:true}).isChecked(),true);await page.getByLabel('网格吸附',{exact:true}).uncheck();checks.push('旧网格偏好只重置一次，后续主动选择保留');
  for(const mode of ['outer','inner']){
   await reset(mode);

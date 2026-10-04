@@ -205,6 +205,7 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
   const transforms=useOuterCanvasTransforms({assets,groups,selected,setSelected,textLayerRef,surfaceRef,viewport,onAssetsChange,onGroupsChange,onSaveTransform,onSaveText,onAssetsCommit,onGroupsCommit,onChangeGroupMember,expandGroupsToFit,readUiScale,displayAssets,screenToWorld,getSurfacePoint,settings,categoryId:activeCategory.id});
   transformsRef.current=transforms;
   useImperativeHandle(ref, () => ({
+    flushNotes: () => drawerLayerRef.current?.flush(),
     getVisibleCenter() {
       const rect = surfaceRef.current?.getBoundingClientRect();
       if (!rect) return { x: 0, y: 0 };
@@ -792,8 +793,9 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
     });
     setMenu(null);
   };
-  const moveToCategory = (assetId, categoryId) => {
+  const moveToCategory = async (assetId, categoryId) => {
     if (!categoryId) return;
+    try { await drawerLayerRef.current?.flush(); } catch { return; }
     onAssetsChange(
       assets.map((asset) =>
         asset.id === assetId ? { ...asset, categoryId } : asset,
@@ -1251,6 +1253,7 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
             </>
           ) : (
             <>
+              <button onClick={() => { drawerLayerRef.current?.addIndependent(menu.worldPoint); setMenu(null); }}>添加独立备注</button>
               {TEXT_BLOCK_STYLES.map(style=><button key={style.id} onClick={()=>{textLayerRef.current?.addText(style.id,menu.worldPoint);setMenu(null);}}>添加{style.label}</button>)}
               <hr />
               {menu.assetIds?.length >= 2 && <button onClick={() => createGroup(menu.assetIds)}>创建分组</button>}

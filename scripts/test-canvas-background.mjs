@@ -1,6 +1,6 @@
-import { reportDirectory, browserOptions, qaBaseURL } from './qa-support.mjs';
 import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { canvasSurfaceStyle, resolveCanvasAppearance, normalizeCanvasColor } from '../src/canvasAppearance.js';
 
@@ -15,15 +15,15 @@ assert.equal(normalizeCanvasColor('#f7f7f7'),'#ffffff');
 assert.equal(normalizeCanvasColor('#3b3d42'),'#000000');
 assert.deepEqual(resolveCanvasAppearance({},{canvasBackgroundColor:'#000000',canvasBackground:'solid'}),{color:'#000000',pattern:'solid'});
 checks.push('旧颜色兼容、默认继承、10%–500% 网格间距与负坐标相位');
-import { chromium } from 'playwright';
-const output = path.resolve(reportDirectory(import.meta.url));mkdirSync(output,{recursive:true});
-const browser = await chromium.launch({...browserOptions,headless:true});
+const { chromium } = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE).href);
+const output = path.resolve(process.argv[2] || '.canvas-background-qa');mkdirSync(output,{recursive:true});
+const browser = await chromium.launch({channel:'msedge',headless:true});
 const page = await browser.newPage({viewport:{width:1280,height:820}});
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
 const surface = () => page.locator('.asset-canvas, .asset-inner-canvas');
 const paint = () => surface().evaluate(node=>{const s=getComputedStyle(node);return {color:s.backgroundColor,image:s.backgroundImage,size:s.backgroundSize,position:s.backgroundPosition,rect:{width:node.clientWidth,height:node.clientHeight},text:s.getPropertyValue('--canvas-foreground').trim()};});
 try {
-  await page.goto(`${qaBaseURL}/scripts/verify-canvas-background.html`);
+  await page.goto('http://127.0.0.1:5193/scripts/verify-canvas-background.html');
   await page.waitForSelector('.asset-canvas');
   await page.getByRole('button',{name:'画布背景',exact:true}).click();
   assert.equal(await page.locator('.canvas-appearance-panel select, .canvas-appearance-panel input[type=color]').count(),0);

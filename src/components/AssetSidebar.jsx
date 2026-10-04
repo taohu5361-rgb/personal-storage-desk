@@ -1,12 +1,16 @@
 import { Box, CirclePlus, MoreHorizontal, Search } from 'lucide-react'
+import { SidebarToggle } from './SidebarToggle'
 
-export function AssetSidebar({ active, search, onSearch, onSelect, onAdd, categories = [], menuCategoryId, onToggleMenu, onEdit, onDelete }) {
+export function AssetSidebar({ active, search, onSearch, onSelect, onAdd, categories = [], menuCategoryId, onToggleMenu, onEdit, onDelete, searchRef, expanded, onToggleSidebar }) {
   return (
     <aside className="asset-sidebar">
+      <div className="sidebar-topbar asset-sidebar-topbar">
       <label className="search-box">
         <Search size={16} /><span className="sr-only">搜索资产</span>
-        <input data-shortcut-search value={search} onChange={(e) => onSearch(e.target.value)} placeholder="搜索资产" />
+        <input ref={searchRef} data-shortcut-search value={search} onChange={(e) => onSearch(e.target.value)} placeholder="搜索资产" />
       </label>
+      <SidebarToggle expanded={expanded} onToggle={onToggleSidebar} controls="asset-sidebar" showLabel />
+      </div>
       <nav className="side-nav" aria-label="资产分类">
         {categories.map((category) => <div className={`asset-category-row ${active === category.id ? 'active' : ''}`} key={category.id}>
           <button className="asset-category-select" onClick={() => onSelect(category.id)}><Box size={17} /><span>{category.name}</span></button>

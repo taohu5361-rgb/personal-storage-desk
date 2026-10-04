@@ -7,7 +7,7 @@ import { resolveCanvasAppearance } from '../src/canvasAppearance';
 import '../src/theme.css';
 import '../src/styles.css';
 
-mockIPC(command => command === 'list_asset_note_drawers' ? [] : undefined);
+mockIPC(command => (command === 'list_asset_note_drawers' || command === 'list_category_note_drawers') ? [] : undefined);
 document.documentElement.dataset.theme = 'dark';
 document.documentElement.dataset.effectiveTheme = 'dark';
 const key = 'canvas-background-isolated-qa';

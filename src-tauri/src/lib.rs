@@ -893,6 +893,8 @@ fn delete_workspace(app: AppHandle, id: String, delete_managed: bool) -> Result<
 }
 fn delete_workspace_rows(c: &mut Connection, id: &str) -> Result<()> {
     let tx = c.transaction().map_err(|e| e.to_string())?;
+    // Deleting an entire workspace explicitly removes its categories and notes.
+    tx.execute("DELETE FROM asset_note_drawers WHERE category_id IN (SELECT id FROM categories WHERE workspace_id=?1)", [id]).map_err(|e|e.to_string())?;
     tx.execute(
         "DELETE FROM asset_prompts WHERE asset_id IN (SELECT id FROM assets WHERE workspace_id=?1)",
         [id],
@@ -1708,11 +1710,13 @@ fn delete_asset(app: AppHandle, id: String, delete_managed: bool) -> Result<()> 
         return Ok(());
     };
     if mode == "managed" && !delete_managed {
-        return Err("该资产包含个人收纳台自己的托管副本，请确认删除。".into());
+        return Err("该资产包含脚本集合器自己的托管副本，请确认删除。".into());
     }
     let managed_root = PathBuf::from(settings(&c).managed_asset_dir).join(&id);
-    c.execute("DELETE FROM assets WHERE id=?1", [&id])
-        .map_err(|e| e.to_string())?;
+    let tx = c.unchecked_transaction().map_err(|e|e.to_string())?;
+    asset_note_drawers::detach_for_asset_delete(&tx, &id)?;
+    tx.execute("DELETE FROM assets WHERE id=?1", [&id]).map_err(|e|e.to_string())?;
+    tx.commit().map_err(|e|e.to_string())?;
     drop(c);
     let _ = fs::remove_dir_all(app_dir(&app)?.join("cache").join(&id));
     if managed_root.exists() {
@@ -2128,7 +2132,7 @@ fn restore_database(app: AppHandle) -> Result<bool> {
         .query_row("SELECT COUNT(*) FROM app_settings", [], |r| {
             r.get::<_, i64>(0)
         })
-        .map_err(|_| "所选文件不是个人收纳台数据库".to_string())?;
+        .map_err(|_| "所选文件不是脚本集合器数据库".to_string())?;
     drop(candidate);
     let target = db_path(&app)?;
     let current = db(&app)?;
@@ -3111,7 +3115,7 @@ pub fn run() {
             let menu = tauri::menu::Menu::with_items(app, &[&restore])?;
             tauri::tray::TrayIconBuilder::with_id("main-tray")
                 .icon(icon)
-                .tooltip("个人收纳台：左键恢复，右键打开菜单")
+                .tooltip("脚本集合器：左键恢复，右键打开菜单")
                 .menu(&menu)
                 .show_menu_on_left_click(false)
                 .on_menu_event(|app, event| {
@@ -3156,6 +3160,8 @@ pub fn run() {
             finish_window_close,
             load_app_state,
             asset_note_drawers::list_asset_note_drawers,
+            asset_note_drawers::list_category_note_drawers,
+            asset_note_drawers::transfer_asset_note_drawer,
             asset_note_drawers::create_asset_note_drawer,
             asset_note_drawers::save_asset_note_drawer,
             asset_note_drawers::delete_asset_note_drawer,
@@ -3219,7 +3225,7 @@ pub fn run() {
             migrate_legacy_data
         ])
         .build(tauri::generate_context!())
-        .expect("启动个人收纳台失败")
+        .expect("启动脚本集合器失败")
         .run(|app, event| {
             match event {
                 tauri::RunEvent::Ready => {
@@ -3238,4 +3244,3 @@ pub fn run() {
             }
         });
 }
-

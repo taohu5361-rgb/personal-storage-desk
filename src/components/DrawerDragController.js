@@ -67,6 +67,32 @@ export function outwardPull(side, dx, dy) {
   return side === "left" ? -dx : side === "right" ? dx : side === "top" ? -dy : dy;
 }
 
+export function findDrawerSnapTarget(rect, grab, drawer, assets, existing, attachDistance = DRAWER_MAGNET.attachDistance) {
+  const candidates = [], blocked = [];
+  const visual = drawerVisualRect(rect, grab);
+  for (const asset of assets) {
+    const center = worldToObject(drawerRectCenter(rect), drawerAssetFrame(asset));
+    const localRect = worldDrawerRectToLocal(rect, asset);
+    const localBounds = boundsOf({ x: localRect.left, y: localRect.top, width: localRect.width, height: localRect.height, rotation: -(asset.rotation || 0) });
+    const imageCenter = objectToWorld({ x: asset.x + asset.width / 2, y: asset.y + asset.height / 2 }, drawerAssetFrame(asset));
+    if (intersectsRotated({ left: visual.left, top: visual.top, right: visual.left + visual.width, bottom: visual.top + visual.height }, { ...asset, x: imageCenter.x - asset.width / 2, y: imageCenter.y - asset.height / 2 })) continue;
+    const side = hitDrawerSnapZone(center, asset, attachDistance, { width: localBounds.right - localBounds.left, height: localBounds.bottom - localBounds.top });
+    if (!side) continue;
+    const targetDrawers = existing.filter((item) => item.assetId === asset.id && item.id !== drawer.id);
+    if (targetDrawers.length >= 3) { blocked.push({ assetId: asset.id, reason: "该资产已有 3 个备注抽屉" }); continue; }
+    const placement = resolveDrawerPlacement(asset, {
+      ...drawer, assetId: asset.id, categoryId: asset.categoryId ?? drawer.categoryId, mode: "docked-expanded", side,
+      offset: projectPointOnSide(center, asset, side) - (vertical(side) ? drawer.height : drawer.width) / 2,
+    }, existing, { preferredSide: side, allowFallbackSide: false });
+    if (!placement) { blocked.push({ assetId: asset.id, reason: "目标边空间不足" }); continue; }
+    const gap = side === "left" ? asset.x - localBounds.right : side === "right" ? localBounds.left - asset.x - asset.width
+      : side === "top" ? asset.y - localBounds.bottom : localBounds.top - asset.y - asset.height;
+    candidates.push({ asset, placement, distance: Math.max(0, gap) });
+  }
+  candidates.sort((a, b) => a.distance - b.distance || (b.asset.zIndex || 0) - (a.asset.zIndex || 0) || a.asset.id.localeCompare(b.asset.id));
+  return { candidate: candidates[0] || null, blocked: candidates.length ? null : blocked[0] || null };
+}
+
 export class DrawerDragController {
   constructor(options = {}) {
     this.options = options;
@@ -88,7 +114,7 @@ export class DrawerDragController {
     if (event.button !== 0 || drawer.locked || isDrawerCollapsed(drawer)) return;
     event.preventDefault();
     const asset = this.options.getAsset(drawer.assetId);
-    if (!asset) return;
+    if (!asset && isDrawerDocked(drawer)) return;
     if (this.active) this.finish(true);
     clearTimeout(this.settleTimer);
     this.options.onPreview?.(null);
@@ -126,7 +152,7 @@ export class DrawerDragController {
     active.didMove = true;
     event.preventDefault();
     const asset = this.options.getAsset(active.assetId);
-    if (!asset) { this.finish(true); return; }
+    if (!asset && active.docked) { this.finish(true); return; }
     const worldPoint=this.options.getWorldPoint(event);
     const point=active.docked?worldToObject(worldPoint,drawerAssetFrame(asset)):worldPoint;
     const dx = point.x - active.startPoint.x;
@@ -172,7 +198,19 @@ export class DrawerDragController {
       };
     }
     // Compute the actual visible card's logical center AFTER updating its position.
-    const center = active.docked?drawerRectCenter(active.floatingRect):worldToObject(drawerRectCenter(active.floatingRect),drawerAssetFrame(asset));
+    const center = active.docked?drawerRectCenter(active.floatingRect):asset ? worldToObject(drawerRectCenter(active.floatingRect),drawerAssetFrame(asset)) : drawerRectCenter(active.floatingRect);
+    if (!active.docked && this.options.getAssets) {
+      const { candidate, blocked } = findDrawerSnapTarget(active.floatingRect, active.grab, active.initial, this.options.getAssets(), this.options.getDrawers(), tuning.attachDistance);
+      active.snapTarget = candidate?.placement || null;
+      active.hitZone = candidate?.placement.side || null;
+      active.snapAsset = candidate?.asset || null;
+      active.blockedTarget = blocked;
+      this.options.onPreview?.({ assetId: candidate?.asset.id || active.assetId, drawerId: active.drawerId, kind: "move", dragging: true,
+        docked: false, rect: active.floatingRect, grab: active.grab, side: candidate?.placement.side,
+        targetRect: candidate ? drawerWorldRect(candidate.asset, candidate.placement) : null,
+        targetName: candidate?.asset.name, blockedReason: blocked?.reason });
+      return;
+    }
     const localRect=active.docked?active.floatingRect:worldDrawerRectToLocal(active.floatingRect,asset);
     const localBounds=boundsOf({x:localRect.left,y:localRect.top,width:localRect.width,height:localRect.height,rotation:-(asset.rotation||0)});
     const imageCenter=objectToWorld({x:asset.x+asset.width/2,y:asset.y+asset.height/2},drawerAssetFrame(asset));
@@ -248,10 +286,11 @@ export class DrawerDragController {
       : active.last;
     this.options.onDraft?.(destination);
     if (!cancelled) {
+      if (active.blockedTarget && !active.snapTarget) this.options.onError?.(active.blockedTarget.reason);
       this.options.onCommit?.(destination, active.initial)?.catch?.((error) => this.options.onError?.(error));
     }
     if (active.kind === "move" && (cancelled || active.docked || active.snapTarget)) {
-      this.options.onPreview?.({ assetId: active.assetId, drawerId: active.drawerId, snapping: true, fromRect: active.floatingRect, fromRectLocal:active.docked, grab: active.grab });
+      this.options.onPreview?.({ assetId: destination.assetId, drawerId: active.drawerId, snapping: true, fromRect: active.floatingRect, fromRectLocal:active.docked, grab: active.grab });
       this.settleTimer = setTimeout(() => this.options.onPreview?.(null), 230);
     } else this.options.onPreview?.(null);
   }

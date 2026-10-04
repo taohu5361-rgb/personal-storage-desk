@@ -17,7 +17,7 @@ const initialAssets = sides.map((side, i) => ({
   tags: [], previewUrl: preview, zIndex: i, locked: false,
 }));
 const initialDrawers = sides.map((side, i) => ({
-  id: `drawer-${side}`, assetId: `asset-${side}`, text: `${side} 边备注\n这段文字属于旁边的图片。`,
+  categoryId: "qa", id: `drawer-${side}`, assetId: `asset-${side}`, text: `${side} 边备注\n这段文字属于旁边的图片。`,
   mode: "docked-expanded", side, offset: side === "left" || side === "right" ? 75 : 80,
   width: 240, height: 150, floatingX: 0, floatingY: 0, orderIndex: 0,
   locked: false, styleVariant: "default", createdAt: 1, updatedAt: 1,
@@ -28,8 +28,9 @@ const qa = window.drawerQA = { saveDelay: 0, failNext: false, calls: [], opens: 
 qa.readNative = () => invoke("list_asset_note_drawers", { assetIds: initialAssets.map((asset) => asset.id) });
 if (!new URLSearchParams(window.location.search).has("native")) mockIPC(async (command, args) => {
   qa.calls.push({ command, args: structuredClone(args) });
+  if (command === "list_category_note_drawers") return structuredClone(stored.filter((drawer) => (drawer.categoryId || "qa") === args.categoryId));
   if (command === "list_asset_note_drawers") return structuredClone(stored.filter((drawer) => args.assetIds.includes(drawer.assetId)));
-  if (command === "save_asset_note_drawer") {
+  if (command === "save_asset_note_drawer" || command === "transfer_asset_note_drawer") {
     const submitted = structuredClone(args.drawer);
     const fail = qa.failNext; qa.failNext = false;
     if (qa.saveDelay) await new Promise((resolve) => setTimeout(resolve, qa.saveDelay));
@@ -54,6 +55,8 @@ function Fixture() {
   const [generation, setGeneration] = useState(0);
   const canvasRef = useRef(null);
   useEffect(() => {
+    qa.setAssets = setAssets;
+    qa.setCategory = setCategory;
     qa.setZoom = (zoom) => setCategory((current) => ({ ...current, zoom }));
     qa.getAssets = () => assets;
     qa.moveAsset = (id, dx, dy) => setAssets((current) => current.map((asset) => asset.id === id ? { ...asset, x: asset.x + dx, y: asset.y + dy } : asset));
