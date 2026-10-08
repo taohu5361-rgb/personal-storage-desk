@@ -195,6 +195,8 @@ struct Settings {
     theme: String,
     ui_scale: u32,
     ui_density: String,
+    #[serde(default = "default_property_panel_layout")]
+    property_panel_layout: String,
     canvas_background: String,
     canvas_background_color: String,
     background_opacity: u32,
@@ -332,6 +334,51 @@ fn now() -> i64 {
         .unwrap_or_default()
         .as_millis() as i64
 }
+// A native UI test may stay hidden only when its data directory is isolated.
+// Validate before opening SQLite so a malformed test launch never touches the
+// normal database or briefly displays the application window.
+#[cfg(any(debug_assertions, test))]
+fn validate_hidden_native_test(
+    flag: Option<&std::ffi::OsStr>,
+    test_dir: Option<&Path>,
+    normal_dir: &Path,
+) -> Result<bool> {
+    let Some(flag) = flag else { return Ok(false); };
+    if flag != std::ffi::OsStr::new("1") {
+        return Err("CREATIVE_CLOTH_TEST_HIDE_WINDOW 只能设为 1；正常启动请移除该变量".into());
+    }
+    let root = test_dir.ok_or("隐藏测试必须同时设置 CREATIVE_CLOTH_TEST_DATA_DIR")?;
+    if !root.is_absolute() || !root.is_dir() {
+        return Err("隐藏测试数据目录必须是已经存在的绝对目录".into());
+    }
+    let root = fs::canonicalize(root).map_err(|e| format!("无法核对隐藏测试目录：{e}"))?;
+    // Resolve an existing parent when the application has never created its
+    // normal data folder. This also catches junction/symlink aliases on Windows.
+    let mut parent = normal_dir;
+    let mut suffix = Vec::new();
+    while !parent.exists() {
+        suffix.push(parent.file_name().ok_or("无法核对正常数据目录")?);
+        parent = parent.parent().ok_or("无法核对正常数据目录")?;
+    }
+    let mut normal = fs::canonicalize(parent).map_err(|e| format!("无法核对正常数据目录：{e}"))?;
+    for component in suffix.into_iter().rev() { normal.push(component); }
+    if root.starts_with(&normal) || normal.starts_with(&root) {
+        return Err("隐藏测试目录必须与正常应用数据目录分离".into());
+    }
+    Ok(true)
+}
+fn hidden_native_test_mode(app: &AppHandle) -> Result<bool> {
+    #[cfg(debug_assertions)]
+    {
+        let flag = std::env::var_os("CREATIVE_CLOTH_TEST_HIDE_WINDOW");
+        if flag.is_none() { return Ok(false); }
+        let root = std::env::var_os("CREATIVE_CLOTH_TEST_DATA_DIR").map(PathBuf::from);
+        let normal = app.path().app_data_dir().map_err(|e| e.to_string())?;
+        validate_hidden_native_test(flag.as_deref(), root.as_deref(), &normal)
+    }
+    #[cfg(not(debug_assertions))]
+    { let _ = app; Ok(false) }
+}
 fn app_dir(app: &AppHandle) -> Result<PathBuf> {
     #[cfg(debug_assertions)]
     if let Some(path)=std::env::var_os("CREATIVE_CLOTH_TEST_DATA_DIR") {
@@ -435,12 +482,13 @@ fn init(c: &Connection, app: &AppHandle) -> Result<()> {
         ("startup_page", "home".into()),
         ("restore_workspace", "true".into()),
         ("auto_save", "true".into()),
-        ("auto_save_interval", "30".into()),
+        ("auto_save_interval", "60".into()),
         ("confirm_delete", "true".into()),
         ("close_behavior", "exit".into()),
         ("theme", "system".into()),
         ("ui_scale", "100".into()),
         ("ui_density", "standard".into()),
+        ("property_panel_layout", default_property_panel_layout()),
         ("canvas_background", "dots".into()),
         ("canvas_background_color", "#f7f7f7".into()),
         ("background_opacity", "100".into()),
@@ -460,7 +508,19 @@ fn init(c: &Connection, app: &AppHandle) -> Result<()> {
         )
         .map_err(|e| e.to_string())?;
     }
+    migrate_fixed_auto_save(c)?;
     Ok(())
+}
+fn migrate_fixed_auto_save(c: &Connection) -> Result<()> {
+    let tx=c.unchecked_transaction().map_err(|e|e.to_string())?;
+    let inserted=tx.execute("INSERT OR IGNORE INTO app_settings(key,value) VALUES('fixed_auto_save_clock_version','1')",[]).map_err(|e|e.to_string())?;
+    if inserted==1 {
+        let previous=setting(&tx,"auto_save_interval");
+        if previous=="30" || previous.parse::<u32>().map_or(true,|value|!(5..=3600).contains(&value)) {
+            tx.execute("INSERT INTO app_settings(key,value) VALUES('auto_save_interval','60') ON CONFLICT(key) DO UPDATE SET value='60'",[]).map_err(|e|e.to_string())?;
+        }
+    }
+    tx.commit().map_err(|e|e.to_string())
 }
 fn setting(c: &Connection, k: &str) -> String {
     c.query_row("SELECT value FROM app_settings WHERE key=?1", [k], |r| {
@@ -468,17 +528,31 @@ fn setting(c: &Connection, k: &str) -> String {
     })
     .unwrap_or_default()
 }
+fn default_property_panel_layout() -> String {
+    "right".into()
+}
+fn resolve_property_panel_layout(value: &str) -> String {
+    if value == "bottom" { "bottom".into() } else { default_property_panel_layout() }
+}
+fn validate_property_panel_layout(value: &str) -> Result<()> {
+    if ["right", "bottom"].contains(&value) {
+        Ok(())
+    } else {
+        Err("属性面板布局无效".into())
+    }
+}
 fn settings(c: &Connection) -> Settings {
     Settings {
         startup_page: setting(c, "startup_page"),
         restore_workspace: setting(c, "restore_workspace") == "true",
         auto_save: setting(c, "auto_save") == "true",
-        auto_save_interval: setting(c, "auto_save_interval").parse().unwrap_or(30),
+        auto_save_interval: setting(c, "auto_save_interval").parse().unwrap_or(60),
         confirm_delete: setting(c, "confirm_delete") == "true",
         close_behavior: setting(c, "close_behavior"),
         theme: setting(c, "theme"),
         ui_scale: setting(c, "ui_scale").parse().unwrap_or(100),
         ui_density: setting(c, "ui_density"),
+        property_panel_layout: resolve_property_panel_layout(&setting(c, "property_panel_layout")),
         canvas_background: setting(c, "canvas_background"),
         canvas_background_color: setting(c, "canvas_background_color"),
         background_opacity: setting(c, "background_opacity").parse().unwrap_or(100),
@@ -516,6 +590,7 @@ fn get_startup_theme(app: AppHandle) -> Result<String> {
 
 #[tauri::command]
 fn show_main_window(app: AppHandle) -> Result<()> {
+    if hidden_native_test_mode(&app)? { return Ok(()); }
     let window = app.get_webview_window("main").ok_or("主窗口不可用")?;
     window.show().map_err(|e| e.to_string())?;
     window.unminimize().map_err(|e| e.to_string())?;
@@ -1818,6 +1893,7 @@ fn update_prompt_content_record(c: &Connection, item: PromptContentUpdate) -> Re
 }
 #[tauri::command]
 fn save_settings(app: AppHandle, item: Settings) -> Result<Settings> {
+    validate_property_panel_layout(&item.property_panel_layout)?;
     if item.default_import_mode != "managed" && item.default_import_mode != "reference" {
         return Err("默认导入方式无效".into());
     }
@@ -1839,6 +1915,13 @@ fn save_settings(app: AppHandle, item: Settings) -> Result<Settings> {
     }
     fs::create_dir_all(&item.managed_asset_dir).map_err(|e| format!("托管目录不可用：{e}"))?;
     let mut c = db(&app)?;
+    persist_settings_record(&mut c, &item)?;
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.set_background_color(Some(native_theme_color(&item.theme)));
+    }
+    Ok(item)
+}
+fn persist_settings_record(c: &mut Connection, item: &Settings) -> Result<()> {
     let tx = c.transaction().map_err(|e| e.to_string())?;
     for (k, v) in [
         ("startup_page", item.startup_page.clone()),
@@ -1850,6 +1933,7 @@ fn save_settings(app: AppHandle, item: Settings) -> Result<Settings> {
         ("theme", item.theme.clone()),
         ("ui_scale", item.ui_scale.to_string()),
         ("ui_density", item.ui_density.clone()),
+        ("property_panel_layout", item.property_panel_layout.clone()),
         ("canvas_background", item.canvas_background.clone()),
         (
             "canvas_background_color",
@@ -1883,10 +1967,7 @@ fn save_settings(app: AppHandle, item: Settings) -> Result<Settings> {
         .map_err(|e| e.to_string())?;
     }
     tx.commit().map_err(|e| e.to_string())?;
-    if let Some(window) = app.get_webview_window("main") {
-        let _ = window.set_background_color(Some(native_theme_color(&item.theme)));
-    }
-    Ok(item)
+    Ok(())
 }
 
 #[tauri::command]
@@ -2261,6 +2342,7 @@ fn reset_interface_settings(app: AppHandle) -> Result<()> {
         ("theme", "system"),
         ("ui_scale", "100"),
         ("ui_density", "standard"),
+        ("property_panel_layout", "right"),
         ("canvas_background", "dots"),
         ("background_opacity", "100"),
         ("canvas_background_color", "#f7f7f7"),
@@ -2572,6 +2654,137 @@ fn write_data_url(app: &AppHandle, id: &str, data: &str) -> Result<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn settings_test_db() -> Connection {
+        let connection = Connection::open_in_memory().unwrap();
+        connection.execute_batch("CREATE TABLE app_settings(key TEXT PRIMARY KEY,value TEXT NOT NULL); INSERT INTO app_settings VALUES('last_page','assets/workspace?category=references');").unwrap();
+        connection
+    }
+
+    #[test]
+    fn fixed_auto_save_migration_updates_legacy_default_once_and_preserves_manual_mode() {
+        let connection = settings_test_db();
+        connection.execute_batch("INSERT INTO app_settings VALUES('auto_save_interval','30'),('auto_save','false');").unwrap();
+        migrate_fixed_auto_save(&connection).unwrap();
+        assert_eq!(setting(&connection,"auto_save_interval"),"60");
+        assert_eq!(setting(&connection,"auto_save"),"false");
+        connection.execute("UPDATE app_settings SET value='30' WHERE key='auto_save_interval'",[]).unwrap();
+        migrate_fixed_auto_save(&connection).unwrap();
+        assert_eq!(setting(&connection,"auto_save_interval"),"30");
+    }
+
+    #[test]
+    fn fixed_auto_save_migration_preserves_custom_intervals_and_repairs_invalid_values() {
+        for (previous,expected) in [("5","5"),("120","120"),("3600","3600"),("0","60"),("invalid","60")] {
+            let connection = settings_test_db();
+            connection.execute("INSERT INTO app_settings VALUES('auto_save_interval',?1)",[previous]).unwrap();
+            migrate_fixed_auto_save(&connection).unwrap();
+            assert_eq!(setting(&connection,"auto_save_interval"),expected);
+        }
+    }
+
+    #[test]
+    fn fixed_auto_save_migration_rolls_back_the_version_marker_on_write_failure() {
+        let connection = settings_test_db();
+        connection.execute_batch("INSERT INTO app_settings VALUES('auto_save_interval','30'); CREATE TRIGGER reject_auto_save_interval BEFORE UPDATE OF value ON app_settings WHEN NEW.key='auto_save_interval' BEGIN SELECT RAISE(ABORT,'locked'); END;").unwrap();
+        assert!(migrate_fixed_auto_save(&connection).is_err());
+        assert_eq!(setting(&connection,"fixed_auto_save_clock_version"),"");
+        assert_eq!(setting(&connection,"auto_save_interval"),"30");
+        connection.execute_batch("DROP TRIGGER reject_auto_save_interval;").unwrap();
+        migrate_fixed_auto_save(&connection).unwrap();
+        assert_eq!(setting(&connection,"auto_save_interval"),"60");
+    }
+
+    #[test]
+    fn property_panel_layout_defaults_for_old_settings_and_validates_supported_choices() {
+        let connection = settings_test_db();
+        let original = settings(&connection);
+        assert_eq!(original.property_panel_layout, "right");
+        let mut legacy_payload = serde_json::to_value(&original).unwrap();
+        legacy_payload.as_object_mut().unwrap().remove("propertyPanelLayout");
+        let restored: Settings = serde_json::from_value(legacy_payload).unwrap();
+        assert_eq!(serde_json::to_value(restored).unwrap(), serde_json::to_value(original).unwrap());
+        for value in ["right", "bottom"] {
+            assert!(validate_property_panel_layout(value).is_ok());
+            assert_eq!(resolve_property_panel_layout(value), value);
+        }
+        for value in ["", "left", "BOTTOM"] {
+            assert!(validate_property_panel_layout(value).is_err());
+            assert_eq!(resolve_property_panel_layout(value), "right");
+        }
+    }
+
+    #[test]
+    fn property_panel_layout_roundtrips_without_losing_other_settings_or_last_page() {
+        let mut connection = settings_test_db();
+        let mut original = settings(&connection);
+        original.theme = "dark".into();
+        original.ui_scale = 125;
+        original.confirm_delete = true;
+        original.managed_asset_dir = "fixture-assets".into();
+        original.ask_import_mode = true;
+        persist_settings_record(&mut connection, &original).unwrap();
+        let before = serde_json::to_value(settings(&connection)).unwrap();
+        for layout in ["bottom", "right"] {
+            let mut changed = settings(&connection);
+            changed.property_panel_layout = layout.into();
+            persist_settings_record(&mut connection, &changed).unwrap();
+            let mut expected = before.clone();
+            expected["propertyPanelLayout"] = Value::String(layout.into());
+            assert_eq!(serde_json::to_value(settings(&connection)).unwrap(), expected);
+        }
+    }
+
+    #[test]
+    fn property_panel_layout_write_failure_rolls_back_the_entire_settings_transaction() {
+        let mut connection = settings_test_db();
+        let mut original = settings(&connection);
+        original.theme = "light".into();
+        persist_settings_record(&mut connection, &original).unwrap();
+        let before = serde_json::to_value(settings(&connection)).unwrap();
+        connection.execute_batch("CREATE TRIGGER reject_layout BEFORE UPDATE OF value ON app_settings WHEN NEW.key='property_panel_layout' AND NEW.value='bottom' BEGIN SELECT RAISE(ABORT,'layout locked'); END;").unwrap();
+        let mut changed = settings(&connection);
+        changed.theme = "dark".into();
+        changed.property_panel_layout = "bottom".into();
+        assert!(persist_settings_record(&mut connection, &changed).is_err());
+        assert_eq!(serde_json::to_value(settings(&connection)).unwrap(), before);
+        connection.execute_batch("DROP TRIGGER reject_layout;").unwrap();
+        persist_settings_record(&mut connection, &changed).unwrap();
+        assert_eq!(serde_json::to_value(settings(&connection)).unwrap(), serde_json::to_value(changed).unwrap());
+    }
+
+    #[test]
+    fn hidden_native_test_requires_explicit_flag_and_existing_absolute_directory() {
+        let sandbox = tempfile::tempdir().unwrap();
+        let normal = sandbox.path().join("normal");
+        let isolated = sandbox.path().join("isolated");
+        fs::create_dir_all(&isolated).unwrap();
+        assert!(!validate_hidden_native_test(None, Some(&isolated), &normal).unwrap());
+        let enabled = Some(std::ffi::OsStr::new("1"));
+        assert!(validate_hidden_native_test(enabled, Some(&isolated), &normal).unwrap());
+        assert!(validate_hidden_native_test(Some(std::ffi::OsStr::new("true")), Some(&isolated), &normal).is_err());
+        assert!(validate_hidden_native_test(enabled, None, &normal).is_err());
+        assert!(validate_hidden_native_test(enabled, Some(Path::new("relative-test")), &normal).is_err());
+        assert!(validate_hidden_native_test(enabled, Some(&sandbox.path().join("missing")), &normal).is_err());
+        let file = sandbox.path().join("file");
+        fs::write(&file, "fixture").unwrap();
+        assert!(validate_hidden_native_test(enabled, Some(&file), &normal).is_err());
+    }
+
+    #[test]
+    fn hidden_native_test_rejects_normal_data_and_its_ancestors_or_descendants() {
+        let sandbox = tempfile::tempdir().unwrap();
+        let normal = sandbox.path().join("normal");
+        let nested = normal.join("nested");
+        fs::create_dir_all(&nested).unwrap();
+        let enabled = Some(std::ffi::OsStr::new("1"));
+        assert!(validate_hidden_native_test(enabled, Some(&normal), &normal).is_err());
+        assert!(validate_hidden_native_test(enabled, Some(&nested), &normal).is_err());
+        assert!(validate_hidden_native_test(enabled, Some(sandbox.path()), &normal).is_err());
+        let future_normal = normal.join("not-created").join("app-data");
+        assert!(validate_hidden_native_test(enabled, Some(&normal), &future_normal).is_err());
+        assert!(validate_hidden_native_test(enabled, Some(&nested), &future_normal).unwrap());
+    }
 
     fn inner_canvas_test_db() -> Connection {
         let connection = Connection::open_in_memory().unwrap();
@@ -3105,6 +3318,15 @@ pub fn run() {
         .manage(AssetTextCloseGuard::default())
         .manage(ExitLifecycle::default())
         .setup(|app| {
+            // The config creates main as invisible. Never call show/focus for
+            // an explicitly isolated background test, including tray restores.
+            let hidden_test = hidden_native_test_mode(app.handle())?;
+            if hidden_test {
+                if let Some(window) = app.get_webview_window("main") {
+                    window.set_skip_taskbar(true)?;
+                    window.set_focusable(false)?;
+                }
+            }
             if let Some(window) = app.get_webview_window("main") {
                 let theme =
                     get_startup_theme(app.handle().clone()).unwrap_or_else(|_| "system".into());

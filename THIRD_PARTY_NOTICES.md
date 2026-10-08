@@ -597,7 +597,7 @@ MPL 2.0 组件的覆盖代码保留原许可。相应 `.crate` 源码原包以�
 | npm | `react-dom` | 19.3.0 | MIT | [目录](third_party/licenses/npm/react-dom-19.3.0/) |
 | npm | `rolldown` | 1.2.9 | MIT | [目录](third_party/licenses/npm/rolldown-1.2.9/) |
 | npm | `scheduler` | 0.28.0 | MIT | [目录](third_party/licenses/npm/scheduler-0.28.0/) |
-| npm | `source-map-js` | 1.2.1 | BSD-3-Clause | [目录](third_party/licenses/npm/source-map-js-1.2.1/) |
+| npm | `source-map-js` | 1.2.2 | BSD-3-Clause | [目录](third_party/licenses/npm/source-map-js-1.2.2/) |
 | npm | `tinyglobby` | 0.2.17 | MIT | [目录](third_party/licenses/npm/tinyglobby-0.2.17/) |
 | npm | `vite` | 8.3.0 | MIT | [目录](third_party/licenses/npm/vite-8.3.0/) |
 

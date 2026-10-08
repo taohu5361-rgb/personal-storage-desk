@@ -21,6 +21,8 @@ import { captureMiddleCanvasPan } from "./middleCanvasPan";
 import { boundsOf, unionBounds, intersectsRotated } from "./canvasTransforms.js";
 import { CanvasArrangeTools, ArrangeCommands, CanvasSnapGuides, CanvasAxisGuides } from "./CanvasArrangeTools";
 import { useOuterCanvasTransforms } from "./useOuterCanvasTransforms";
+import { CanvasEditorLayout } from "./CanvasEditorLayout";
+import { createCanvasFrameQueue } from "./canvasFrameQueue.js";
 
 const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 5;
@@ -78,7 +80,6 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
     onAssetsCommit,
     onGroupsChange,
     onGroupsCommit,
-    onGroupSave,
     onCreateGroup,
     onChangeGroupMember,
     onDeleteGroup,
@@ -148,6 +149,8 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
   const [appearanceOpen, setAppearanceOpen] = useState(false);
   const [fps, setFps] = useState(0);
   const assetsRef = useRef(assets);
+  const groupsRef = useRef(groups);
+  groupsRef.current = groups;
   const undoStack = useRef([]);
   const redoStack = useRef([]);
   useEffect(() => { assetsRef.current = assets; }, [assets]);
@@ -191,8 +194,8 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
       ),
     [assets, search],
   );
-  const setViewport = (next) =>
-    onViewportChange({ viewportX: next.x, viewportY: next.y, zoom: next.zoom });
+  const setViewport = (next, options) =>
+    onViewportChange({ viewportX: next.x, viewportY: next.y, zoom: next.zoom }, options);
   const getSurfacePoint = (event) => {
     const rect = surfaceRef.current.getBoundingClientRect();
     return { x: (event.clientX - rect.left) / readUiScale(), y: (event.clientY - rect.top) / readUiScale() };
@@ -205,6 +208,19 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
   const transforms=useOuterCanvasTransforms({assets,groups,selected,setSelected,textLayerRef,surfaceRef,viewport,onAssetsChange,onGroupsChange,onSaveTransform,onSaveText,onAssetsCommit,onGroupsCommit,onChangeGroupMember,expandGroupsToFit,readUiScale,displayAssets,screenToWorld,getSurfacePoint,settings,categoryId:activeCategory.id});
   transformsRef.current=transforms;
   useImperativeHandle(ref, () => ({
+    cancelInteraction() {cancelNativeRef.current?.();transforms.cancelInteraction();drawerLayerRef.current?.cancelInteraction?.();},
+    hasActiveInteraction() {return !!interactionRef.current || transforms.hasActiveInteraction() || !!textLayerRef.current?.hasActiveInteraction?.() || !!drawerLayerRef.current?.hasActiveInteraction?.();},
+    hasPendingChanges() {return transforms.hasPendingChanges() || !!textLayerRef.current?.hasPendingChanges?.() || !!drawerLayerRef.current?.hasPendingChanges?.();},
+    async autoSave() {
+      if(interactionRef.current || transforms.hasActiveInteraction() || textLayerRef.current?.hasActiveInteraction?.() || drawerLayerRef.current?.hasActiveInteraction?.())return false;
+      // Freeze every resource at this tick, before waiting for a slow write.
+      // A transform owns the text controller's atomic geometry/content snapshot.
+      const jobs=[drawerLayerRef.current?.autoSave?.()];
+      jobs.push(transforms.hasPendingChanges() ? transforms.flush({once:true}) : textLayerRef.current?.autoSave?.());
+      await Promise.all(jobs);
+      return true;
+    },
+    async save() {cancelNativeRef.current?.();transforms.cancelInteraction();drawerLayerRef.current?.cancelInteraction?.();await transforms.flush();await textLayerRef.current?.flush();await drawerLayerRef.current?.flush();},
     flushNotes: () => drawerLayerRef.current?.flush(),
     getVisibleCenter() {
       const rect = surfaceRef.current?.getBoundingClientRect();
@@ -214,10 +230,16 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
     getSelectedIds() { return [...selected]; },
     saveTransforms() {return transforms.flush();},
     addText() { textLayerRef.current?.addText(); },
+    addIndependentNote() {
+      return drawerLayerRef.current?.addIndependent(screenToWorld({x:surfaceRef.current.clientWidth / 2,y:surfaceRef.current.clientHeight / 2}));
+    },
+    addAttachedNote() {
+      if (selected.length === 1) return drawerLayerRef.current?.addForAsset(selected[0]);
+    },
     textAction(action) {
       if(action==='undo')return transforms.undo();
       if(action==='redo')return transforms.redo();
-      if(action==='save'){transforms.flush().then(()=>textLayerRef.current?.flush()).then(()=>onSaveLayout?.()).catch(()=>{});return true;}
+      if(action==='save'){onSaveLayout?.()?.catch(()=>{});return true;}
       if(action==='select-all')return false;
       return selected.length ? false : textLayerRef.current?.action(action) || false;
     },
@@ -284,14 +306,13 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
       if (!interaction) return;
       if (interaction.middleButton) {
         if (event.pointerId !== interaction.pointerId) return;
-        if (!(event.buttons & 4)) { pointerUp(event); return; }
       }
       if (interaction.kind === "pan") {
         setViewport({
           x: interaction.viewport.x + (event.clientX - interaction.startX) / readUiScale(),
           y: interaction.viewport.y + (event.clientY - interaction.startY) / readUiScale(),
           zoom: interaction.viewport.zoom,
-        });
+        }, {preview:true});
       }
       if (interaction.kind === "select") {
         const point = getSurfacePoint(event);
@@ -320,11 +341,12 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
               : asset,
           );
         assetsRef.current = nextAssets;
-        onAssetsChange(nextAssets);
+        onAssetsChange(nextAssets, {preview:true});
         const expanded = expandGroupsToFit(groups, nextAssets, interaction.positions.keys());
         if (expanded !== groups) {
           interaction.groupsChanged = true;
-          onGroupsChange?.(expanded);
+          groupsRef.current = expanded;
+          onGroupsChange?.(expanded, {preview:true});
         }
         if (interaction.positions.size === 1) {
           const movedAsset = nextAssets.find((asset) => interaction.positions.has(asset.id));
@@ -377,11 +399,12 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
               : item,
           );
         assetsRef.current = nextAssets;
-        onAssetsChange(nextAssets);
+        onAssetsChange(nextAssets, {preview:true});
         const expanded = expandGroupsToFit(groups, nextAssets, [asset.id]);
         if (expanded !== groups) {
           interaction.groupsChanged = true;
-          onGroupsChange?.(expanded);
+          groupsRef.current = expanded;
+          onGroupsChange?.(expanded, {preview:true});
         }
       }
       if (interaction.kind === "group-move") {
@@ -393,12 +416,14 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
             : asset,
         );
         assetsRef.current = nextAssets;
-        onAssetsChange(nextAssets);
-        onGroupsChange?.(groups.map((group) =>
+        onAssetsChange(nextAssets, {preview:true});
+        const movedGroups = groups.map((group) =>
           group.id === interaction.groupId
             ? { ...group, x: interaction.group.x + dx, y: interaction.group.y + dy }
             : group,
-        ));
+        );
+        groupsRef.current = movedGroups;
+        onGroupsChange?.(movedGroups, {preview:true});
       }
       if (interaction.kind === "group-resize") {
         const dx = (event.clientX - interaction.startX) / (viewport.zoom * readUiScale());
@@ -415,23 +440,25 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
         }
         if (interaction.edge.includes("s")) height = clamp(interaction.group.height + dy, MIN_GROUP_HEIGHT, 100_000);
         const resized = groups.map((group) => group.id === interaction.groupId ? { ...group, x, y, width, height } : group);
-        onGroupsChange?.(expandGroupsToFit(resized, assets, assets.filter((asset) => asset.groupId === interaction.groupId).map((asset) => asset.id)));
+        const nextGroups = expandGroupsToFit(resized, assets, assets.filter((asset) => asset.groupId === interaction.groupId).map((asset) => asset.id));
+        groupsRef.current = nextGroups;
+        onGroupsChange?.(nextGroups, {preview:true});
       }
     };
     const pointerUp = (event) => {
       const interaction = interactionRef.current;
       if (interaction?.middleButton && event?.pointerId != null && event.pointerId !== interaction.pointerId) return;
-      const changed = ["move", "resize", "group-move", "group-resize"].includes(interaction?.kind);
+      if(interaction)queue.flush(event);
+      const after = interaction?.before ? historySnapshot(assetsRef.current, groupsRef.current) : null;
+      const changed = ["move", "resize", "group-move", "group-resize"].includes(interaction?.kind) && JSON.stringify(interaction.before) !== JSON.stringify(after);
       interactionRef.current = null;
       setMiddlePanning(false);
       setSelectionBox(null);
       setHoveredGroupId("");
       if (changed) {
-        recordHistory(interaction.before, historySnapshot(assetsRef.current, groups));
-        if (["move", "resize", "group-move"].includes(interaction.kind)) {
-          onAssetsCommit?.();
-        }
-        if (interaction.kind === "group-resize" && !interaction.groupsChanged) onGroupsCommit?.();
+        recordHistory(interaction.before, after);
+        // Preview changes are already displayed; mark the completed operation once.
+        onAssetsChange(assetsRef.current);
         if (interaction.kind === "move" && interaction.dropGroupId) {
           const assetId = [...interaction.positions.keys()][0];
           onChangeGroupMember?.(interaction.dropGroupId, assetId, true);
@@ -441,24 +468,36 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
     const cancelNative = (event) => {
       const interaction = interactionRef.current;
       if (event?.pointerId != null && interaction?.pointerId != null && event.pointerId !== interaction.pointerId) return;
+      queue.clear();
       interactionRef.current = null;
       spaceRef.current = false;
       setMiddlePanning(false);
       setSelectionBox(null);
       setHoveredGroupId("");
       if (interaction?.before) restoreHistory(interaction.before);
-      if (interaction?.kind === "pan") setViewport(interaction.viewport);
+      if (interaction?.kind === "pan") setViewport(interaction.viewport,{preview:true});
     };
+    const queue = createCanvasFrameQueue(pointerMove,requestAnimationFrame,cancelAnimationFrame);
+    const queuedMove = event => {
+      const interaction = interactionRef.current;
+      if(!interaction)return;
+      if(interaction.middleButton && event.pointerId===interaction.pointerId && !(event.buttons & 4)){pointerUp(event);return;}
+      event.preventDefault();queue.push(event);
+    };
+    const beforeLeave = () => cancelNative();
     cancelNativeRef.current = cancelNative;
-    window.addEventListener("pointermove", pointerMove);
+    window.addEventListener("pointermove", queuedMove, {passive:false});
     window.addEventListener("pointerup", pointerUp);
     window.addEventListener("pointercancel", cancelNative);
     window.addEventListener("blur",cancelNative);
+    window.addEventListener('asset-text-before-leave',beforeLeave);
     return () => {
-      window.removeEventListener("pointermove", pointerMove);
+      queue.clear();
+      window.removeEventListener("pointermove", queuedMove);
       window.removeEventListener("pointerup", pointerUp);
       window.removeEventListener("pointercancel", cancelNative);
       window.removeEventListener("blur",cancelNative);
+      window.removeEventListener('asset-text-before-leave',beforeLeave);
     };
   }, [
     assets,
@@ -468,10 +507,8 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
     viewport.y,
     viewport.zoom,
     onAssetsChange,
-    onAssetsCommit,
     groups,
     onGroupsChange,
-    onGroupsCommit,
     onChangeGroupMember,
   ]);
 
@@ -640,6 +677,15 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
     if (undoStack.current.length > 100) undoStack.current.shift();
     redoStack.current = [];
   };
+  const restoreHistory = snapshot => {
+    const assetGeometry = new Map(snapshot.assets.map(item => [item.id,item]));
+    const groupGeometry = new Map(snapshot.groups.map(item => [item.id,item]));
+    const nextAssets = assetsRef.current.map(item => assetGeometry.has(item.id) ? {...item,...assetGeometry.get(item.id)} : item);
+    const nextGroups = groupsRef.current.map(item => groupGeometry.has(item.id) ? {...item,...groupGeometry.get(item.id)} : item);
+    assetsRef.current = nextAssets; groupsRef.current = nextGroups;
+    onAssetsChange(nextAssets,{preview:true});
+    onGroupsChange?.(nextGroups,{preview:true});
+  };
   const applyHistory = (from, to) => {
     if (!from.length) return;
     const snapshot = from.pop();
@@ -650,8 +696,6 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
     onAssetsChange(next);
     const groupStates = new Map(snapshot.groups.map((group) => [group.id, group]));
     onGroupsChange?.(groups.map((group) => groupStates.has(group.id) ? {...group,...groupStates.get(group.id)} : group));
-    queueMicrotask(() => onAssetsCommit?.());
-    queueMicrotask(() => onGroupsCommit?.());
   };
   const changeLayer = (assetIds, action) => {
     const ids = new Set(Array.isArray(assetIds) ? assetIds : [assetIds]);
@@ -681,7 +725,6 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
     const next = assets.map((asset) => updates.has(asset.id) ? { ...asset, zIndex: updates.get(asset.id) } : asset);
     onAssetsChange(next);
     recordHistory(before, historySnapshot(next, groups));
-    queueMicrotask(() => onAssetsCommit?.());
     setMenu(null);
   };
   const toggleLock = (assetIds) => {
@@ -692,16 +735,11 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
     const next = assets.map((asset) => ids.has(asset.id) ? { ...asset, locked: !allLocked } : asset);
     onAssetsChange(next);
     recordHistory(before, historySnapshot(next, groups));
-    queueMicrotask(() => onAssetsCommit?.());
     setMenu(null);
   };
-  const updateGroup = (groupId, patch, persist = false) => {
+  const updateGroup = (groupId, patch) => {
     const next = groups.map((group) => group.id === groupId ? { ...group, ...patch } : group);
     onGroupsChange?.(next);
-    if (persist) {
-      const updated = next.find((group) => group.id === groupId);
-      if (updated) queueMicrotask(() => onGroupSave?.(updated));
-    }
   };
   function createGroup(assetIds = selected) {
     const uniqueIds = [...new Set(assetIds)];
@@ -824,16 +862,20 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
   const menuGroup = menu?.groupId ? groupMap.get(menu.groupId) : null;
 
   return (
+    <CanvasEditorLayout surface="outer">
     <div
       ref={surfaceRef}
       className={`asset-canvas background-${canvasPattern} ${settings?.showImageShadow ? "" : "no-shadow"} ${settings?.showSelectionBorder ? "" : "no-selection-border"} ${settings?.showAssetTags ? "" : "no-tags"} ${middlePanning || interactionRef.current?.kind === "pan" ? "is-panning" : ""}`}
       style={canvasSurfaceStyle(appearance, viewport)}
       tabIndex="0"
-      onPointerDownCapture={event => captureMiddleCanvasPan(event, surfaceRef.current, () => {
+      onPointerDownCapture={event => {
+        if (event.target.closest('.ui-inspector, .inner-canvas-lightbox')) return;
+        captureMiddleCanvasPan(event, surfaceRef.current, () => {
         setMenu(null);
         interactionRef.current = { kind: "pan", middleButton: true, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, viewport };
         setMiddlePanning(true);
-      })}
+        });
+      }}
       onLostPointerCapture={event => {
         if (interactionRef.current?.middleButton && interactionRef.current.pointerId === event.pointerId) {
           interactionRef.current = null;
@@ -1041,6 +1083,7 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
         assets={assets}
         displayAssets={displayAssets}
         groups={groups}
+        settings={settings}
         activeCategoryId={activeCategory.id}
         viewport={viewport}
         surfaceRef={surfaceRef}
@@ -1060,7 +1103,7 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
           }}
         />
       )}
-      <CategoryCanvasTextLayer key={activeCategory.id} categoryId={activeCategory.id} blocks={textBlocks} fonts={fonts} surfaceApiRef={textLayerRef} onTextContextActive={clearAssetSelection} onSave={onSaveText} externalCanvas={transforms.externalCanvas}
+      <CategoryCanvasTextLayer key={activeCategory.id} categoryId={activeCategory.id} blocks={textBlocks} fonts={fonts} surfaceApiRef={textLayerRef} onTextContextActive={clearAssetSelection} onSave={onSaveText} externalCanvas={transforms.externalCanvas} autoSaveEnabled={settings?.autoSave!==false}
         viewport={{...viewport,onChange:setViewport}} onMinimapItems={updateMinimapTexts}/>
       <CanvasSnapGuides guides={transforms.guides} viewport={viewport}/>
       <CanvasAxisGuides reference={transforms.axisReference} preview={transforms.axisPreview?.preview} active={transforms.axisPreview?.active} viewport={viewport}/>
@@ -1079,7 +1122,7 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
         </div>
       )}
       <div className="canvas-controls" aria-label="画布缩放">
-        {!settings?.autoSave && <button onClick={()=>transforms.flush().then(()=>onSaveLayout?.()).catch(()=>{})}>保存布局</button>}
+        {!settings?.autoSave && <button onClick={()=>onSaveLayout?.()?.catch(()=>{})}>保存布局</button>}
         <button aria-label="缩小" onClick={() => zoomCenter(0.8)}>
           <Minus size={15} />
         </button>
@@ -1088,6 +1131,7 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
           <Plus size={15} />
         </button>
         <button
+          title="恢复100%缩放"
           onClick={() =>
             zoomAt(1, {
               x: surfaceRef.current.clientWidth / 2,
@@ -1095,7 +1139,7 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
             })
           }
         >
-          100%
+          1:1
         </button>
         <button aria-label="适应全部资产" onClick={fitAll}>
           <Maximize size={15} />
@@ -1193,7 +1237,7 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
                 drawerLayerRef.current?.addForAsset(assetId);
               }}>
                 <StickyNote size={14} />
-                添加备注抽屉
+                添加附属备注
               </button>
               {menuAsset.missing && (
                 <button
@@ -1294,5 +1338,6 @@ export const AssetCanvas = forwardRef(function AssetCanvas(
         </div>
       )}
     </div>
+    </CanvasEditorLayout>
   );
 });

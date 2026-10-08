@@ -2,11 +2,11 @@
 
 <img src="src-tauri/icons/128x128.png" alt="个人收纳台图标" width="96" height="96">
 
-**公开开发版：v0.1.0-alpha.2（Pre-release）**
+**公开开发版：v0.1.0-alpha.3（Pre-release）**
 
-[下载 Windows EXE、程序包及查看版本说明](https://github.com/taohu5361-rgb/personal-storage-desk/releases/tag/v0.1.0-alpha.2) · [直接下载 Windows x64 EXE](https://github.com/taohu5361-rgb/personal-storage-desk/releases/download/v0.1.0-alpha.2/personal-storage-desk-v0.1.0-alpha.2-windows-x64.exe) · [所有版本](https://github.com/taohu5361-rgb/personal-storage-desk/releases)
+[打开 v0.1.0-alpha.3 版本页](https://github.com/taohu5361-rgb/personal-storage-desk/releases/tag/v0.1.0-alpha.3) · [直接下载 Windows x64 EXE](https://github.com/taohu5361-rgb/personal-storage-desk/releases/download/v0.1.0-alpha.3/personal-storage-desk-v0.1.0-alpha.3-windows-x64.exe) · [所有版本](https://github.com/taohu5361-rgb/personal-storage-desk/releases)
 
-点击 EXE 链接即可下载并运行；需要 WebView2 Runtime。完整 Windows 程序包 ZIP 附带第三方许可材料，源码 ZIP 与 SHA-256 校验文件也在版本页。程序仍处于早期开发，使用前请备份数据。
+版本页提供单独的 EXE 下载链接，也提供附带第三方许可材料的完整 Windows 程序包 ZIP；源码 ZIP 与 SHA-256 校验文件也在版本页。EXE 需要 WebView2 Runtime。程序仍处于早期开发，使用前请备份数据。
 
 一个正在早期开发的 Windows 本地文件与创作材料可视化组织工作空间。把材料放进分类，在画布上排列文件卡片、文字和视觉分组，再进入资产详情整理样图、提示词与案例备注。
 
@@ -17,13 +17,16 @@
 - 按 **工作空间（界面中的“模型”）→ 分类 → 资产** 组织材料。原文件可以是任意格式，并可单独选择封面；应用能够预览的格式受当前图片解码与界面实现限制。
 - 通过托管模式保存原文件副本，或通过引用模式记录本机源文件路径。
 - 在分类外画布中自由移动资产；可用连续坐标拖动、单图中心参考轴吸附、分组和小地图导航，并保存布局与视口。
+- 多选资产、文字和色块可左/中/右、上/中/下对齐，也可水平或垂直等距排列；支持撤销、重做、智能吸附与网格吸附。
 - 在资产详情的标准视图与内画布之间切换。资产自由文字共享内容与样式，按视图分别保存布局；样图、提示词与案例备注引用同一份记录。
 - 使用可浮动、停靠和收纳的备注卡片；备注可以吸附到其他资产，也可以作为独立备注。删除资产会保留其备注。资产内与外画布各有小地图；内画布背景可按资产单独设置。
+- 自动保存采用可配置的固定间隔；也可切换为手动保存。画布拖动、缩放和文字编辑先保留草稿，避免连续操作触发大量写入；切页前会处理未保存内容。
+- 右侧属性栏、底部属性栏和分类栏可拖动调整大小，并分别记住布局尺寸。
 - 在本机 SQLite 中保存记录，检查缺失引用，并通过设置中的数据库备份与恢复操作保存或恢复记录。
 
 首页提供“排列模式”和“画布模式”两个入口。排列模式当前仍对应原有脚本模块，只有分类、登记与启动等实验骨架，主要功能尚未开展；脚本启动调用本机已有环境，应用不内置解释器，也不提供脚本沙箱。画布模式进入现有资产与画布模块。首页名称调整没有合并两套底层数据结构。
 
-按单图中心十字轴排列和吸附已支持；多对象自动排列、等距和多选吸附仍属后续规划。
+单图可显示中心十字轴并吸附；多选对齐与等距排列已经支持。更复杂的多对象吸附仍在迭代。
 
 ## 首次使用
 

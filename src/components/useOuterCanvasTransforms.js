@@ -32,7 +32,7 @@ export function useOuterCanvasTransforms(options) {
     const textPatches=patches.filter(p=>p.id.startsWith('text:')).map(p=>({...p,objectId:p.id.slice(5)}));
     if(textPatches.length)textLayerRef.current?.patchGeometry(textPatches);
     let nextGroups=groupPatches?r.groups.map(g=>{const p=groupPatches.find(p=>p.id===g.id);return p?{...g,x:p.x,y:p.y,width:p.width,height:p.height}:g;}):r.expandGroupsToFit(r.groups,nextAssets,patches.filter(p=>p.id.startsWith('asset:')).map(p=>p.id.slice(6)));
-    if(nextGroups.some((g,n)=>!r.groups[n]||['x','y','width','height'].some(k=>g[k]!==r.groups[n][k]))){refs.current.groups=nextGroups;r.onGroupsChange?.(nextGroups);}
+    if(nextGroups.some((g,n)=>!r.groups[n]||['x','y','width','height'].some(k=>g[k]!==r.groups[n][k]))){refs.current.groups=nextGroups;r.onGroupsChange?.(nextGroups,{preview:true});}
   };
   const record=before=>{const after=snapshot();if(JSON.stringify(before)===JSON.stringify(after))return;history.current.undo.push(before);if(history.current.undo.length>100)history.current.undo.shift();history.current.redo=[];tick(v=>v+1);};
   const batch=()=>({assets:refs.current.assets.map(a=>({id:a.id,...geometry(a)})),texts:(textLayerRef.current?.items()||[]).map(t=>({id:t.objectId,...geometry(t)})),groups:refs.current.groups.map(g=>({id:g.id,...geometry(g)}))});
@@ -40,19 +40,19 @@ export function useOuterCanvasTransforms(options) {
     if(refs.current.onSaveTransform)await refs.current.onSaveTransform(enriched);else {await refs.current.onSaveText?.(enriched.textChanges);await refs.current.onAssetsCommit?.();await refs.current.onGroupsCommit?.();}
     if(pending.current?._revision===enriched._revision)pending.current=null;
   };
-  const flush=()=>{
-    if(running.current){if(pending.current)textLayerRef.current?.commitGeometry(pending.current,persistBatch).catch(()=>{});return running.current;}
+  const flush=({once=false}={})=>{
+    if(running.current){if(!once&&pending.current)textLayerRef.current?.commitGeometry(pending.current,persistBatch).catch(()=>{});return running.current;}
     if(!pending.current)return Promise.resolve();
     running.current=(async()=>{
       setError('');
       while(pending.current){
         const value=pending.current;
-        if(textLayerRef.current?.commitGeometry)await textLayerRef.current.commitGeometry(value,persistBatch);else await persistBatch(value);
-        if(pending.current===value)pending.current=null;
+        if(textLayerRef.current?.commitGeometry)await textLayerRef.current.commitGeometry(value,persistBatch,{once});else await persistBatch(value);
+        if(once)break;
       }
     })().catch(e=>{setError(String(e));throw e;}).finally(()=>{running.current=null;});return running.current;
   };
-  const commit=()=>{pending.current={...batch(),_revision:++revision.current};if(refs.current.settings?.autoSave!==false)flush().catch(()=>{});};
+  const commit=()=>{pending.current={...batch(),_revision:++revision.current};};
   const point=event=>refs.current.screenToWorld(refs.current.getSurfacePoint(event));
   const finish=cancel=>{
     frameQueue.current?.clear();
@@ -110,8 +110,13 @@ export function useOuterCanvasTransforms(options) {
   const api=useRef({});api.current={move,finish,flush};
   useEffect(()=>{
     const queue=createCanvasFrameQueue(e=>api.current.move(e),requestAnimationFrame,cancelAnimationFrame);frameQueue.current=queue;
-    const onMove=e=>{if(active.current?.pointerId===e.pointerId){e.preventDefault();queue.push(e);}},up=e=>{if(active.current?.pointerId===e.pointerId){queue.flush(e);api.current.finish(false);}},cancel=e=>{if(!e.pointerId||active.current?.pointerId===e.pointerId)api.current.finish(true);},escape=e=>{if(e.key!=='Escape'||e.isComposing||e.target?.closest?.('input,textarea,select,[contenteditable=true]'))return;if(active.current){e.preventDefault();api.current.finish(true);}else setAxisKey('');};
-    const leave=e=>{api.current.finish(true);if(pending.current)e.detail.promises.push(api.current.flush());};
+    const onMove=e=>{if(active.current?.pointerId===e.pointerId){e.preventDefault();queue.push(e);}},up=e=>{if(active.current?.pointerId===e.pointerId){queue.flush(e);api.current.finish(false);}},cancel=e=>{if(!e.pointerId||active.current?.pointerId===e.pointerId)api.current.finish(true);},escape=e=>{if(e.key!=='Escape'||e.isComposing||e.target?.closest?.('input,textarea,select,[contenteditable=true],[role=separator]'))return;if(active.current){e.preventDefault();api.current.finish(true);}else setAxisKey('');};
+    const leave=e=>{
+      api.current.finish(true);
+      if(!pending.current&&!running.current)return;
+      if(refs.current.settings?.autoSave===false)e.detail.promises.push(Promise.reject(Error('请手动保存后离开')));
+      else e.detail.promises.push(api.current.flush());
+    };
     window.addEventListener('pointermove',onMove,{passive:false});window.addEventListener('pointerup',up);window.addEventListener('pointercancel',cancel);window.addEventListener('blur',cancel);window.addEventListener('keydown',escape,true);window.addEventListener('asset-text-before-leave',leave);
     return()=>{queue.clear();window.removeEventListener('pointermove',onMove);window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',cancel);window.removeEventListener('blur',cancel);window.removeEventListener('keydown',escape,true);window.removeEventListener('asset-text-before-leave',leave);};
   },[]);
@@ -125,7 +130,7 @@ export function useOuterCanvasTransforms(options) {
   const axisProps={axisImage:selectedItems.length===1&&isImageObject(selectedItems[0]),axisActive:selectedItems[0]?.id===axisKey,onAxisToggle:toggleAxis};
   return {
     beginMove,beginResize,beginRotate,chooseBox:(assets,texts)=>choose([...assets.map(id=>'asset:'+id),...texts.map(id=>'text:'+id)]),clear:()=>choose([]),selectTexts:ids=>choose([...selectedKeys.current.filter(k=>k.startsWith('asset:')),...ids.map(id=>'text:'+id)]),selectForMenu,
-    undo:()=>undo(false),redo:()=>undo(true),flush,error,guides,activity,scene,visibleScene,axisReference,axisPreview,
+    undo:()=>undo(false),redo:()=>undo(true),cancelInteraction:()=>finish(true),hasPendingChanges:()=>!!pending.current||!!running.current,hasActiveInteraction:()=>!!active.current,flush,error,guides,activity,scene,visibleScene,axisReference,axisPreview,
     arrangeProps:{...axisProps,count:selectedItems.length,locked:selectedItems.some(i=>i.locked),reference,onAction:arrange,onReference:()=>setReferenceKey(selectedKeys.current[0]),gap,setGap},
     toolbarProps:{axisReference,onAxisToggle:toggleAxis,onAxisClear:()=>setAxisKey(''),items:selectedItems,reference,onAction:arrange,onReference:()=>setReferenceKey(selectedKeys.current[0]),gap,setGap,onRotation:rotate,onUndo:()=>undo(false),onRedo:()=>undo(true),canUndo:!!history.current.undo.length,canRedo:!!history.current.redo.length,...prefs},
     externalCanvas:{hasDraft:()=>!!active.current||!!pending.current,selectionCount:selectedItems.length,beginMove:(e,id)=>beginMove(e,'text:'+id),beginResize:(e,id,c)=>beginResize(e,'text:'+id,c),beginRotate:(e,id)=>beginRotate(e,'text:'+id),selectForMenu:id=>selectForMenu('text:'+id),arrange:{count:selectedItems.length,locked:selectedItems.some(i=>i.locked),reference,onAction:arrange,onReference:()=>setReferenceKey(selectedKeys.current[0]),gap,setGap}},

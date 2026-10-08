@@ -28,6 +28,6 @@ export function createCategoryTextController(categoryId, blocks, persist, notify
     written=next;
   };
   const controller=createAssetTextController(categoryId,written,(mode,changes)=>write(changes),notify,['canvas']);
-  controller.commitGeometry=(batch,persistBatch)=>controller.commitExternal('canvas',changes=>write(changes,textChanges=>persistBatch({...batch,textChanges})));
+  controller.commitGeometry=(batch,persistBatch,options)=>controller.commitExternal('canvas',changes=>write(changes,textChanges=>persistBatch({...batch,textChanges})),options);
   return controller;
 }

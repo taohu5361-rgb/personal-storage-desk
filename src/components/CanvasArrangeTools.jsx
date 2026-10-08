@@ -4,6 +4,7 @@ import './canvasTransforms.css';
 import { imageCenter, imageCorners, isImageObject } from './canvasAxisGeometry.js';
 import { cornersOf } from './canvasTransforms.js';
 import { readGridPreference } from './canvasSnapPreferences.js';
+import { CanvasInspectorPortal, useCanvasInspector } from './CanvasEditorLayout';
 export const arrangeActions=[['left','左对齐'],['center-x','水平居中'],['right','右对齐'],['top','上对齐'],['center-y','垂直居中'],['bottom','下对齐'],['distribute-x','水平等距'],['distribute-y','垂直等距']];
 export function ArrangeCommands({count,locked,reference,onAction,onReference,gap,setGap,axisImage,axisActive,onAxisToggle}) {
   if(count===1&&axisImage)return <button onClick={onAxisToggle}>{axisActive?'关闭中轴线':'显示中轴线'}</button>;
@@ -17,6 +18,7 @@ export function ArrangeCommands({count,locked,reference,onAction,onReference,gap
   </>;
 }
 export function CanvasArrangeTools({items,reference,onAction,onReference,gap,setGap,onRotation,onUndo,onRedo,canUndo,canRedo,smart,grid,onSmart,onGrid,axisReference,onAxisToggle,onAxisClear}) {
+  const inspector=useCanvasInspector();
   const [expanded,setExpanded]=useState(false);
   const rotationInputRef=useRef(null);
   useEffect(()=>{
@@ -30,6 +32,20 @@ export function CanvasArrangeTools({items,reference,onAction,onReference,gap,set
   },[]);
   const single=items.length===1?items[0]:null,locked=items.some(i=>i.locked);
   const axisImage=isImageObject(single);
+  const rotationField=single&&<div className="ui-inspector-rotation"><label><span>角度</span><input ref={rotationInputRef} aria-label="旋转角度" key={`${single.objectId||single.id}:${single.rotation||0}`} type="number" step="1" disabled={single.locked} defaultValue={Number((single.rotation||0).toFixed(2))} onBlur={e=>{const value=Number(e.target.value);if(e.target.value!==''&&Number.isFinite(value)&&value!==Number((single.rotation||0).toFixed(2)))onRotation(value);}} onKeyDown={e=>{if(e.key==='Enter')e.currentTarget.blur();e.stopPropagation();}}/>°</label><button disabled={single.locked} title="旋转归零" aria-label="旋转归零" onClick={()=>onRotation(0)}><RotateCcw size={14}/></button></div>;
+  if(inspector) {
+    const number=value=>Number.isFinite(Number(value))?Number(Number(value).toFixed(1)):'—';
+    const name=single?.name||single?.title||single?.textValue?.slice(0,48)|| (axisImage?'图片':'对象');
+    return <CanvasInspectorPortal section="arrange"><div className="canvas-arrange-toolbar" aria-label="画布排列" data-selection-count={items.length}>
+      <div className="ui-inspector-selection"><h3>{single?'所选对象':items.length?`已选择 ${items.length} 个对象`:'画布工具'}</h3><p>{single?`${name}${single.locked?' · 已锁定':''}`:items.length?'对齐和等距排列会作用于当前选区。':'选择对象后可查看位置、尺寸与排列选项。'}</p></div>
+      {single&&<section className="ui-inspector-transform" aria-label="位置尺寸与旋转"><h4>位置与尺寸</h4><dl className="ui-inspector-geometry" aria-label="对象几何信息">{[['X',single.x],['Y',single.y],['宽',single.width],['高',single.imageHeight??single.height]].map(([label,value])=><div key={label}><dt>{label}</dt><dd>{number(value)}</dd></div>)}</dl>{rotationField}</section>}
+      {items.length>0&&<details className="ui-inspector-arrange" open><summary>{axisImage?'图片中轴线':'排列与对称'}</summary><div className="canvas-arrange-panel"><ArrangeCommands count={items.length} locked={locked} reference={reference} onAction={onAction} onReference={onReference} gap={gap} setGap={setGap} axisImage={axisImage} axisActive={!!axisReference&&(axisReference.id||axisReference.objectId)===(single?.id||single?.objectId)} onAxisToggle={onAxisToggle}/></div></details>}
+      <section className="ui-inspector-canvas-options" aria-label="吸附与操作历史"><h4>吸附与操作历史</h4>{axisReference&&<button title="清除中轴线；空闲时 Esc" aria-label="清除中轴线" onClick={onAxisClear}>清除中轴线</button>}
+      <div className="ui-inspector-snap"><button className={smart?'active':''} aria-pressed={smart} title="智能吸附；Alt 临时取消" onClick={()=>onSmart(!smart)}><Magnet size={14}/>智能吸附</button><label className="canvas-grid-toggle"><input type="checkbox" checked={grid} onChange={e=>onGrid(e.target.checked)}/>网格吸附</label></div>
+      <div className="ui-inspector-history"><span>操作历史</span><button disabled={!canUndo} aria-label="撤销画布操作" title="撤销画布操作" onClick={onUndo}><Undo2 size={14}/></button><button disabled={!canRedo} aria-label="重做画布操作" title="重做画布操作" onClick={onRedo}><Redo2 size={14}/></button></div>
+      {!items.length&&<p className="ui-inspector-help">选中多个对象可对齐、等距排列。按住 Alt 可临时取消吸附。</p>}</section>
+    </div></CanvasInspectorPortal>;
+  }
   return <div className="canvas-arrange-toolbar" aria-label="画布排列" onPointerDown={e=>e.stopPropagation()} onWheel={e=>e.stopPropagation()}>
     <button className={smart?'active':''} aria-pressed={smart} title="智能吸附；Alt 临时取消" onClick={()=>onSmart(!smart)}><Magnet size={14}/>吸附</button>
     <label className="canvas-grid-toggle"><input type="checkbox" checked={grid} onChange={e=>onGrid(e.target.checked)}/>网格吸附</label>

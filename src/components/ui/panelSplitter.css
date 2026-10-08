@@ -1,0 +1,13 @@
+.ui-panel-splitter { position:absolute; z-index:80; touch-action:none; user-select:none; outline:none; }
+.ui-panel-splitter[data-axis="x"] { width:10px; cursor:col-resize; }
+.ui-panel-splitter[data-axis="y"] { height:10px; cursor:row-resize; }
+.ui-panel-splitter::before { content:""; position:absolute; background:var(--border-default); transition:background .12s; }
+.ui-panel-splitter[data-axis="x"]::before { left:4px; top:0; bottom:0; width:1px; }
+.ui-panel-splitter[data-axis="y"]::before { top:4px; left:0; right:0; height:1px; }
+.ui-panel-splitter > span { position:absolute; border-radius:2px; background:var(--text-muted); }
+.ui-panel-splitter[data-axis="x"] > span { top:calc(50% - 14px); left:4px; width:2px; height:28px; }
+.ui-panel-splitter[data-axis="y"] > span { top:4px; left:calc(50% - 14px); width:28px; height:2px; }
+.ui-panel-splitter:hover::before,.ui-panel-splitter:focus-visible::before,.ui-panel-splitter[data-resizing="true"]::before { background:var(--border-focus); }
+.ui-panel-splitter:hover > span,.ui-panel-splitter:focus-visible > span,.ui-panel-splitter[data-resizing="true"] > span { background:var(--accent); }
+.ui-panel-splitter:focus-visible { outline:2px solid var(--border-focus); outline-offset:-2px; }
+.ui-shell.immersive .ui-panel-splitter { display:none; }

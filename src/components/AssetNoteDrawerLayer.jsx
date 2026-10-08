@@ -34,7 +34,7 @@ import {
   saveAssetNoteDrawer,
   flushAssetNoteDrawerSaves,
 } from "../data/assetNoteDrawerRepository";
-import { reconcileDrawerSave, rollbackDrawerLayout } from "./DrawerSaveState.js";
+import { reconcileDrawerSave, snapshotDirtyDrawers } from "./DrawerSaveState.js";
 import { objectToWorld } from "./canvasTransforms.js";
 import { minimapPolygonItem } from "./minimapGeometry.js";
 
@@ -63,7 +63,7 @@ export function AssetNoteDockHost({ assetId, onHostChange }) {
 }
 
 export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
-  { assets, displayAssets, groups = [], activeCategoryId, viewport, surfaceRef, worldRef, dockHosts, onDecorationChange, onMinimapItems },
+  { assets, displayAssets, groups = [], activeCategoryId, viewport, surfaceRef, worldRef, dockHosts, onDecorationChange, onMinimapItems, settings },
   ref,
 ) {
   const [drawers, setDrawers] = useState([]);
@@ -81,6 +81,7 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     return () => observer.disconnect();
   }, []);
   const [notice, setNotice] = useState("");
+  const [saveError, setSaveError] = useState("");
   const [drawerMenu, setDrawerMenu] = useState(null);
   const [scaleMenu, setScaleMenu] = useState(null);
   const [attachmentMenu, setAttachmentMenu] = useState(null);
@@ -91,7 +92,10 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
   const drawersRef = useRef(drawers);
   const assetsRef = useRef(assets);
   const viewportRef = useRef(viewport);
-  const saveTimersRef = useRef(new Map());
+  const savingCountRef = useRef(0);
+  const saveBatchesRef = useRef(new Map());
+  const autoSaveRef = useRef(null);
+  const interactionStateRef = useRef({});
   const noticeTimerRef = useRef(null);
   const portalRef = useRef(null);
   const controllerRef = useRef(null);
@@ -106,6 +110,7 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
   }
   assetsRef.current = assets;
   viewportRef.current = viewport;
+  interactionStateRef.current = { editingId, scaleMenu, settings };
 
   const assetIds = useMemo(() => assets.map((asset) => asset.id), [assets]);
   const assetKey = activeCategoryId + "\u0000" + assetIds.slice().sort().join("\u0000");
@@ -142,65 +147,69 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
   };
   const persistDrawer = async (drawer, previous) => {
     if (deletingRef.current.has(drawer.id)) return;
-    const latest = drawersRef.current.find((item) => item.id === drawer.id);
-    const submitted = normalizeDrawer({ ...drawer, categoryId: drawer.categoryId || activeCategoryId, text: latest?.text ?? drawer.text });
-    const pending = saveTimersRef.current.get(drawer.id);
-    if (pending) clearTimeout(pending.timer);
-    saveTimersRef.current.delete(drawer.id);
+    // The tick/explicit save owns this exact snapshot. Later typing remains a
+    // separate dirty draft and waits for the next tick or manual save.
+    const submitted = normalizeDrawer({ ...drawer, categoryId: drawer.categoryId || activeCategoryId });
     const epoch = loadEpochRef.current;
     const baseline = previous || confirmedRef.current.get(drawer.id);
     const changingOwner = (baseline?.assetId ?? null) !== (submitted.assetId ?? null);
     if (changingOwner) setBusy(drawer.id, true);
+    savingCountRef.current += 1;
     try {
       const saved = await saveAssetNoteDrawer(submitted, baseline);
       if (epoch !== loadEpochRef.current) return saved;
       confirmedRef.current.set(saved.id, saved);
       updateDrawerList((current) => current.map((item) => item.id === saved.id ? reconcileDrawerSave(item, submitted, saved) : item));
       return saved;
-    } catch (error) {
-      if (epoch === loadEpochRef.current) {
-        updateDrawerList((current) => current.map((item) => item.id === drawer.id
-          ? rollbackDrawerLayout(item, submitted, previous || confirmedRef.current.get(drawer.id)) : item));
-      }
-      throw error;
     } finally {
+      savingCountRef.current -= 1;
       if (changingOwner) setBusy(drawer.id, false);
     }
   };
-  const queueSave = (drawer, delay = 320) => {
-    const timers = saveTimersRef.current;
-    const previous = timers.get(drawer.id);
-    if (previous) clearTimeout(previous.timer);
-    const entry = {
-      drawer,
-      timer: setTimeout(() => {
-        if (timers.get(drawer.id) !== entry) return;
-        timers.delete(drawer.id);
-        persistDrawer(entry.drawer).catch(announce);
-      }, delay),
-    };
-    timers.set(drawer.id, entry);
+  const hasPendingChanges = () => savingCountRef.current > 0 || snapshotDirtyDrawers(drawersRef.current, confirmedRef.current, deletingRef.current).length > 0;
+  const hasActiveInteraction = () => !!controllerRef.current?.active || !!interactionStateRef.current.editingId
+    || !!interactionStateRef.current.scaleMenu || attachmentBusyRef.current.size > 0 || creatingAssetIdsRef.current.size > 0;
+  const flushAllSaves = () => {
+    if (controllerRef.current?.active) return Promise.reject(new Error("请先结束备注拖动或调整尺寸，再保存"));
+    const changed = snapshotDirtyDrawers(drawersRef.current, confirmedRef.current, deletingRef.current);
+    const epoch = loadEpochRef.current;
+    const key = `${epoch}:${JSON.stringify(changed)}`;
+    // Parent departure safety and this owner's departure listener may request
+    // the same snapshot together. Share that write instead of duplicating it.
+    if (saveBatchesRef.current.has(key)) return saveBatchesRef.current.get(key);
+    const batch = (async () => {
+      try {
+        await Promise.all(changed.map((drawer) => persistDrawer(drawer)));
+        await flushAssetNoteDrawerSaves();
+        if (epoch === loadEpochRef.current) setSaveError("");
+      } catch (error) {
+        if (epoch === loadEpochRef.current) setSaveError(String(error?.message || error));
+        throw error;
+      }
+    })();
+    saveBatchesRef.current.set(key, batch);
+    void batch.finally(() => { if (saveBatchesRef.current.get(key) === batch) saveBatchesRef.current.delete(key); }).catch(() => {});
+    return batch;
   };
-  const flushSave = (drawer) => {
-    const pending = saveTimersRef.current.get(drawer.id);
-    if (pending) {
-      clearTimeout(pending.timer);
-      saveTimersRef.current.delete(drawer.id);
-    }
-    return persistDrawer(drawersRef.current.find((item) => item.id === drawer.id) || drawer);
-  };
-  const flushAllSaves = async () => {
-    const changed = drawersRef.current.filter((drawer) => {
-      const saved = confirmedRef.current.get(drawer.id);
-      return saveTimersRef.current.has(drawer.id) || !saved || JSON.stringify(saved) !== JSON.stringify(drawer);
-    });
-    try { await Promise.all(changed.map((drawer) => persistDrawer(drawer))); await flushAssetNoteDrawerSaves(); }
-    catch (error) { announce(error?.message || error); throw error; }
+  const autoSave = () => {
+    if (interactionStateRef.current.settings?.autoSave === false || hasActiveInteraction()) return Promise.resolve();
+    if (autoSaveRef.current) return autoSaveRef.current;
+    const pending = flushAllSaves();
+    autoSaveRef.current = pending;
+    void pending.finally(() => { if (autoSaveRef.current === pending) autoSaveRef.current = null; }).catch(() => {});
+    return pending;
   };
   const flushRef = useRef(flushAllSaves);
   flushRef.current = flushAllSaves;
   useEffect(() => {
-    const beforeLeave = (event) => event.detail.promises.push(flushRef.current());
+    const beforeLeave = (event) => {
+      controllerRef.current?.finish(true);
+      if (interactionStateRef.current.settings?.autoSave === false && hasPendingChanges()) {
+        const message = "备注尚未保存，请先点击保存，再离开当前画布";
+        announce(message);
+        event.detail.promises.push(Promise.reject(new Error(message)));
+      } else event.detail.promises.push(flushRef.current());
+    };
     window.addEventListener("asset-text-before-leave", beforeLeave);
     return () => window.removeEventListener("asset-text-before-leave", beforeLeave);
   }, []);
@@ -226,6 +235,7 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     setScaleMenu(null);
     setAttachmentMenu(null);
     setLoadError("");
+    setSaveError("");
     setEditingId("");
     setSelectedDrawerId("");
     setDrawerMenu(null);
@@ -269,7 +279,6 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     }
     if (changed.length) {
       updateDrawerList(next);
-      changed.forEach((drawer) => queueSave(drawer));
     }
   }, [assetSizeKey, assetKey, loadedAssetKey]);
 
@@ -301,13 +310,17 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     getDrawers: () => drawersRef.current,
     getAssets: () => visibleAssetsRef.current,
     onDraft: (drawer) => updateDrawerList((current) => current.map((item) => item.id === drawer.id ? { ...drawer, text: item.text } : item)),
-    onCommit: persistDrawer,
+    onCommit: () => {},
     onPreview: setPreview,
     onError: (error) => announce(error?.message || error),
   });
 
   useImperativeHandle(ref, () => ({
     flush: () => flushRef.current(),
+    cancelInteraction: () => controllerRef.current?.finish(true),
+    hasPendingChanges,
+    hasActiveInteraction,
+    autoSave,
     getVisibleRects() {
       return drawersRef.current.filter((drawer) => !drawer.assetId || visibleAssetIds.has(drawer.assetId))
         .map((drawer) => drawerVisibleRect(assetForDrawer(drawer), drawer));
@@ -365,18 +378,14 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     if (drawer && isDrawerCollapsed(drawer)) {
       const expanded = { ...drawer, mode: "docked-expanded" };
       updateDrawerList((current) => current.map((item) => item.id === id ? expanded : item));
-      persistDrawer(expanded, drawer).catch(announce);
     }
     setSelectedDrawerId(id); setEditingId(id);
   };
   const changeText = (drawer, text) => {
     const updated = { ...(drawersRef.current.find((item) => item.id === drawer.id) || drawer), text };
     updateDrawerList((current) => current.map((item) => item.id === drawer.id ? updated : item));
-    queueSave(updated);
   };
   const finishEdit = (drawer) => {
-    const current = drawersRef.current.find((item) => item.id === drawer.id) || drawer;
-    flushSave(current).catch(announce);
     setEditingId((currentId) => currentId === drawer.id ? "" : currentId);
   };
   const handleTextKeyDown = (event, drawer) => {
@@ -403,7 +412,6 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
       return;
     }
     updateDrawerList((current) => current.map((item) => item.id === drawer.id ? resized : item));
-    persistDrawer(resized, drawer).catch(announce);
   };
   const moveDrawerToSide = (drawer, side) => {
     const asset = assetsRef.current.find((item) => item.id === drawer.assetId);
@@ -423,16 +431,13 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
       return;
     }
     updateDrawerList((current) => current.map((item) => item.id === drawer.id ? placement : item));
-    persistDrawer(placement, drawer).catch(announce);
   };
   const removeDrawer = async (drawer) => {
     if (!window.confirm("删除这个备注抽屉及其文字？")) return;
-    const pending = saveTimersRef.current.get(drawer.id);
-    if (pending) clearTimeout(pending.timer);
-    saveTimersRef.current.delete(drawer.id);
     deletingRef.current.add(drawer.id);
     try {
       await deleteAssetNoteDrawer(drawer);
+      confirmedRef.current.delete(drawer.id);
       updateDrawerList((current) => current.filter((item) => item.id !== drawer.id));
       if (editingId === drawer.id) setEditingId("");
       if (selectedDrawerId === drawer.id) setSelectedDrawerId("");
@@ -496,8 +501,7 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     }
     updateDrawerList((current) => current.map((item) => item.id === latest.id ? updated : item));
     setEditingId("");
-    try { await persistDrawer(updated, latest); closeAttachmentSettings(); }
-    catch (error) { announce(error?.message || error); }
+    closeAttachmentSettings();
   };
   const changeScale = (id, percent) => {
     if (!Number.isFinite(percent)) return;
@@ -505,13 +509,11 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     if (!latest) return;
     const updated = { ...latest, textScale: clamp(percent / 100, 0.5, 20) };
     updateDrawerList((current) => current.map((item) => item.id === id ? updated : item));
-    queueSave(updated);
   };
   const toggleLock = (drawer) => {
     const updated = { ...drawer, locked: !drawer.locked };
     updateDrawerList((current) => current.map((item) => item.id === drawer.id ? updated : item));
     setDrawerMenu(null);
-    persistDrawer(updated, drawer).catch(announce);
   };
 
   const toggleCollapsed = (drawer) => {
@@ -523,7 +525,6 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     setSelectedDrawerId(latest.id);
     setDrawerMenu(null);
     updateDrawerList((current) => current.map((item) => item.id === latest.id ? updated : item));
-    persistDrawer(updated, latest).catch(announce);
   };
 
   const decorations = useMemo(() => Object.fromEntries(assets.map((asset) => {
@@ -615,10 +616,8 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
     document.addEventListener("keydown", escape);
     return () => { document.removeEventListener("pointerdown", deselect, true); document.removeEventListener("keydown", escape); };
   }, [editingId]);
-  useEffect(() => () => { flushAllSaves().catch(() => {}); }, [activeCategoryId, assetKey]);
   useEffect(() => () => {
     controllerRef.current?.dispose();
-    flushRef.current().catch(() => {});
     clearTimeout(noticeTimerRef.current);
   }, []);
 
@@ -639,7 +638,6 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
             {menuDrawer.locked ? <Unlock size={14} /> : <Lock size={14} />}
             {menuDrawer.locked ? "解锁备注" : "锁定备注"}
           </button>
-          <button disabled title="样式选项预留">修改样式（预留）</button>
           <hr />
           <button disabled={menuDrawer.locked || !menuDrawer.assetId || attachmentBusy.has(menuDrawer.id)} onClick={() => moveDrawerToSide(menuDrawer, "left")}>移到左侧</button>
           <button disabled={menuDrawer.locked || !menuDrawer.assetId || attachmentBusy.has(menuDrawer.id)} onClick={() => moveDrawerToSide(menuDrawer, "right")}>移到右侧</button>
@@ -653,6 +651,7 @@ export const AssetNoteDrawerLayer = forwardRef(function AssetNoteDrawerLayer(
       {scaleDrawer && scaleMenu && createPortal(
         <DrawerScalePanel key={scaleDrawer.id} drawer={scaleDrawer} position={scaleMenu} onChange={changeScale} onClose={() => setScaleMenu(null)} />, document.body)}
       {notice && <output className="asset-note-drawer-notice" role="status">{notice}</output>}
+      {saveError && <div className="asset-note-drawer-notice" role="alert" style={{ pointerEvents: "auto" }} onPointerDown={event => event.stopPropagation()}><span>备注尚未保存：{saveError}</span><button type="button" onClick={() => flushRef.current().catch(() => {})}>重试保存</button></div>}
     </>
   );
 });

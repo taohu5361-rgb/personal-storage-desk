@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   AlignLeft,
   ArrowDownToLine,
@@ -36,6 +37,7 @@ import { clientToSurface, surfaceToWorld, clientWorldDelta, zoomViewportAt, resi
 import { axisSnapPreview, isImageObject } from "./canvasAxisGeometry.js";
 import { createCanvasFrameQueue } from "./canvasFrameQueue.js";
 import { captureMiddleCanvasPan } from "./middleCanvasPan";
+import { CanvasEditorLayout, CanvasInspectorPortal } from "./CanvasEditorLayout";
 
 import { geometry, objectId, boundsOf, unionBounds, intersectsRotated, rotationFromPointer, resizeRotated, snapMove, arrangeObjects, visibleObjects, normalizeRotation } from "./canvasTransforms.js";
 import { CanvasArrangeTools, ArrangeCommands, CanvasSnapGuides, CanvasAxisGuides, useSnapPreferences } from "./CanvasArrangeTools";
@@ -47,6 +49,7 @@ const EMPTY_ITEMS = [];
 const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 5;
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const detailScrollContainer = surface => surface?.closest('[data-editor-scroll="true"], .asset-detail-main');
 const intersects = (a, b) =>
   a.left <= b.right && a.right >= b.left && a.top <= b.bottom && a.bottom >= b.top;
 
@@ -78,6 +81,8 @@ export function AssetTextSurface({
   viewMode = "canvas",
   children,
   textController,
+  autoSave = true,
+  onManualSave,
   onDraft,
   onRegisterFlush,
   registerShortcutActions,
@@ -150,8 +155,12 @@ export function AssetTextSurface({
   const editingTextIdRef = useRef("");
   const selectedRef = useRef([]);
   const keyHandlerRef = useRef(null);
-  const viewportTimerRef = useRef(null);
   const viewportSaveRef = useRef(onSaveViewport);
+  const pendingDraftRef = useRef(null);
+  const composingRef = useRef(false);
+  const flushSurfaceRef = useRef(null);
+  const autoSaveRef = useRef(null);
+  const manualSaveRef = useRef(null);
   const itemsRef = useRef(initialItems);
   const sourceObjectsRef = useRef({assetId,objects:initialObjects});
   const viewportRef = useRef({
@@ -159,6 +168,8 @@ export function AssetTextSurface({
     y: standard ? 0 : initialViewport?.viewportY ?? 70,
     zoom: standard ? 1 : initialViewport?.zoom ?? 1,
   });
+  const savedViewportRef = useRef({...viewportRef.current});
+  const viewportOwnerRef = useRef(assetId);
   const replaceItemsRef = useRef(null);
   const setViewRef = useRef(null);
   const [items, setItems] = useState(initialItems);
@@ -169,7 +180,28 @@ export function AssetTextSurface({
   const [editingTextId, setEditingTextId] = useState("");
   const [textDraft, setTextDraft] = useState("");
   const [lightbox, setLightbox] = useState(null);
+  const lightboxRef = useRef(null);
   const [error, setError] = useState("");
+  useEffect(() => {
+    if (!lightbox) return;
+    const previous = document.activeElement;
+    const closeButton = lightboxRef.current?.querySelector('button');
+    closeButton?.focus({ preventScroll: true });
+    const keydown = event => {
+      if (event.key === 'Escape') {
+        event.preventDefault(); event.stopPropagation();
+        setLightbox(null);
+      } else if (event.key === 'Tab') {
+        event.preventDefault(); event.stopPropagation();
+        closeButton?.focus({ preventScroll: true });
+      }
+    };
+    window.addEventListener('keydown', keydown, true);
+    return () => {
+      window.removeEventListener('keydown', keydown, true);
+      if (previous?.isConnected) previous.focus({ preventScroll: true });
+    };
+  }, [lightbox]);
   selectedRef.current = selected;
   editingTextIdRef.current = editingTextId;
   const promptMap = new Map(prompts.map((prompt) => [prompt.id, prompt]));
@@ -203,11 +235,12 @@ export function AssetTextSurface({
     setMenu(null);
     setEditingTextId("");
     setReferenceId('');setGuides([]);historyRef.current={undo:[],redo:[]};
+    pendingDraftRef.current=null;
   }, [assetId]);
 
   useEffect(() => {
     const sourceChanged = sourceObjectsRef.current.assetId !== assetId || sourceObjectsRef.current.objects !== initialObjects;
-    const liveObjects = sourceChanged && !interactionRef.current ? initialObjects : itemsRef.current.filter(item => item.objectType !== 'textBlock');
+    const liveObjects = sourceChanged && !interactionRef.current && !pendingDraftRef.current && !textController?.snapshot().dirty ? initialObjects : itemsRef.current.filter(item => item.objectType !== 'textBlock');
     sourceObjectsRef.current = {assetId,objects:initialObjects};
     const next = [
       ...liveObjects.filter((item) => item.objectType !== "text"),
@@ -221,12 +254,16 @@ export function AssetTextSurface({
     setItems(next);
   }, [assetId, initialObjects, initialTextBlocks]);
   useEffect(() => {
+    const changedOwner = viewportOwnerRef.current !== assetId;
+    viewportOwnerRef.current=assetId;
+    if (!changedOwner && (interactionRef.current || JSON.stringify(viewportRef.current)!==JSON.stringify(savedViewportRef.current))) return;
     const next = {
       x: standard ? 0 : initialViewport?.viewportX ?? 80,
       y: standard ? 0 : initialViewport?.viewportY ?? 70,
       zoom: standard ? 1 : initialViewport?.zoom ?? 1,
     };
     viewportRef.current = next;
+    savedViewportRef.current = {...next};
     setViewportState(next);
   }, [assetId, initialViewport?.viewportX, initialViewport?.viewportY, initialViewport?.zoom]);
   useEffect(() => {
@@ -236,50 +273,72 @@ export function AssetTextSurface({
     syncFontFaces(fonts);
   }, [fonts]);
 
+  const stageItems = useCallback((next, extraOptions = {}) => {
+    pendingDraftRef.current = {next,options:extraOptions};
+    if (textController) textController.draft(viewMode,next,standard ? undefined : next.filter(item=>item.objectType !== 'textBlock'));
+    else onDraft?.(next);
+    return next;
+  },[textController,viewMode,standard,onDraft]);
   const replaceItems = useCallback((nextOrUpdater, {draft=true} = {}) => {
     const next = typeof nextOrUpdater === "function" ? nextOrUpdater(itemsRef.current) : nextOrUpdater;
     if(next.length===itemsRef.current.length&&next.every((item,n)=>item===itemsRef.current[n]))return itemsRef.current;
     itemsRef.current = next;
     setItems(next);
-    if(draft)onDraft?.(next);
+    if(draft)stageItems(next);
     return next;
-  }, [onDraft]);
+  }, [stageItems]);
   replaceItemsRef.current = replaceItems;
 
   const setView = useCallback((next) => {
     const value = typeof next === "function" ? next(viewportRef.current) : next;
     viewportRef.current = value;
     setViewportState(value);
-    if (embeddedCanvas) { viewportSaveRef.current?.(value); return; }
-    if (viewportTimerRef.current) window.clearTimeout(viewportTimerRef.current);
-    viewportTimerRef.current = window.setTimeout(() => {
-      viewportTimerRef.current = null;
-      viewportSaveRef.current?.(value);
-    }, 220);
+    if (embeddedCanvas) viewportSaveRef.current?.(value,{preview:true});
   }, [embeddedCanvas]);
   setViewRef.current = setView;
 
-  const commitItems = useCallback(async (next, extraOptions = {}) => {
-    try {
-      setError("");
-      const options = {
-        ...extraOptions,
-        textBlocks: next.filter((item) => item.objectType === "textBlock"),
-      };
-      await onSaveObjects(
-        next.filter((item) => item.objectType !== "textBlock"),
-        options,
-      );
-    } catch (reason) {
-      if (!textController) setError(String(reason));
-    }
-  }, [onSaveObjects,textController]);
+  // Completing an edit changes the draft. Only the fixed clock or an explicit
+  // save action writes it, so a frequent gesture cannot move the save schedule.
+  const commitItems = useCallback(async (next, extraOptions = {}) => stageItems(next,extraOptions), [stageItems]);
   commitItemsRef.current = commitItems;
-
-  useEffect(() => () => {
-    if (viewportTimerRef.current) window.clearTimeout(viewportTimerRef.current);
-    if (!embeddedCanvas) viewportSaveRef.current?.(viewportRef.current);
-  }, []);
+  const hasActiveInteraction = () => !!interactionRef.current || !!editingTextIdRef.current || composingRef.current;
+  const hasPendingChanges = () => !!(textController ? textController.snapshot().dirty : pendingDraftRef.current) || (!standard && !embeddedCanvas && JSON.stringify(viewportRef.current)!==JSON.stringify(savedViewportRef.current));
+  const persistDrafts = async ({once=false} = {}) => {
+    if (once && hasActiveInteraction()) return false;
+    if (!once) {
+      finishInteractionRef.current?.(true);
+      editingTextIdRef.current='';setEditingTextId('');
+    }
+    const viewportTarget = {...viewportRef.current};
+    try {
+      setError('');
+      const pending = pendingDraftRef.current;
+      if (textController) {
+        if (once) await textController.saveOnce(); else await textController.flush();
+      } else if (pending) {
+        await onSaveObjects(pending.next.filter(item=>item.objectType!=='textBlock'),{...pending.options,textBlocks:pending.next.filter(item=>item.objectType==='textBlock')});
+      }
+      if (pendingDraftRef.current===pending) pendingDraftRef.current=null;
+      if (!standard && !embeddedCanvas && JSON.stringify(viewportTarget)!==JSON.stringify(savedViewportRef.current)) {
+        await viewportSaveRef.current?.(viewportTarget);
+        savedViewportRef.current=viewportTarget;
+      }
+      if (!once && hasPendingChanges()) return persistDrafts();
+      return true;
+    } catch (reason) {setError(String(reason));throw reason;}
+  };
+  flushSurfaceRef.current = () => persistDrafts();
+  manualSaveRef.current = () => onManualSave ? onManualSave() : flushSurfaceRef.current();
+  autoSaveRef.current = () => autoSave ? persistDrafts({once:true}) : Promise.resolve(false);
+  useEffect(() => {
+    textController?.seedInnerObjects(viewMode,standard ? [] : initialObjects.filter(item=>item.objectType!=='text'));
+  },[textController,viewMode,standard,initialObjects]);
+  useEffect(() => {
+    if (embeddedCanvas) return;
+    const tick = event => event.detail.promises.push(autoSaveRef.current());
+    window.addEventListener('canvas-auto-save',tick);
+    return ()=>window.removeEventListener('canvas-auto-save',tick);
+  },[embeddedCanvas]);
 
   const surfacePoint = (event) => {
     const rect = surfaceRef.current.getBoundingClientRect();
@@ -340,7 +399,7 @@ export function AssetTextSurface({
       const view = viewportRef.current;
       const delta = clientWorldDelta(event, interaction, view, readUiScale());
       if (standard && interaction.kind !== 'select') {
-        const scroll = surfaceRef.current.closest('.asset-detail-main');
+        const scroll = detailScrollContainer(surfaceRef.current);
         delta.x += (scroll?.scrollLeft || 0) - (interaction.scrollX || 0);
         delta.y += (scroll?.scrollTop || 0) - (interaction.scrollY || 0);
         if (interaction.kind === 'move') {delta.x=Math.max(delta.x,-Math.min(...[...interaction.originals.values()].map(i=>i.x)));delta.y=Math.max(delta.y,-Math.min(...[...interaction.originals.values()].map(i=>i.y)));}
@@ -423,6 +482,7 @@ export function AssetTextSurface({
   useEffect(() => {
     const keydown = (event) => {
       if (event.defaultPrevented || event.isComposing) return;
+      if (lightboxRef.current) return;
       const target = event.target instanceof HTMLElement ? event.target : null;
       const typing = Boolean(target?.closest("input, textarea, select, [contenteditable='true']"));
       if (!standard && !embeddedCanvas && event.code === "Space" && !event.repeat && !typing && !target?.closest('button,a,[role="button"]')) {
@@ -443,7 +503,7 @@ export function AssetTextSurface({
         commandKey = true;
       }
       if(commandKey&&((key==='z')||key==='undo'||key==='redo'||key==='y')){event.preventDefault();geometryHistoryRef.current(key==='redo'||key==='y'||event.shiftKey);return;}
-      if (key === 'save') {event.preventDefault();commitItemsRef.current?.(itemsRef.current);return;}
+      if (key === 'save') {event.preventDefault();manualSaveRef.current?.().catch(()=>{});return;}
       if (key === 'all') {event.preventDefault();const ids=itemsRef.current.map(i=>i.objectId);selectedRef.current=ids;setSelected(ids);return;}
       if (['lock','top','bottom','group'].includes(key) && selectedRef.current.length) {
         event.preventDefault(); const ids=new Set(selectedRef.current);
@@ -596,8 +656,8 @@ export function AssetTextSurface({
       kind: "move", pointerId: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
-      scrollX: surfaceRef.current.closest(".asset-detail-main")?.scrollLeft || 0,
-      scrollY: surfaceRef.current.closest(".asset-detail-main")?.scrollTop || 0,
+      scrollX: detailScrollContainer(surfaceRef.current)?.scrollLeft || 0,
+      scrollY: detailScrollContainer(surfaceRef.current)?.scrollTop || 0,
       originals: new Map(moving.filter((entry) => !entry.locked).map((entry) => [entry.objectId, { ...entry }])),
       snapBounds:visibleObjects(itemsRef.current.filter(entry=>!moving.includes(entry)),viewportRef.current,{width:surfaceRef.current.clientWidth,height:surfaceRef.current.clientHeight}).map(entry=>({...boundsOf(entry),id:objectId(entry)})),
       axisReference:moving.length===1&&isImageObject(item)?itemsRef.current.find(entry=>entry.objectId===axisIdRef.current):null,
@@ -609,7 +669,7 @@ export function AssetTextSurface({
     event.stopPropagation();
     if (event.button !== 0 || item.locked) return;
     if(externalRef.current){externalRef.current.beginResize(event,item.objectId,corner);return;}
-    interactionRef.current = { kind: "resize", pointerId: event.pointerId, item: { ...item }, originals: new Map([[item.objectId, { ...item }]]), corner, startX: event.clientX, startY: event.clientY, scrollX: surfaceRef.current.closest(".asset-detail-main")?.scrollLeft || 0, scrollY: surfaceRef.current.closest(".asset-detail-main")?.scrollTop || 0 };
+    interactionRef.current = { kind: "resize", pointerId: event.pointerId, item: { ...item }, originals: new Map([[item.objectId, { ...item }]]), corner, startX: event.clientX, startY: event.clientY, scrollX: detailScrollContainer(surfaceRef.current)?.scrollLeft || 0, scrollY: detailScrollContainer(surfaceRef.current)?.scrollTop || 0 };
   };
 
   const beginRotation=(event,item)=>{
@@ -625,7 +685,7 @@ export function AssetTextSurface({
     event.stopPropagation();
     const surface = surfaceRef.current;
     const point = surfacePoint(event);
-    const visible = standard ? surface.closest('.asset-detail-main')?.getBoundingClientRect() : null;
+    const visible = standard ? detailScrollContainer(surface)?.getBoundingClientRect() : null;
     const rect = surface.getBoundingClientRect(), scale = readUiScale();
     const bounds = visible ? {left:Math.max(8,(visible.left-rect.left)/scale+8),top:Math.max(8,(visible.top-rect.top)/scale+8),right:Math.min(surface.clientWidth,(visible.right-rect.left)/scale),bottom:Math.min(surface.clientHeight,(visible.bottom-rect.top)/scale)} : {left:8,top:8,right:surface.clientWidth,bottom:surface.clientHeight};
     const selection = objectId && selected.includes(objectId) ? selected : objectId ? [objectId] : selected;
@@ -674,7 +734,7 @@ export function AssetTextSurface({
   const addTextAtCenter = (styleType = "plain") => {
     const surface = surfaceRef.current;
     const rect = surface.getBoundingClientRect();
-    const scroll = surface.closest('.asset-detail-main');
+    const scroll = detailScrollContainer(surface);
     const visible = scroll?.getBoundingClientRect();
     const center = standard && visible ? surfacePoint({clientX:Math.max(rect.left,visible.left)+(Math.min(rect.right,visible.right)-Math.max(rect.left,visible.left))/2,clientY:Math.max(rect.top,visible.top)+(Math.min(rect.bottom,visible.bottom)-Math.max(rect.top,visible.top))/2}) : screenToWorld({x:surface.clientWidth/2,y:surface.clientHeight/2});
     addText(styleType, center, true);
@@ -687,6 +747,7 @@ export function AssetTextSurface({
     updateAndCommit((current) => current.map((entry) => entry.objectId === item.objectId ? { ...entry, textValue: textDraft } : entry));
     editingTextIdRef.current = "";
     setEditingTextId("");
+    flushSurfaceRef.current?.().catch(()=>{});
   };
   const startTextBlockEditing = (item) => {
     editingTextIdRef.current = item.objectId;
@@ -781,7 +842,7 @@ export function AssetTextSurface({
     const base = baseRef.current, shell = shellRef.current;
     const sync = () => { if (!base.isConnected || !shell.isConnected) return; setBaseHeight(base.offsetHeight); setContentWidth(shell.clientWidth); };
     const observer = new ResizeObserver(sync); observer.observe(base); observer.observe(shell); sync();
-    const scroll = surfaceRef.current.closest('.asset-detail-main');
+    const scroll = detailScrollContainer(surfaceRef.current);
     const syncScroll = () => setHorizontalScroll(scroll?.scrollLeft || 0);
     scroll?.addEventListener('scroll',syncScroll,{passive:true});syncScroll();
     return () => {observer.disconnect();scroll?.removeEventListener('scroll',syncScroll);};
@@ -790,16 +851,17 @@ export function AssetTextSurface({
     if (!textController || embeddedCanvas) return;
     const origin = standard ? {x:16,y:baseHeight+32} : {x:Math.max(0,...initialObjects.map(i=>i.x+i.width))+48,y:70};
     if (standard && !baseHeight) return;
-    if (textController.initialize(viewMode,origin)) textController.flush().catch(()=>{});
+    textController.initialize(viewMode,origin);
   }, [textController,viewMode,baseHeight,embeddedCanvas]);
   useEffect(() => onRegisterFlush?.(() => {
     finishInteraction(true);
     editingTextIdRef.current='';setEditingTextId('');
-    return textController?.flush() || commitItemsRef.current?.(itemsRef.current);
-  }), [onRegisterFlush,textController,finishInteraction]);
-  const selectedCenter = selectedTextBlock ? viewport.x+(selectedTextBlock.x+selectedTextBlock.width/2)*viewport.zoom-horizontalScroll : 0;
-  const dockSide = selectedCenter > (surfaceRef.current?.clientWidth || contentWidth || 1000)/2 ? "left" : "right";
-  const stylePanel = selectedTextBlock && <TextStyleToolbar dockSide={dockSide} item={selectedTextBlock} theme={textTheme} fonts={fonts} onChange={(change)=>updateAndCommit(current=>current.map(item=>item.objectId===selectedTextBlock.objectId?{...item,...change}:item))}/>;
+    if (!autoSave && hasPendingChanges()) {
+      const message='有未保存的画布修改，请点击“保存”后再离开。';setError(message);return Promise.reject(Error(message));
+    }
+    return flushSurfaceRef.current();
+  }), [onRegisterFlush,textController,finishInteraction,autoSave]);
+  const stylePanel = selectedTextBlock && <TextStyleToolbar item={selectedTextBlock} theme={textTheme} fonts={fonts} onChange={(change)=>updateAndCommit(current=>current.map(item=>item.objectId===selectedTextBlock.objectId?{...item,...change}:item))}/>;
   const right = Math.max(contentWidth || 0,...items.map(i=>i.x+i.width+24));
   const bottom = Math.max(baseHeight+64,...items.map(i=>i.y+i.height+24));
   const createAtMenuPoint = (styleType) => {
@@ -810,15 +872,19 @@ export function AssetTextSurface({
     items: () => itemsRef.current,
     selectIds(ids) {selectedRef.current=ids;setSelected(ids);},
     patchGeometry(patches) {const byId=new Map(patches.map(i=>[i.objectId||i.id,i]));return replaceItemsRef.current(current=>current.map(i=>{const p=byId.get(i.objectId);if(!p||['x','y','width','height','rotation'].every(k=>(i[k]||0)===(p[k]||0)))return i;return {...i,...geometry(p)};}),{draft:false});},
-    commitGeometry(batch,persist) {textController?.draft('canvas',itemsRef.current);return onCommitGeometry ? onCommitGeometry(batch,persist) : commitItemsRef.current(itemsRef.current);},
-    flush() {return textController?.flush() || commitItemsRef.current(itemsRef.current);},
+    commitGeometry(batch,persist,options) {textController?.draft('canvas',itemsRef.current);return onCommitGeometry ? onCommitGeometry(batch,persist,options) : flushSurfaceRef.current();},
+    autoSave() {return autoSaveRef.current();},
+    hasActiveInteraction,
+    hasPendingChanges,
+    cancelInteraction() {cancelInteractionRef.current?.();},
+    flush() {return flushSurfaceRef.current();},
     clearSelection() { cancelInteractionRef.current?.(); selectedRef.current=[];setSelected([]);setMenu(null);if(editingTextIdRef.current)finishTextBlockEditing(editingTextIdRef.current); },
     selectBox(box) {const view=viewportRef.current;const worldBox={left:(box.left-view.x)/view.zoom,top:(box.top-view.y)/view.zoom,right:(box.right-view.x)/view.zoom,bottom:(box.bottom-view.y)/view.zoom};const ids=itemsRef.current.filter(i=>intersectsRotated(worldBox,i)).map(i=>i.objectId);selectedRef.current=ids;setSelected(ids);return ids;},
     action(action) { if (!selectedRef.current.length && !(action==='paste' && clipboardRef.current.length)) return false; keyHandlerRef.current?.({textAction:action,key:'',target:surfaceRef.current,preventDefault(){},stopPropagation(){}});return true; },
   }));
 
-  return (
-    <div ref={shellRef} className={embeddedCanvas ? "outer-text-shell" : standard ? "standard-text-shell" : "inner-canvas-shell"}>
+  const surface = (
+    <div ref={shellRef} className={embeddedCanvas ? "outer-text-shell" : standard ? "standard-text-shell" : "inner-canvas-shell"} onCompositionStartCapture={()=>{composingRef.current=true;}} onCompositionEndCapture={()=>{composingRef.current=false;}}>
       {!embeddedCanvas && <div className="inner-canvas-toolbar" style={standard ? {transform:`translateX(${horizontalScroll}px)`} : undefined}>
         <div>
           <button className="secondary" onClick={addSampleAtCenter}><ImagePlus size={15} />新增样图</button>
@@ -826,13 +892,14 @@ export function AssetTextSurface({
         </div>
         {standard ? <select aria-label="定位文字" value="" onChange={event=>{const item=items.find(i=>i.objectId===event.target.value);if(item)focusObject(item);}}><option value="">定位文字（{items.length}）</option>{items.map((item,index)=><option key={item.objectId} value={item.objectId}>{item.title || item.textValue?.slice(0,24) || `文字 ${index+1}`}</option>)}</select> : <span>滚轮缩放 · 空格或中键平移 · 拖动空白处框选</span>}
       </div>}
-      {standard && <div className="standard-text-panel-host" style={{transform:`translateX(${horizontalScroll}px)`}}>{stylePanel}</div>}
+      {stylePanel && <CanvasInspectorPortal section="text">{stylePanel}</CanvasInspectorPortal>}
       <div
         style={standard ? {minWidth:right,minHeight:bottom} : embeddedCanvas ? undefined : canvasSurfaceStyle(canvasAppearance || resolveCanvasAppearance(), viewport)}
         ref={surfaceRef}
         className={`${embeddedCanvas ? "outer-text-surface" : standard ? "standard-text-surface" : `asset-inner-canvas background-${(canvasAppearance || resolveCanvasAppearance()).pattern}`} ${interactionRef.current?.kind === "pan" ? "is-panning" : ""}`}
         tabIndex="0"
         onPointerDownCapture={event => {
+          if (event.target.closest('.ui-inspector, .inner-canvas-lightbox')) return;
           if (standard || embeddedCanvas) return;
           captureMiddleCanvasPan(event, surfaceRef.current, () => {
             setMenu(null);
@@ -945,7 +1012,6 @@ export function AssetTextSurface({
             );
           })}
         </div>
-        {!standard && stylePanel}
         {!standard&&!embeddedCanvas&&<><CanvasSnapGuides guides={guides} viewport={viewport}/><CanvasAxisGuides reference={items.find(i=>i.objectId===axisId)} preview={axisPreview?.preview} active={axisPreview?.active} viewport={viewport}/><CanvasArrangeTools axisReference={items.find(i=>i.objectId===axisId)} onAxisToggle={toggleAxis} onAxisClear={()=>setAxisId('')} items={items.filter(i=>selected.includes(i.objectId))} reference={items.find(i=>i.objectId===referenceId)} onAction={arrangeSelected} onReference={()=>setReferenceId(selected[0])} gap={symmetryGap} setGap={setSymmetryGap} onRotation={rotateSelected} onUndo={()=>applyGeometryHistory(false)} onRedo={()=>applyGeometryHistory(true)} canUndo={!!historyRef.current.undo.length} canRedo={!!historyRef.current.redo.length} {...snapPrefs}/></>}
         {selectionBox && <div className="inner-canvas-selection" style={{ left: selectionBox.left, top: selectionBox.top, width: selectionBox.right - selectionBox.left, height: selectionBox.bottom - selectionBox.top }} />}
         {!standard && !embeddedCanvas && !items.length && <div className="inner-canvas-empty"><AlignLeft size={27} /><strong>这个资产还没有样图</strong><span>右键画布或点击“新增样图”开始</span></div>}
@@ -953,7 +1019,7 @@ export function AssetTextSurface({
           <button aria-label="缩小" onClick={() => zoomCenter(0.8)}><Minus size={15} /></button>
           <span>{Math.round(viewport.zoom * 100)}%</span>
           <button aria-label="放大" onClick={() => zoomCenter(1.25)}><Plus size={15} /></button>
-          <button onClick={() => zoomAt(1, { x: surfaceRef.current.clientWidth / 2, y: surfaceRef.current.clientHeight / 2 })}>100%</button>
+          <button title="恢复100%缩放" onClick={() => zoomAt(1, { x: surfaceRef.current.clientWidth / 2, y: surfaceRef.current.clientHeight / 2 })}>1:1</button>
           <button onClick={fitAll}><Maximize size={14} />适应全部</button>
           <MinimapToggle {...minimap} />
           <button aria-label="画布背景" aria-expanded={appearanceOpen} onClick={() => setAppearanceOpen(value => !value)}><Palette size={15} />背景</button>
@@ -1012,9 +1078,10 @@ export function AssetTextSurface({
             </>}
           </div>
         )}
-        {error && <div className="inner-canvas-error"><span>{error}</span><button onClick={()=>commitItems(itemsRef.current)}>重试保存</button><button onClick={() => setError("")}><X size={13} /></button></div>}
+        {error && <div className="inner-canvas-error"><span>{error}</span><button onClick={()=>flushSurfaceRef.current().catch(()=>{})}>重试保存</button><button onClick={() => setError("")}><X size={13} /></button></div>}
       </div>
-      {lightbox && <div className="inner-canvas-lightbox" onClick={() => setLightbox(null)}><button aria-label="关闭" onClick={() => setLightbox(null)}><X size={20} /></button><img src={lightbox.src} alt={lightbox.title} /><span>{lightbox.title}</span></div>}
+      {lightbox && createPortal(<div ref={lightboxRef} className="inner-canvas-lightbox" role="dialog" aria-modal="true" aria-label={lightbox.title || '样图预览'} onPointerDown={event => event.stopPropagation()} onClick={event => { event.stopPropagation(); setLightbox(null); }} onContextMenu={event => event.stopPropagation()}><button type="button" aria-label="关闭" onClick={() => setLightbox(null)}><X size={20} /></button><img src={lightbox.src} alt={lightbox.title} /><span>{lightbox.title}</span></div>, document.body)}
     </div>
   );
+  return embeddedCanvas ? surface : <CanvasEditorLayout surface={standard ? 'standard' : 'inner'}>{surface}</CanvasEditorLayout>;
 }

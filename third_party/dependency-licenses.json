@@ -8002,15 +8002,15 @@
   {
     "ecosystem": "npm",
     "name": "source-map-js",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "license": "BSD-3-Clause",
     "upstream": "7rulnik/source-map-js",
-    "source_archive": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
-    "notices_directory": "third_party/licenses/npm/source-map-js-1.2.1",
+    "source_archive": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.2.tgz",
+    "notices_directory": "third_party/licenses/npm/source-map-js-1.2.2",
     "notice_files": [
       "LICENSE"
     ],
-    "lock_checksum": "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA=="
+    "lock_checksum": "sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw=="
   },
   {
     "ecosystem": "npm",

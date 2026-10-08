@@ -104,7 +104,7 @@ export function ShortcutSettingsPage({ store }) {
       <header>
         <p className="eyebrow">设置</p>
         <h1>快捷键</h1>
-        <p>自定义个人收纳台中的常用操作快捷键。</p>
+        <p>自定义脚本集合器中的常用操作快捷键。</p>
       </header>
       <div className="shortcuts-toolbar">
         <input
